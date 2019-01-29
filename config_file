@@ -1,3 +1,4 @@
 # jindou
-stage 1
-Router number 1
+# 1/29/2019 
+stage 1 # this is the number of the stage
+num_routers 1 # this is the number of secondary router

@@ -12,7 +12,10 @@ class cRouter{
 	public:
 		int iStage;
 		int iRouteNum;
-		cRouter(){;}
+		int iRouterID;
+		cRouter(){iStage=0;iRouteNum=0;iRouterID=0;}
 		void readConfigFile(char* filePath);
+		void writeLogFile(vector<string> vLog);
 		int parser(const string &temp, vector<string> &output);
+		int syntax();
 };

@@ -8,23 +8,51 @@ void cRouter::readConfigFile(char* filePath)
 		getline(infile,sTemp);
 		vReadBuffer.push_back(sTemp);
 	}
+	infile.close();
 	for(int i=0;i<vReadBuffer.size();i++)
 	{	
 		bool flag =true;
 		string sNum;
 		vector<string> output;
-		int a = parser(vReadBuffer[i],output);
-		cout<<"a: "<<a<<endl;
-		if(a)
+		if(parser(vReadBuffer[i],output))
 		{
 			for(int i=0;i<output.size();i++)
 			{
-				cout<<output[i]<<endl;
+				//cout<<output[i]<<endl;
+				if(output[i++]=="stage")
+				{
+					iStage = stoi(output[i]);
+				}
+				else if( output[i++] == "num_routers")
+				{
+					iRouteNum = stoi(output[i]);
+				}
 			}
 		}
 	}
 	
 }
+
+void cRouter::writeLogFile(vector<string> vLog)
+{
+	string sFilePath;
+	string sStageNum = to_string(iStage);
+	string sRouterID = to_string(iRouterID);
+	sFilePath = "stage"+sStageNum+"."+"r"+sRouterID+".out";
+	ofstream outFile(sFilePath);
+	if(outFile.is_open())
+	{
+		for(int i=0;i<vLog.size();i++)
+		{
+			outFile<<vLog[i]<<"\n";
+		}
+	}
+	else
+	{
+		cout<<"writeLogFile error: cannot open the file!"<<endl;
+	}
+}
+
 
 int cRouter::parser(const string &target, vector<string> &output)
 {
@@ -45,7 +73,8 @@ int cRouter::parser(const string &target, vector<string> &output)
 		}
 		else if((target[i]>='A' && target[i]<='Z')||
 			(target[i]>='a' && target[i]<='z')||
-			(target[i]>='0' && target[i]<='9'))
+			(target[i]>='0' && target[i]<='9')||
+		        (target[i]=='_'))
 		{
 			if(wordHeadFoundFlag == false)
 			{
@@ -73,7 +102,8 @@ int cRouter::parser(const string &target, vector<string> &output)
 				else
 				{	
 					string subString(target.begin()+iWordHead
-							,target.begin()+iWordTail);
+							,target.begin()+iWordTail+1);
+					// must +1 to include the tail
 					output.push_back(subString);
 				}
 				iCount++;

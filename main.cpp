@@ -7,8 +7,8 @@ int main(int argc, char * argv[])
 	{
 		configFilePath = argv[i];
 	}
-	cRouter primRouter;
-	primRouter.readConfigFile(configFilePath);
+	cRouter Router;
+	Router.readConfigFile(configFilePath);
 	pid_t fPid;
 	fPid = fork();
 	if(fPid<0)
@@ -17,11 +17,18 @@ int main(int argc, char * argv[])
 	}
 	else if (fPid==0)
 	{
-		cout<<"second router"<<getpid()<<endl;
+		Router.iRouterID = 1;
+		vector<string> vLog;
+		string temp = "second router"+to_string(getpid());
+		vLog.push_back(temp);
+		Router.writeLogFile(vLog);
 	}
 	else
 	{
-		cout<<"primary router"<<getpid()<<endl;
+		vector<string> vLog;
+		string temp = "primary router"+to_string(getpid());
+		vLog.push_back(temp);
+		Router.writeLogFile(vLog);
 	}	
 
 }

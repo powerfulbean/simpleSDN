@@ -1,6 +1,12 @@
 //jindou
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -8,6 +14,7 @@
 
 using namespace std;
 
+#define SERV_PORT 80
 class cRouter{
 	public:
 		int iStage;

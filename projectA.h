@@ -20,9 +20,15 @@ class cRouter{
 		int iStage;
 		int iRouteNum;
 		int iRouterID;
+		int iPortNum;
+//		int sockID;
 		cRouter(){iStage=0;iRouteNum=0;iRouterID=0;}
 		void readConfigFile(char* filePath);
 		void writeLogFile(vector<string> vLog);
 		int parser(const string &temp, vector<string> &output);
 		int syntax();
 };
+int getUdpSocket();
+void setTempAddr(const char* pIp,struct sockaddr_in & locAddr);
+void getDynmcPortSrv(const struct sockaddr_in & locAddr,
+			struct sockaddr_in & outputAddr);

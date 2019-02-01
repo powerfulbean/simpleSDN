@@ -1,1 +1,3 @@
-primary router3883
+primary port: 52575
+router 1, pid: 3965, port: 54433
+router 0 closed

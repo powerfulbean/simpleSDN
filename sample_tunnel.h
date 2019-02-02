@@ -52,6 +52,12 @@ int tun_alloc(char *dev, int flags);
 
 int tunnel_reader();
 
+/**************************************************************************
+ * cwrite: write routine that checks for errors and exits if an error is  *
+ *         returned.                                                      *
+ **************************************************************************/
+int cwrite(int fd, char *buf, int n);
+
 #ifdef __cplusplus
 };
 #endif

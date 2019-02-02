@@ -119,6 +119,22 @@ int tunnel_reader()
     }
 }
 
+/**************************************************************************
+ * cwrite: write routine that checks for errors and exits if an error is  *
+ *         returned.                                                      *
+ **************************************************************************/
+int cwrite(int fd, char *buf, int n){
+  
+  int nwrite;
+
+  if((nwrite=write(fd, buf, n)) < 0){
+    perror("Writing data");
+    exit(1);
+  }
+  return nwrite;
+}
+
+
 // int main(int argc, char** argv)
 // {
 	// /*

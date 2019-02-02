@@ -26,17 +26,7 @@
 */
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <linux/if_tun.h>
-#include <sys/ioctl.h>
-#include <net/if.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include "sample_tunnel.h"
 
 /**************************************************************************
  * tun_alloc: allocates or reconnects to a tun/tap device. 
@@ -129,10 +119,10 @@ int tunnel_reader()
     }
 }
 
-int main(int argc, char** argv)
-{
-	/*
-	 * For a real proja, you will want to do some setup here.
-	 */
-	tunnel_reader();
-}
+// int main(int argc, char** argv)
+// {
+	// /*
+	 // * For a real proja, you will want to do some setup here.
+	 // */
+	// tunnel_reader();
+// }

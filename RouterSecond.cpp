@@ -35,7 +35,7 @@ void secondRouter_s2(cRouter & Router)
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
 
-	int error = select(1, &rd, NULL, NULL, timeout);
+	int error = select(1, &rd, NULL, NULL, &timeout);
 	if (error == 0)
 	{
 		cout << "timeout!";

@@ -1,7 +1,3 @@
-primary port: 52169
-router 1, pid: 8809, port: 54630
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+primary port: 38245
+router 1, pid: 9049, port: 51294
 router 0 closed

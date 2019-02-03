@@ -85,6 +85,7 @@ void icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, 
 	printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
 	printf("service type: %d  ", pIpHeader->ip_p);
 	printf("icmp type: %d", pIcmp->icmp_type);
+	cout<<endl;
 }
 
 void icmpReply_Edit(char* buffer)

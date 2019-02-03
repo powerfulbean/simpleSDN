@@ -40,7 +40,7 @@ void secondRouter_s2(cRouter & Router)
 		else
 		{
 			printf("Read a packet from primary router, packet length:%d\n", nread);
-			icmpForward_log(Router, buffer, sizeof(buffer),  FromUdp);
+			icmpForward_log(Router, buffer, sizeof(buffer),  FromUdp, ntohs(rou1Addr.sin_port));
 			sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 			//icmpReply_primRouter(tun_fd, buffer, nread);
 		}

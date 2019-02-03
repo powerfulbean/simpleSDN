@@ -56,7 +56,7 @@ void icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fl
 	else if (flag == FromUdp)
 	{
 		string sSrcPort = to_string(iPort);
-		string sLog = "ICMP from port : " +  sSrcPort ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+		string sLog = "ICMP from port : " +  sSrcPort +  ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
 		vLog.push_back(sLog);
 	}
 	

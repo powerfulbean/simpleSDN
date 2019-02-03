@@ -110,7 +110,7 @@ void stage1(cRouter &Router,
 	{
 		secondRouter(Router, rou1Addr, rou2Addr);
 		Router.iFPID = fPid;
-
+		secondRouter_s2(Router);
 	}
 	else
 	{

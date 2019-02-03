@@ -62,7 +62,7 @@ void recvMsg(int sockID, char *buf, unsigned int iSize,
 }
 
 
-void IPhandler(char* buffer)
+void icmpReply_Edit(char* buffer)
 {
         struct ip * pIpHeader;
 	struct icmp * pIcmp;
@@ -93,4 +93,5 @@ void IPhandler(char* buffer)
         printf("service type: %d  ",pIpHeader->ip_p);
 	
 }
+
 

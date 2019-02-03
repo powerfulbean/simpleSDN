@@ -32,5 +32,5 @@ void sendMsg(int sockID2,const char* buf, unsigned int iSize,
 void recvMsg(int sockID2, char *buf, unsigned int iSize,
 struct sockaddr_in & rou2Addr);
 
-void IPhandler(char* buffer);
+void icmpReply_Edit(char* buffer);
 

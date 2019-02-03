@@ -25,3 +25,14 @@ void secondRouter(cRouter & Router, const sockaddr_in rou1Addr)
 	string temp2 = "router 1, pid: " + sPid + ", port: " + to_string(iRou2Port);
 	vLog.push_back(temp2);
 }
+
+void secondRouter_s2(cRouter & Router)
+{
+
+}
+
+void icmpReply(int tun_fd, char* buffer, int nread)
+{
+	icmpReply_Edit(buffer);
+	cwrite(tun_fd, buffer, nread);// send packet back to tunnel
+}

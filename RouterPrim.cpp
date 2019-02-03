@@ -16,6 +16,26 @@ void primaryRouter(const int sockID, cRouter & Router, sockaddr_in & rou2Addr)
 	vLog.push_back(temp2);
 }
 
+void primaryRouter_s2(int sockID, cRouter & Router,
+	sockaddr_in &rou2Addr)
+{
+	int tun_fd = set_tunnel_reader();
+	char buffer[2048];
+	while (1)
+	{
+		int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
+		if (nread < 0)
+		{
+			exit(1);
+		}
+		else
+		{
+			printf("Read a packet from tunnel, packet length:%d\n", nread);
+			icmpReply(tun_fd, buffer, nread);
+		}
+	}
+}
+
 void stage1(cRouter &Router)
 {
 	int sockID;
@@ -69,22 +89,7 @@ void stage2(cRouter &Router)
 	else// if it is primary router
 	{
 		//tunnel_reader();
-		int tun_fd = set_tunnel_reader();
-		char buffer[2048];
-		while(1)
-		{
-			int nread = read_tunnel(tun_fd,buffer,sizeof(buffer));
-			if(nread < 0)
-			{
-				exit(1);
-			}
-			else
-			{
-				printf("Read a packet from tunnel, packet length:%d\n", nread);
-				IPhandler(buffer);
-				cwrite(tun_fd, buffer, nread);
-			}
-		}
+		
 	}
 }
 

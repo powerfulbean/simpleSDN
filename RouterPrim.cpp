@@ -20,7 +20,18 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 {
 	int tun_fd = set_tunnel_reader();
 	char buffer[2048];
-	while (1)
+	struct timeval timeout;
+	fd_set rd;
+	timeout.tv_sec = 15;
+	timeout.tv_usec = 0;
+
+	int error = select(1, &rd, NULL, NULL, timeout);
+	if (error == 0)
+	{
+		cout << "timeout!";
+		return;
+	}
+	else
 	{
 		int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
 		if (nread < 0)
@@ -127,7 +138,7 @@ void stage2(cRouter &Router,
 	stage1(Router, rou1Addr, rou2Addr);
 	if(Router.iFPID == 0) // if it is secondary router
 	{
-		secondRouter_s2(Router);;
+		secondRouter_s2(Router);
 	}
 	else// if it is primary router
 	{

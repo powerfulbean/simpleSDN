@@ -30,7 +30,18 @@ void secondRouter_s2(cRouter & Router)
 {
 	char buffer[2048];
 	struct sockaddr_in rou1Addr;
-	while (1)
+	struct timeval timeout;
+	fd_set rd;
+	timeout.tv_sec = 15;
+	timeout.tv_usec = 0;
+
+	int error = select(1, &rd, NULL, NULL, timeout);
+	if (error == 0)
+	{
+		cout << "timeout!";
+		return;
+	}
+	else
 	{
 		int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 		if (nread < 0)

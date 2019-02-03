@@ -35,7 +35,7 @@ void secondRouter_s2(cRouter & Router)
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
 
-	int iSelect = select(Router.iSockID+1, &rd, NULL, NULL, timeout);
+	int iSelect = select(Router.iSockID+1, &rd, NULL, NULL, &timeout);
 	if (iSelect == 0)
 	{
 		cout << "timeout!" << endl;

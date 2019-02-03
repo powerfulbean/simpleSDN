@@ -7,7 +7,7 @@ void secondRouter(cRouter & Router, const struct sockaddr_in rou1Addr, struct so
 
 int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int flag, int iPort);
 void icmpReply_primRouter(int tun_fd, char* buffer, int nread);
-void icmpReply_secondRouter(int iSockID, char* buffer, size_t iSize,const struct sockaddr_in rou1Addr);
+void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize,const struct sockaddr_in rou1Addr);
 
 void primaryRouter_s2(cRouter & Router,struct sockaddr_in &rou2Addr);
 void secondRouter_s2(cRouter & Router);

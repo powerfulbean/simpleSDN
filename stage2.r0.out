@@ -1,3 +1,4 @@
-primary port: 38245
-router 1, pid: 9049, port: 51294
+primary port: 58752
+router 1, pid: 9431, port: 48942
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
 router 0 closed

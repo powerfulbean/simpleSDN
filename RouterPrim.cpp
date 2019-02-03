@@ -29,7 +29,7 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 	FD_SET(tun_fd, &fdSet);
 	FD_SET(iSockID, &fdSet);
 	int iMaxfdpl = (tun_fd > iSockID) ? (tun_fd + 1) : (iSockID + 1);
-	int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, timeout);
+	int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL,&timeout);
 	if (iSelect == 0)
 	{
 		cout << "timeout!"<<endl;

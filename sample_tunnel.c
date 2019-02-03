@@ -91,7 +91,6 @@ int read_tunnel(int tun_fd, char *buffer,int iBufSize)
         {
             perror("Reading from tunnel interface");
             close(tun_fd);
-            exit(1);
         }
 	return nread;
 }

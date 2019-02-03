@@ -65,9 +65,10 @@ void recvMsg(int sockID, char *buf, unsigned int iSize,
 void IPhandler(char* buffer)
 {
         struct ip * pIpHeader;
-        pIpHeader = (struct ip *) buffer;
+       	pIpHeader = (struct ip *) buffer;
         printf("src address: %s  ",inet_ntoa(pIpHeader->ip_src));
         printf("dst address: %s  ",inet_ntoa(pIpHeader->ip_dst));
         printf("service type: %d  ",pIpHeader->ip_p);
+	
 }
 

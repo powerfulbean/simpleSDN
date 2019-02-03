@@ -1,6 +1,6 @@
 #pragma once
 #include "cRouter.h"
-
+#include "sample_tunnel.h"
 void primaryRouter(int sockID, cRouter & Router,
 	sockaddr_in &rou2Addr);
 void secondRouter(cRouter & Router, const sockaddr_in rou1Addr);

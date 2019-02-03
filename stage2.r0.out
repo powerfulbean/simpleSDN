@@ -1,6 +1,3 @@
-primary port: 37028
-router 1, pid: 5452, port: 39494
-router 0 closed
-primary port: 32948
-router 1, pid: 5453, port: 60981
+primary port: 57421
+router 1, pid: 5636, port: 42658
 router 0 closed

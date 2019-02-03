@@ -61,5 +61,27 @@ void stage1(cRouter &Router)
 void stage2(cRouter &Router)
 {
 	stage1(Router);
+	if(Router.iFPID == 0) // if it is secondary router
+	{
+		;
+	}
+	else// if it is primary router
+	{
+		int tun_fd = set_tunnel_reader();
+		char buffer[2048];
+		while(1)
+		{
+			int nread = read_tunnel(tun_fd,buffer,sizeof(buffer));
+			if(nread < 0)
+			{
+				exit(1);
+			}
+			else
+			{
+				printf("Read a packet from tunnel, packet length:%d\n", nread);
+				IPhandler(buffer);
+			}
+		}
+	}
 }
 

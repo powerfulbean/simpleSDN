@@ -67,6 +67,7 @@ void stage2(cRouter &Router)
 	}
 	else// if it is primary router
 	{
+		//tunnel_reader();
 		int tun_fd = set_tunnel_reader();
 		char buffer[2048];
 		while(1)

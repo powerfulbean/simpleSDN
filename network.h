@@ -18,8 +18,6 @@
 
 #include "icmp_checksum.h"
 
-#define ICMP_ECHO   0
-#define ICMP_ECHOREPLY  8
 
 #define SERV_PORT 80
 

@@ -62,7 +62,7 @@ int cwrite(int fd, char *buf, int n);
 int set_tunnel_reader();
 
 
-int read_tunnel(int tun_fd, char *buffer,int iBufSize);
+int read_tunnel(int tun_fd, char *buffer,size_t iBufSize);
 #ifdef __cplusplus
 };
 #endif

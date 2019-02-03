@@ -84,9 +84,10 @@ int set_tunnel_reader()
 }
 
 // the function read_tunnel is built by Jin Dou based on tunnel_reader
-int read_tunnel(int tun_fd, char *buffer,int iBufSize)
+int read_tunnel(int tun_fd, char *buffer,size_t iBufSize)
 {
-	int nread = read(tun_fd,buffer,sizeof(buffer));
+	int nread = read(tun_fd,buffer,iBufSize);
+	//printf("buffer size %d\n",iBufSize);
         if(nread < 0)
         {
             perror("Reading from tunnel interface");
@@ -126,6 +127,7 @@ int tunnel_reader()
     {
 	/* Now read data coming from the tunnel */
         int nread = read(tun_fd,buffer,sizeof(buffer));
+	printf("buffer size %d\n",sizeof(buffer));
 	if(nread < 0) 
 	{
 	    perror("Reading from tunnel interface");

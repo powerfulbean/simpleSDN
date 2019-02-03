@@ -34,7 +34,7 @@ int main(int argc, char * argv[])
 			break;
 		  case 2:
 			stage2(Router);
-			//tunnel_reader();	
+		//	tunnel_reader();	
 			Router.close();
 			cout<<"***Stage 2 end, pid: "<<getpid();
                         cout<<"\n-----------------------"<<endl<<endl;

@@ -30,14 +30,14 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 		else
 		{
 			printf("Read a packet from tunnel, packet length:%d\n", nread);
-			icmpForward_log(Router, buffer, sizeof(buffer),  FromTunnel);
+			icmpForward_log(Router, buffer, sizeof(buffer),  FromTunnel, ntohs(rou2Addr.sin_port));
 			sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 			//icmpReply_primRouter(tun_fd, buffer, nread);
 		}
 	}
 }
 
-void icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int flag)
+void icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int flag, int iPort)
 {
 	vector<string> &vLog = Router.vLog;
 	struct in_addr srcAddr;
@@ -55,7 +55,7 @@ void icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fl
 	}
 	else if (flag == FromUdp)
 	{
-		string sSrcPort = to_string(ntohs(srcAddr.sin_port));
+		string sSrcPort = to_string(iPort);
 		string sLog = "ICMP from port : " +  sSrcPort ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
 		vLog.push_back(sLog);
 	}

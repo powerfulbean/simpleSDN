@@ -65,7 +65,25 @@ void recvMsg(int sockID, char *buf, unsigned int iSize,
 void IPhandler(char* buffer)
 {
         struct ip * pIpHeader;
-       	pIpHeader = (struct ip *) buffer;
+		struct icmp * pIcmp;
+		pIpHeader = (struct ip *) buffer;
+		unsigned int iIpHeaderLen = pIpHeader->ip_hl<<2;
+		pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
+
+		// edit ICMP_echoReply
+		pIcmp->icmp_type = ICMP_ECHOREPLY;
+		pIcmp->icmp_cksum = 0;
+		short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+		pIcmp->icmp_cksum = checksum((char *)pIcmp, iIcmpTotLen);
+
+		// edit IP packet
+		struct inaddr tempAddr = pIpHeader->ip_dst;
+		pIpHeader->ip_dst = pIpHeader->ip_src;
+		pIpHeader->ip_src = tempAddr;
+		pIpHeader->ip_sum = 0;
+		pIpHeader->ip_sum = checksum((char*)pIpHeader, iIpHeaderLen);
+
+		
         printf("src address: %s  ",inet_ntoa(pIpHeader->ip_src));
         printf("dst address: %s  ",inet_ntoa(pIpHeader->ip_dst));
         printf("service type: %d  ",pIpHeader->ip_p);

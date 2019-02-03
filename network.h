@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#include <netinet/ip_icmp.h>
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,12 @@
 #include <vector>
 #include <fstream>
 #include <wait.h>
+
+#include "icmp_checksum.h"
+
+#define ICMP_ECHO   0
+#define ICMP_ECHOREPLY  8
+
 #define SERV_PORT 80
 
 using namespace std;

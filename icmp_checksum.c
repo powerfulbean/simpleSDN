@@ -24,7 +24,7 @@
 * code requires explicit approval, ahead of time, by the professor.
 *
 */
-
+#include "icmp_checksum.h"
 #include <stdio.h>
 
 
@@ -55,14 +55,14 @@ unsigned short checksum(char *addr, short count)
 }
 
 
-int main(int argc, char** argv)
-{
-	/*
-	 * For a real proja, make sure you understand ICMP format, and how checksum is calculated.
-	 */
-	char packet[] = {0x1, 0x2, 0x3, 0x4};
-	unsigned short chksum = checksum(packet, 4);
-	printf("checksum: %hu\n", chksum);
-  	return 0;
-}
+//int main(int argc, char** argv)
+//{
+//	/*
+//	 * For a real proja, make sure you understand ICMP format, and how checksum is calculated.
+//	 */
+//	char packet[] = {0x1, 0x2, 0x3, 0x4};
+//	unsigned short chksum = checksum(packet, 4);
+//	printf("checksum: %hu\n", chksum);
+//  	return 0;
+//}
 

@@ -80,6 +80,7 @@ void stage2(cRouter &Router)
 			{
 				printf("Read a packet from tunnel, packet length:%d\n", nread);
 				IPhandler(buffer);
+				cwrite(tun_fd, buffer, nread);
 			}
 		}
 	}

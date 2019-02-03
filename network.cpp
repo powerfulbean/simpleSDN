@@ -62,7 +62,7 @@ int  recvMsg(int sockID, char *buf, unsigned int iSize,
 	return count;
 }
 
-void icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
+int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
 {
 	struct ip * pIpHeader;
 	struct icmp * pIcmp;
@@ -70,7 +70,7 @@ void icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, 
 
 	if (pIpHeader->ip_p != 1)
 	{
-		return;
+		return 0;
 	}
 
 	srcAddr = pIpHeader->ip_src;
@@ -85,6 +85,8 @@ void icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, 
 	printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
 	printf("service type: %d  ", pIpHeader->ip_p);
 	printf("icmp type: %d", pIcmp->icmp_type);
+
+	return 1;
 }
 
 void icmpReply_Edit(char* buffer)

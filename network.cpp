@@ -39,7 +39,7 @@ void sendMsg(int sockID2,const char* buf,unsigned int iSize,
 	cout<<"sendMsg: end"<<endl<<endl;
 }
 	
-void recvMsg(int sockID, char *buf, unsigned int iSize,
+int  recvMsg(int sockID, char *buf, unsigned int iSize,
                 struct sockaddr_in & rou2Addr)
 {
 	socklen_t len;
@@ -59,12 +59,33 @@ void recvMsg(int sockID, char *buf, unsigned int iSize,
         cout<<"recvMsg: sender port: "<<iRou2Port<<endl;
         cout<<"recvMsg: end"<<endl;
 	cout<<endl;
+	return count;
 }
 
-//void icmpUnpack(char* buffer)
-//{
-//	;
-//}
+void icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
+{
+	struct ip * pIpHeader;
+	struct icmp * pIcmp;
+	pIpHeader = (struct ip *) buffer;
+
+	if (pIpHeader->ip_p != 1)
+	{
+		return;
+	}
+
+	srcAddr = pIpHeader->ip_src;
+	dstAddr = pIpHeader->ip_dst;
+
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
+
+	// edit ICMP_echoReply
+	icmp_type = pIcmp->icmp_type;
+	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
+	printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
+	printf("service type: %d  ", pIpHeader->ip_p);
+	printf("icmp type: %d", pIcmp->icmp_type);
+}
 
 void icmpReply_Edit(char* buffer)
 {

@@ -20,6 +20,8 @@
 
 
 #define SERV_PORT 80
+#define FromTunnel 5511
+#define FromUdp 5512
 
 using namespace std;
 
@@ -29,8 +31,8 @@ void getDynmcPortSrv(const struct sockaddr_in & locAddr,
                         struct sockaddr_in & outputAddr);
 void sendMsg(int sockID2,const char* buf, unsigned int iSize,
 		const struct sockaddr_in rou1Addr);
-void recvMsg(int sockID2, char *buf, unsigned int iSize,
+int recvMsg(int sockID2, char *buf, unsigned int iSize,
 struct sockaddr_in & rou2Addr);
 
 void icmpReply_Edit(char* buffer);
-
+void icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);

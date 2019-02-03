@@ -5,6 +5,7 @@ void primaryRouter(int sockID, cRouter & Router,
 	sockaddr_in &rou2Addr);
 void secondRouter(cRouter & Router, const struct sockaddr_in rou1Addr, struct sockaddr_in &rou2Addr);
 
+void icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int flag);
 void icmpReply_primRouter(int tun_fd, char* buffer, int nread);
 void icmpReply_secondRouter(int iSockID, char* buffer, size_t iSize,const struct sockaddr_in rou1Addr);
 

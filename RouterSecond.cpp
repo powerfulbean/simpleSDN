@@ -28,6 +28,23 @@ void secondRouter(cRouter & Router, const sockaddr_in rou1Addr, struct sockaddr_
 
 void secondRouter_s2(cRouter & Router)
 {
+	char buffer[2048];
+	struct sockaddr_in rou1Addr;
+	while (1)
+	{
+		int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+		if (nread < 0)
+		{
+			exit(1);
+		}
+		else
+		{
+			printf("Read a packet from primary router, packet length:%d\n", nread);
+			icmpForward_log(Router, buffer, sizeof(buffer),  FromUdp);
+			sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+			//icmpReply_primRouter(tun_fd, buffer, nread);
+		}
+	};
 
 }
 

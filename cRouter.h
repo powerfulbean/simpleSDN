@@ -1,4 +1,5 @@
 //jindou
+#pragma once
 #include "network.h"
 using namespace std;
 
@@ -12,23 +13,18 @@ class cRouter{
 		int iPortNum;
 		int iFPID;// store the return value of fork()
 		vector<string> vConfig;
+		vector<string> vLog;
 		int iConfigReg;
 //		int sockID;
+
+
 		cRouter(){iStage=0;iRouteNum=0;iRouterID=0;iConfigReg=0;}
 		void readConfigFile(char* filePath);
-		void writeLogFile(vector<string> vLog);
+		void writeLogFile();
 		int parser(const string &temp, vector<string> &output);
 		int syntax();
 		int stageEngine();
+		void close();
 };
 
-void primaryRouter(int sockID,cRouter & Router, 
-		sockaddr_in &rou2Addr);
-void secondRouter(cRouter & Router, const sockaddr_in rou1Addr);
 
-void primaryRouter_s2(int sockID,cRouter & Router,
-                sockaddr_in &rou2Addr);
-void secondRouter_s2(cRouter & Router, const sockaddr_in rou1Addr);
-
-void stage1(cRouter &Router);
-void stage2(cRouter &Router);

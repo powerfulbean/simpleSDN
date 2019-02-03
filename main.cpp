@@ -18,6 +18,11 @@ int main(int argc, char * argv[])
 		{
 		  case 1:
 	   		stage1(Router);
+			Router.close();
+			if (Router.iFPID == 0)
+			{
+				exit(0);
+			}
 			cout<<"***Stage 1 end, pid: "<<getpid();
 			cout<<"\n-----------------------"<<endl<<endl;
 			
@@ -25,6 +30,7 @@ int main(int argc, char * argv[])
 		  case 2:
 			stage2(Router);
 			tunnel_reader();
+			Router.close();
 			break;
 		  default:
 			break;

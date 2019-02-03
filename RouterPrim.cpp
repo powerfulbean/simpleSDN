@@ -55,7 +55,6 @@ void stage1(cRouter &Router)
 		Router.iFPID = fPid;
 		sockaddr_in rou2Addr;
 		primaryRouter(sockID, Router, rou2Addr);
-		waitpid(fPid, NULL, 0);
 	}
 }
 

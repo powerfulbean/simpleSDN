@@ -23,6 +23,10 @@ int main(int argc, char * argv[])
 			{
 				exit(0);
 			}
+			else
+			{
+				waitpid(Router.iFPID, NULL, 0);
+			}
 			cout<<"***Stage 1 end, pid: "<<getpid();
 			cout<<"\n-----------------------"<<endl<<endl;
 			

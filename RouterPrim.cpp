@@ -32,7 +32,7 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 	int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, timeout);
 	if (iSelect == 0)
 	{
-		cout << "timeout!";
+		cout << "timeout!"<<endl;
 		return;
 	}
 	else

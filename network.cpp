@@ -61,12 +61,22 @@ void recvMsg(int sockID, char *buf, unsigned int iSize,
 	cout<<endl;
 }
 
+//void icmpUnpack(char* buffer)
+//{
+//	;
+//}
 
 void icmpReply_Edit(char* buffer)
 {
         struct ip * pIpHeader;
 	struct icmp * pIcmp;
 	pIpHeader = (struct ip *) buffer;
+
+	if (pIpHeader->ip_p != 1)
+	{
+		return;
+	}
+
 	printf("src address: %s  ",inet_ntoa(pIpHeader->ip_src));
         printf("dst address: %s  ",inet_ntoa(pIpHeader->ip_dst));
         printf("service type: %d  ",pIpHeader->ip_p);

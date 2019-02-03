@@ -6,6 +6,8 @@ int main(int argc, char * argv[])
 {
 	char* configFilePath;
 	cRouter Router;
+	struct sockaddr_in rou1Addr;
+	struct sockaddr_in rou2Addr;
 	for (int i=1;i<argc;i++)
 	{
 		configFilePath = argv[i];
@@ -18,7 +20,7 @@ int main(int argc, char * argv[])
 		switch(Router.iStage)
 		{
 		  case 1:
-	   		stage1(Router);
+	   		stage1(Router, rou1Addr, rou2Addr);
 			Router.close();
 			if (Router.iFPID == 0)
 			{
@@ -33,7 +35,7 @@ int main(int argc, char * argv[])
 			
 			break;
 		  case 2:
-			stage2(Router);
+			stage2(Router, rou1Addr, rou2Addr);
 		//	tunnel_reader();	
 			Router.close();
 			cout<<"***Stage 2 end, pid: "<<getpid();

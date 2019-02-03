@@ -30,16 +30,24 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 		else
 		{
 			printf("Read a packet from tunnel, packet length:%d\n", nread);
-			icmpReply(tun_fd, buffer, nread);
+			icmpReply_primRouter(tun_fd, buffer, nread);
 		}
 	}
 }
 
-void stage1(cRouter &Router)
+void icmpReply_primRouter(int tun_fd, char* buffer, int nread)
+{
+	icmpReply_Edit(buffer);
+	cwrite(tun_fd, buffer, nread);// send packet back to tunnel
+}
+
+void stage1(cRouter &Router,
+			struct sockaddr_in & rou1Addr,
+			struct sockaddr_in & rou2Addr)
 {
 	int sockID;
 	socklen_t len;
-	struct sockaddr_in rou1Addr, locAddr;
+	struct sockaddr_in  locAddr;
 	setTempAddr("127.0.0.1", locAddr);
 	getDynmcPortSrv(locAddr, rou1Addr);
 	sockID = getUdpSocket();
@@ -65,7 +73,7 @@ void stage1(cRouter &Router)
 	}
 	else if (fPid == 0)
 	{
-		secondRouter(Router, rou1Addr);
+		secondRouter(Router, rou1Addr, rou2Addr);
 		Router.iFPID = fPid;
 
 	}
@@ -73,14 +81,15 @@ void stage1(cRouter &Router)
 	{
 		cout << "child process pid: " << fPid << endl << endl;
 		Router.iFPID = fPid;
-		sockaddr_in rou2Addr;
 		primaryRouter(sockID, Router, rou2Addr);
 	}
 }
 
-void stage2(cRouter &Router)
+void stage2(cRouter &Router,
+			struct sockaddr_in & rou1Addr,
+			struct sockaddr_in & rou2Addr)
 {
-	stage1(Router);
+	stage1(Router, rou1Addr, rou2Addr);
 	if(Router.iFPID == 0) // if it is secondary router
 	{
 		;
@@ -88,7 +97,6 @@ void stage2(cRouter &Router)
 	else// if it is primary router
 	{
 		//tunnel_reader();
-		sockaddr_in rou2Addr;
 		primaryRouter_s2(Router, rou2Addr);
 	}
 }

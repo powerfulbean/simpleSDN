@@ -1,11 +1,11 @@
 #include "Router.h"
 
 
-void secondRouter(cRouter & Router, const sockaddr_in rou1Addr)
+void secondRouter(cRouter & Router, const sockaddr_in rou1Addr, struct sockaddr_in &rou2Addr)
 {
 	vector<string> &vLog = Router.vLog;
 	int sockID2 = getUdpSocket();
-	struct sockaddr_in rou2Addr;
+	//struct sockaddr_in rou2Addr;
 	socklen_t len = sizeof(rou2Addr);
 	string sPid = to_string(getpid());
 	string msg = "router: 1, pid: xxxx";
@@ -31,8 +31,8 @@ void secondRouter_s2(cRouter & Router)
 
 }
 
-void icmpReply(int tun_fd, char* buffer, int nread)
+void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr)
 {
 	icmpReply_Edit(buffer);
-	cwrite(tun_fd, buffer, nread);// send packet back to tunnel
+	sendMsg(iSockID, buffer, iSize, rou1Addr);
 }

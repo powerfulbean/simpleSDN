@@ -1,3 +1,7 @@
-primary port: 60177
-router 1, pid: 7560, port: 48690
+primary port: 52169
+router 1, pid: 8809, port: 54630
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
 router 0 closed

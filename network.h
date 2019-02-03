@@ -31,7 +31,7 @@ void getDynmcPortSrv(const struct sockaddr_in & locAddr,
                         struct sockaddr_in & outputAddr);
 void sendMsg(int sockID2,const char* buf, unsigned int iSize,
 		const struct sockaddr_in rou1Addr);
-void recvMsg(int sockID2, char *buf, unsigned int iSize,
+int recvMsg(int sockID2, char *buf, unsigned int iSize,
 struct sockaddr_in & rou2Addr);
 
 void icmpReply_Edit(char* buffer);

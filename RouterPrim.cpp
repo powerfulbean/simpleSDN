@@ -37,7 +37,7 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 	}
 }
 
-void icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int flag, int iPort)
+int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int flag, int iPort)
 {
 	vector<string> &vLog = Router.vLog;
 	struct in_addr srcAddr;

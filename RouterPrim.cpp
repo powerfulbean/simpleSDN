@@ -110,7 +110,7 @@ void stage1(cRouter &Router,
 	{
 		secondRouter(Router, rou1Addr, rou2Addr);
 		Router.iFPID = fPid;
-		secondRouter_s2(Router);
+		
 	}
 	else
 	{
@@ -127,7 +127,7 @@ void stage2(cRouter &Router,
 	stage1(Router, rou1Addr, rou2Addr);
 	if(Router.iFPID == 0) // if it is secondary router
 	{
-		;
+		secondRouter_s2(Router);;
 	}
 	else// if it is primary router
 	{

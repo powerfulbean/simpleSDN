@@ -15,7 +15,7 @@ class cRouter{
 		vector<string> vConfig;
 		vector<string> vLog;
 		int iConfigReg;
-//		int sockID;
+		int iSockID;
 
 
 		cRouter(){iStage=0;iRouteNum=0;iRouterID=0;iConfigReg=0;}

@@ -18,6 +18,7 @@ void secondRouter(cRouter & Router, const sockaddr_in rou1Addr)
 	iRou2Port = ntohs(rou2Addr.sin_port);
 	Router.iRouterID = 1;
 	Router.iPortNum = iRou2Port;
+	Router.iSockID = sockID2;
 	cout << "router2: local address: " << pRou2Addr << endl;
 	cout << "router2: local  port: " << iRou2Port << endl;
 	cout << endl;

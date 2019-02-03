@@ -2,6 +2,7 @@
 
 void primaryRouter(const int sockID, cRouter & Router, sockaddr_in & rou2Addr)
 {
+	Router.iSockID = sockID;
 	vector<string> &vLog = Router.vLog;
 	string temp = "primary port: " + to_string(Router.iPortNum);
 	vLog.push_back(temp);

@@ -16,8 +16,7 @@ void primaryRouter(const int sockID, cRouter & Router, sockaddr_in & rou2Addr)
 	vLog.push_back(temp2);
 }
 
-void primaryRouter_s2(int sockID, cRouter & Router,
-	sockaddr_in &rou2Addr)
+void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 {
 	int tun_fd = set_tunnel_reader();
 	char buffer[2048];
@@ -89,7 +88,8 @@ void stage2(cRouter &Router)
 	else// if it is primary router
 	{
 		//tunnel_reader();
-		
+		sockaddr_in rou2Addr;
+		primaryRouter_s2(Router, rou2Addr);
 	}
 }
 

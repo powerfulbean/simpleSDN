@@ -18,7 +18,7 @@ int cRouter::stageEngine()
 	
 void cRouter::close()
 {
-	string temp3 = "router" + to_string(iRouterID) +"closed";
+	string temp3 = "router " + to_string(iRouterID) +" closed";
 	vLog.push_back(temp3);
 	writeLogFile();
 }

@@ -1,4 +1,5 @@
 #include "cRouter.h"
+#include "sample_tunnel.h"
 
 int main(int argc, char * argv[])
 {
@@ -23,6 +24,7 @@ int main(int argc, char * argv[])
 			break;
 		  case 2:
 			stage2(Router);
+			tunnel_reader();
 			break;
 		  default:
 			break;

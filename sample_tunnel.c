@@ -66,6 +66,36 @@ int tun_alloc(char *dev, int flags)
     return fd;
 }
 
+// the function set_tunnel_reader() is built by Jin Dou based on tunnel_reader
+int set_tunnel_reader()
+{
+    char tun_name[IFNAMSIZ];
+
+    /* Connect to the tunnel interface (make sure you create the tunnel interface first) */
+    strcpy(tun_name, "tun1");
+    int tun_fd = tun_alloc(tun_name, IFF_TUN | IFF_NO_PI);
+
+    if(tun_fd < 0)
+    {
+        perror("Open tunnel interface");
+        exit(1);
+    }
+   return tun_fd;
+}
+
+// the function read_tunnel is built by Jin Dou based on tunnel_reader
+int read_tunnel(int tun_fd, char *buffer,int iBufSize)
+{
+	int nread = read(tun_fd,buffer,sizeof(buffer));
+        if(nread < 0)
+        {
+            perror("Reading from tunnel interface");
+            close(tun_fd);
+            exit(1);
+        }
+	return nread;
+}
+
 
 int tunnel_reader()
 {
@@ -107,7 +137,7 @@ int tunnel_reader()
 	{
 	    printf("Read a packet from tunnel, packet length:%d\n", nread);
 	    /* Do whatever with the data, function to manipulate the data here */
-
+		
 	    /*
 	     * For project A, you will need to add code to forward received packet 
 	     * to router via UDP socket.
@@ -142,3 +172,5 @@ int cwrite(int fd, char *buf, int n){
 	 // */
 	// tunnel_reader();
 // }
+//
+

@@ -166,10 +166,9 @@ void secondRouter(cRouter & Router, const sockaddr_in rou1Addr)
 	exit(0);
 }
 
-void primaryRouter(const int sockID,cRouter & Router, const sockaddr_in rou1Addr)
+void primaryRouter(const int sockID,cRouter & Router, sockaddr_in & rou2Addr)
 {
         vector<string> vLog;
-        struct sockaddr_in rou2Addr;
         string temp = "primary port: "+to_string(Router.iPortNum);
         vLog.push_back(temp);
         char buf[1024], pRou2Addr[16];
@@ -222,14 +221,13 @@ void stage1(cRouter &Router)
         {
                 cout<<"child process pid: "<<fPid<<endl<<endl;
 		Router.iFPID = fPid;
-                primaryRouter(sockID,Router,rou1Addr);
+		sockaddr_in rou2Addr;
+                primaryRouter(sockID,Router,rou2Addr);
 		waitpid(fPid,NULL,0);
         }
 }
 
 void stage2(cRouter &Router)
 {
-	cout<<"stage 2:\n";
-	cout<<"iStage: "<<Router.iStage<<endl;
-	cout<<"iRouteNum: "<<Router.iRouteNum<<endl;
+	stage1(Router);
 }

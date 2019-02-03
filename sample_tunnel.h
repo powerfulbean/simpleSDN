@@ -37,7 +37,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <unistd.h>
-
+#include <netinet/ip.h>
 /**************************************************************************
  * tun_alloc: allocates or reconnects to a tun/tap device. 
  * copy from from simpletun.c
@@ -52,12 +52,17 @@ int tun_alloc(char *dev, int flags);
 
 int tunnel_reader();
 
+
 /**************************************************************************
  * cwrite: write routine that checks for errors and exits if an error is  *
  *         returned.                                                      *
  **************************************************************************/
 int cwrite(int fd, char *buf, int n);
 
+int set_tunnel_reader();
+
+
+int read_tunnel(int tun_fd, char *buffer,int iBufSize);
 #ifdef __cplusplus
 };
 #endif

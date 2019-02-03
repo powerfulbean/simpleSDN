@@ -22,62 +22,67 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 	int iSockID = Router.iSockID;
 	
 	struct timeval timeout;
-	fd_set fdSet;
+	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
-	FD_ZERO(&fdSet);
-	FD_SET(tun_fd, &fdSet);
-	FD_SET(iSockID, &fdSet);
+	FD_ZERO(&fdSetAll);
+	FD_SET(tun_fd, &fdSetAll);
+	FD_SET(iSockID, &fdSetAll);
 	int iMaxfdpl = (tun_fd > iSockID) ? (tun_fd + 1) : (iSockID + 1);
-	int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL,&timeout);
-	if (iSelect == 0)
+	while (1)
 	{
-		cout << "timeout!"<<endl;
-		return;
-	}
-	else
-	{
-		char buffer[2048];
-		if (FD_ISSET(tun_fd, &fdSet))
+		fdSet = fdSetAll;
+		int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, &timeout);
+		if (iSelect == 0)
 		{
-			memset(buffer, 0, 2048);
-			int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
-			if (nread < 0)
+			cout << "timeout!" << endl;
+			return;
+		}
+		else
+		{
+			char buffer[2048];
+			if (FD_ISSET(tun_fd, &fdSet))
 			{
-				exit(1);
-			}
-			else
-			{
-				printf("Read a packet from tunnel, packet length:%d\n", nread);
-				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
-				if (a != 1)
+				memset(buffer, 0, 2048);
+				int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
+				if (nread < 0)
 				{
-					return;
+					exit(1);
 				}
-				sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
-				//icmpReply_primRouter(tun_fd, buffer, nread);
+				else
+				{
+					printf("Read a packet from tunnel, packet length:%d\n", nread);
+					int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
+					if (a != 1)
+					{
+						return;
+					}
+					sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+					//icmpReply_primRouter(tun_fd, buffer, nread);
+				}
 			}
-		}
-		else if (FD_ISSET(iSockID, &fdSet))
-		{
-			memset(buffer, 0, 2048);
-			struct sockaddr_in rou2Addr;
-			int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
-			if (nread < 0)
+			else if (FD_ISSET(iSockID, &fdSet))
 			{
-				exit(1);
+				memset(buffer, 0, 2048);
+				struct sockaddr_in rou2Addr;
+				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+				if (nread < 0)
+				{
+					exit(1);
+				}
+				else
+				{
+					printf("Read a packet from primary router, packet length:%d\n", nread);
+					icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
+					cwrite(tun_fd, buffer, nread);// send packet back to tunnel
+												  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+												  //icmpReply_primRouter(tun_fd, buffer, nread);
+				}
 			}
-			else
-			{
-				printf("Read a packet from primary router, packet length:%d\n", nread);
-				icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
-				cwrite(tun_fd, buffer, nread);// send packet back to tunnel
-				//sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-				//icmpReply_primRouter(tun_fd, buffer, nread);
-			}
+
 		}
-		
 	}
+	
 }
 
 int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int flag, int iPort)

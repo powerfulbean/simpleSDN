@@ -31,32 +31,39 @@ void secondRouter_s2(cRouter & Router)
 	char buffer[2048];
 	struct sockaddr_in rou1Addr;
 	struct timeval timeout;
-	fd_set rd;
+	int iSockID = Router.iSockID;
+	fd_set fdSetAll, rd;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
-
-	int iSelect = select(Router.iSockID+1, &rd, NULL, NULL, &timeout);
-	if (iSelect == 0)
+	FD_ZERO(&fdSetAll);
+	FD_SET(iSockID, &fdSetAll);
+	while (1)
 	{
-		cout << "timeout!" << endl;
-		return;
-	}
-	else
-	{
-		char buffer[2048];
-		int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-		if (nread < 0)
+		rd = fdSetAll;
+		int iSelect = select(Router.iSockID + 1, &rd, NULL, NULL, &timeout);
+		if (iSelect == 0)
 		{
-			exit(1);
+			cout << "timeout!" << endl;
+			return;
 		}
 		else
 		{
-			printf("Read a packet from primary router, packet length:%d\n", nread);
-			icmpForward_log(Router, buffer, sizeof(buffer),  FromUdp, ntohs(rou1Addr.sin_port));
-			icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-			//icmpReply_primRouter(tun_fd, buffer, nread);
+			char buffer[2048];
+			int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+			if (nread < 0)
+			{
+				exit(1);
+			}
+			else
+			{
+				printf("Read a packet from primary router, packet length:%d\n", nread);
+				icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
+				icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+				//icmpReply_primRouter(tun_fd, buffer, nread);
+			}
 		}
-	};
+	}
+	
 
 }
 

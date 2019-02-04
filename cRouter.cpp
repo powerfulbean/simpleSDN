@@ -22,6 +22,7 @@ void cRouter::close()
 	vLog.push_back(temp3);
 	writeLogFile();
 }
+
 void cRouter::readConfigFile(char* filePath)
 {
 	ifstream infile(filePath);

@@ -62,6 +62,12 @@ int  recvMsg(int sockID, char *buf, unsigned int iSize,
 	return count;
 }
 
+/* About the function:
+	icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
+	was built based on the itroduction of ipheader length calculation by "zthgreat"
+	" https://blog.csdn.net/u014634338/article/details/48951345"
+*/
+
 int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
 {
 	struct ip * pIpHeader;
@@ -90,6 +96,12 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 	return 1;
 }
 
+/* About the function:
+void icmpReply_Edit(char* buffer)
+was built based on the itroduction of netinet/ip.h ipheader on
+"https://www.ibm.com/developerworks/cn/linux/network/ping/index.html"
+*/
+
 void icmpReply_Edit(char* buffer)
 {
         struct ip * pIpHeader;
@@ -111,8 +123,8 @@ void icmpReply_Edit(char* buffer)
 	// edit ICMP_echoReply
 	pIcmp->icmp_type = ICMP_ECHOREPLY;
 	pIcmp->icmp_cksum = 0;
-	short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
-	pIcmp->icmp_cksum = checksum((char *)pIcmp, iIcmpTotLen);
+	short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen; // this part is learnt from 
+	pIcmp->icmp_cksum = checksum((char *)pIcmp, iIcmpTotLen); // the checksum funtion was provided by cs551 class moodle
 
 	// edit IP packet
 	struct in_addr tempAddr = pIpHeader->ip_dst;

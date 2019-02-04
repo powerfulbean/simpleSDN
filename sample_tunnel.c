@@ -66,7 +66,7 @@ int tun_alloc(char *dev, int flags)
     return fd;
 }
 
-// the function set_tunnel_reader() is built by Jin Dou based on tunnel_reader
+// the function set_tunnel_reader() is built by Jin Dou based on tunnel_reader provided by the author of this file
 int set_tunnel_reader()
 {
     char tun_name[IFNAMSIZ];
@@ -83,7 +83,7 @@ int set_tunnel_reader()
    return tun_fd;
 }
 
-// the function read_tunnel is built by Jin Dou based on tunnel_reader
+// the function read_tunnel is built by Jin Dou based on tunnel_reader provided by the author of this file
 int read_tunnel(int tun_fd, char *buffer,size_t iBufSize)
 {
 	int nread = read(tun_fd,buffer,iBufSize);

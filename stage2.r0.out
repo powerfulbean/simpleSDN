@@ -1,11 +1,11 @@
-primary port: 49220
-router 1, pid: 9703, port: 51566
+primary port: 38994
+router 1, pid: 3418, port: 43848
 ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from port : 51566, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from port : 43848, src: 10.5.51.3, dst : 10.5.51.2, type : 0
 ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from port : 51566, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from port : 43848, src: 10.5.51.3, dst : 10.5.51.2, type : 0
 ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from port : 51566, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from port : 43848, src: 10.5.51.3, dst : 10.5.51.2, type : 0
 ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from port : 51566, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from port : 43848, src: 10.5.51.3, dst : 10.5.51.2, type : 0
 router 0 closed

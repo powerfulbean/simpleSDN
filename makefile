@@ -1,4 +1,13 @@
-cc = g++
+cxx = g++
+
+SOURCE = main.cpp \
+	icmp_checksum.c icmp_checksum.h \
+	sample_tunnel.c  sample_tunnel.h \
+	cRouter.cpp cRouter.h \
+	network.cpp network.h \
+	RouterPrim.cpp RouterSecond.cpp Router.h
+	
+SUPPORT = README.stage1.txt README.stage2.txt Makefile 
 
 proja:ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o
 	g++ ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o -o proja
@@ -18,3 +27,5 @@ checkSum.o: icmp_checksum.c
 	g++ -c icmp_checksum.c -o checkSum.o
 clean:
 	rm -f proja *.o
+tar:
+	tar czvf proja.tar.gz $(SOURCE) $(SUPPORT)

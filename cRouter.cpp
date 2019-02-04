@@ -91,6 +91,7 @@ int cRouter::parser(const string &target, vector<string> &output)
 	//bool wordTailFoundFlag = false;
 	int iWordHead=0;
 	int iWordTail=0;
+	bool bEndFlag = false;
 	for(int i=0;i<target.size();i++)
 	{
 		if(target[i]==' ' || target[i]==9)
@@ -99,7 +100,7 @@ int cRouter::parser(const string &target, vector<string> &output)
 		}
 		else if(target[i]== '#')
 		{
-			break;
+			bEndFlag = true;
 		}
 		else if((target[i]>='A' && target[i]<='Z')||
 			(target[i]>='a' && target[i]<='z')||
@@ -139,6 +140,10 @@ int cRouter::parser(const string &target, vector<string> &output)
 				iCount++;
 				wordHeadFoundFlag = false;
 			}	
+		}
+		if ( bEndFlag == true)
+		{
+			break;
 		}
 	}
 	return iCount;

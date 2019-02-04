@@ -7,7 +7,7 @@ SOURCE = main.cpp \
 	network.cpp network.h \
 	RouterPrim.cpp RouterSecond.cpp Router.h
 	
-SUPPORT = README.stage1.txt README.stage2.txt Makefile 
+SUPPORT = README.stage1.txt README.stage2.txt makefile 
 
 proja:ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o
 	g++ ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o -o proja

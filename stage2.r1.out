@@ -1,10 +1,14 @@
-router 1, pid: 2749, port: 37142
-ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.7, type : 8
-ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.7, type : 8
-ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.7, type : 8
-ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.7, type : 8
-ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.5, type : 8
-ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.5, type : 8
-ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.5, type : 8
-ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.5, type : 8
+router 1, pid: 2806, port: 52092
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 46040, src: 10.5.51.2, dst : 10.5.51.3, type : 8
 router 1 closed

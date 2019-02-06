@@ -1,19 +1,27 @@
-primary port: 55381
-router 1, pid: 2749, port: 37142
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.7, type : 8
-ICMP from port : 37142, src: 10.5.51.7, dst : 10.5.51.2, type : 0
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.7, type : 8
-ICMP from port : 37142, src: 10.5.51.7, dst : 10.5.51.2, type : 0
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.7, type : 8
-ICMP from port : 37142, src: 10.5.51.7, dst : 10.5.51.2, type : 0
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.7, type : 8
-ICMP from port : 37142, src: 10.5.51.7, dst : 10.5.51.2, type : 0
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.5, type : 8
-ICMP from port : 37142, src: 10.5.51.5, dst : 10.5.51.2, type : 0
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.5, type : 8
-ICMP from port : 37142, src: 10.5.51.5, dst : 10.5.51.2, type : 0
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.5, type : 8
-ICMP from port : 37142, src: 10.5.51.5, dst : 10.5.51.2, type : 0
-ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.5, type : 8
-ICMP from port : 37142, src: 10.5.51.5, dst : 10.5.51.2, type : 0
+primary port: 46040
+router 1, pid: 2806, port: 52092
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
+ICMP from tunnel, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+ICMP from port : 52092, src: 10.5.51.3, dst : 10.5.51.2, type : 0
 router 0 closed

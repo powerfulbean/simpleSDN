@@ -1,6 +1,10 @@
-router 1, pid: 3712, port: 57795
-ICMP from port : 56405, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from port : 56405, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from port : 56405, src: 10.5.51.2, dst : 10.5.51.3, type : 8
-ICMP from port : 56405, src: 10.5.51.2, dst : 10.5.51.3, type : 8
+router 1, pid: 2749, port: 37142
+ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.7, type : 8
+ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.7, type : 8
+ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.7, type : 8
+ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.7, type : 8
+ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.5, type : 8
+ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.5, type : 8
+ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.5, type : 8
+ICMP from port : 55381, src: 10.5.51.2, dst : 10.5.51.5, type : 8
 router 1 closed

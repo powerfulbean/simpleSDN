@@ -61,7 +61,7 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 					//icmpReply_primRouter(tun_fd, buffer, nread);
 				}
 			}
-			else if (FD_ISSET(iSockID, &fdSet))
+			if (FD_ISSET(iSockID, &fdSet))
 			{
 				memset(buffer, 0, 2048);
 				struct sockaddr_in rou2Addr;

@@ -61,6 +61,8 @@ void secondRouter_s2(cRouter & Router)
 				icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
+			timeout.tv_sec = 15;
+			timeout.tv_usec = 0;
 		}
 	}
 	

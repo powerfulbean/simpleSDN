@@ -141,7 +141,7 @@ void icmpReply_Edit(char* buffer)
 		
         printf("src address: %s  ",inet_ntoa(pIpHeader->ip_src));
         printf("dst address: %s  ",inet_ntoa(pIpHeader->ip_dst));
-        printf("service type: %d  ",pIpHeader->ip_p);
+        printf("service type: %d  \n",pIpHeader->ip_p);
 	
 }
 
@@ -176,7 +176,7 @@ struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int i
 
 		printf("src after replacement address: %s  ", inet_ntoa(pIpHeader->ip_src));
 		printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
-		printf("service type: %d  ", pIpHeader->ip_p);
+		printf("service type: %d  \n", pIpHeader->ip_p);
 	}
 	else if (iFlag == FromRawSock)
 	{
@@ -189,7 +189,7 @@ struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int i
 
 		printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
 		printf("dst after replacement address: %s  ", inet_ntoa(pIpHeader->ip_dst));
-		printf("service type: %d  ", pIpHeader->ip_p);
+		printf("service type: %d  \n", pIpHeader->ip_p);
 	}
 	
 	return replacedAddr;

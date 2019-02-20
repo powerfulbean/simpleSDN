@@ -162,11 +162,13 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 							 const struct in_addr addrForReplace)
 {
 	struct in_addr dstAddr;
+	struct in_addr srcAddr;
 	struct msghdr msg1;
 	struct iovec iov1;
 	struct icmphdr icmphdr;
 	struct sockaddr_in sockDstAddr;
 	u_int8_t icmp_type;
+	icmpUnpack(buffer, icmphdr, srcAddr, dstAddr, icmp_type);
 	sockDstAddr.sin_addr = dstAddr;
 	sockDstAddr.sin_family = AF_INET;
 
@@ -178,7 +180,7 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	msg1.msg_namelen = sizeof(sockDstAddr);
 	msg1.msg_iov = &iov1;
 	msg1.msg_iovlen = 1;
-	msg1.msg_control = NULL;
+	msg1.msg_control = 0;
 	msg1.msg_controllen = 0;
 	msg1.msg_flags = 0;
 	int err = sendmsg(iRawSockID, &msg1, 0);

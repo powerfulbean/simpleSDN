@@ -47,9 +47,9 @@ void secondRouter_s2(cRouter & Router)
 		rou2ExternalAddr.sin_family = AF_INET;
 		rou2ExternalAddr.sin_port = htons(0);
 		socklen_t len = sizeof(rou2ExternalAddr);
-		if (!bind(iRawSockID,(struct sockaddr*) &rou2ExternalAddr, len))
+		if (-1 == bind(iRawSockID,(struct sockaddr*) &rou2ExternalAddr, len))
 		{
-			printf("secondRouter_s2 error, bind error");
+			perror("secondRouter_s2 error, bind error");
 		}
 
 	}
@@ -80,7 +80,6 @@ void secondRouter_s2(cRouter & Router)
 				u_int8_t icmp_type;
 				icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 				int iCheck = packetDstCheck(dstAddr, "10.5.51.0","255.255.255.0");
-				cout<<"check: "<<iCheck<<endl;
 				if (iCheck == 1)
 				{
 					icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);

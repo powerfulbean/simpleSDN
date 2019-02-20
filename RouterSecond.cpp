@@ -135,15 +135,13 @@ int packetDstCheck(struct in_addr &packetDstAddr, string targetDst, string mask)
 {
 
 	struct in_addr netmask;
-	int err = inet_aton(mask,netmask);
+	int err = inet_aton(mask.data(),&netmask);
 	if (err == 0)
 	{
 		printf("packetDstCheck error: aton");
 	}
 	struct in_addr subnet;
 	subnet.s_addr = netmask.s_addr & subnet.s_addr;
-
-
 
 	string packetDst(inet_ntoa(subnet));
 	if (targetDst == packetDst)

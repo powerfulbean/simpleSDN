@@ -41,6 +41,13 @@ int main(int argc, char * argv[])
 			cout<<"***Stage 2 end, pid: "<<getpid();
                         cout<<"\n-----------------------"<<endl<<endl;
 			break;
+		  case 3:
+			stage2(Router, rou1Addr, rou2Addr);
+			//	tunnel_reader();	
+			Router.close();
+			cout << "***Stage 2 end, pid: " << getpid();
+			cout << "\n-----------------------" << endl << endl;
+			break;
 		  default:
 			break;
 		}

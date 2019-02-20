@@ -5,6 +5,11 @@ int getUdpSocket()
         return socket(AF_INET,SOCK_DGRAM,0);
 }
 
+int getIcmpRawSocket()
+{
+	return socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+}
+
 void setTempAddr(const char* pIp, struct sockaddr_in & locAddr)
 {
         bzero(&locAddr,sizeof(locAddr));
@@ -138,6 +143,55 @@ void icmpReply_Edit(char* buffer)
         printf("dst address: %s  ",inet_ntoa(pIpHeader->ip_dst));
         printf("service type: %d  ",pIpHeader->ip_p);
 	
+}
+
+
+struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int iFlag)
+{
+	struct ip * pIpHeader;
+	struct icmp * pIcmp;
+	struct in_addr replacedAddr;
+	pIpHeader = (struct ip *) buffer;
+
+	if (pIpHeader->ip_p != 1)
+	{
+		return;
+	}
+
+	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
+	printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
+	printf("service type: %d  ", pIpHeader->ip_p);
+
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+
+	if (iFlad == FromUdp)
+	{
+		// edit IP packet
+		replacedAddr = pIpHeader->ip_src;
+		pIpHeader->ip_src = AddrForReplace;
+		pIpHeader->ip_sum = 0;
+		pIpHeader->ip_sum = checksum((char*)pIpHeader, iIpHeaderLen);
+
+
+		printf("src after replacement address: %s  ", inet_ntoa(pIpHeader->ip_src));
+		printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
+		printf("service type: %d  ", pIpHeader->ip_p);
+	}
+	else if (iFlag == FromRawSock)
+	{
+		// edit IP packet
+		replacedAddr = pIpHeader->ip_dst;
+		pIpHeader->ip_dst = AddrForReplace;
+		pIpHeader->ip_sum = 0;
+		pIpHeader->ip_sum = checksum((char*)pIpHeader, iIpHeaderLen);
+
+
+		printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
+		printf("dst after replacement address: %s  ", inet_ntoa(pIpHeader->ip_dst));
+		printf("service type: %d  ", pIpHeader->ip_p);
+	}
+	
+	return replacedAddr;
 }
 
 

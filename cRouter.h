@@ -16,9 +16,10 @@ class cRouter{
 		vector<string> vLog;
 		int iConfigReg;
 		int iSockID;
+		int iRawSockID;
 
 
-		cRouter(){iStage=0;iRouteNum=0;iRouterID=0;iConfigReg=0;}
+		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 0; iSockID = -1; iRawSockID = -1; }
 		void readConfigFile(char* filePath);
 		void writeLogFile();
 		int parser(const string &temp, vector<string> &output);

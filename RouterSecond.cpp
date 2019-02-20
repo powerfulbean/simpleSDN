@@ -31,12 +31,28 @@ void secondRouter_s2(cRouter & Router)
 	char buffer[2048];
 	struct sockaddr_in rou1Addr;
 	struct timeval timeout;
+	struct sockaddr_in rou2ExternalAddr;
 	int iSockID = Router.iSockID;
+	int iRawSockID;
 	fd_set fdSetAll, rd;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
 	FD_ZERO(&fdSetAll);
 	FD_SET(iSockID, &fdSetAll);
+	if (Router.iStage == 3)
+	{
+		iRawSockID = getIcmpRawSocket();
+		Router.iRawSockID = iRawSockID;
+		rou2ExternalAddr.sin_addr.s_addr = htonl("192.168.201.2");
+		rou2ExternalAddr.sin_family = AF_INET;
+		rou2ExternalAddr.sin_port = htons(0);
+		socklen_t len = sizeof(rou2Addr);
+		if (!bind(iRawSockID, &rou2ExternalAddr, len))
+		{
+			printf("secondRouter_s2 error, bind error");
+		}
+
+	}
 	while (1)
 	{
 		rd = fdSetAll;
@@ -60,12 +76,18 @@ void secondRouter_s2(cRouter & Router)
 				icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
 				struct in_addr srcAddr;
 				struct in_addr dstAddr;
+				const struct sockaddr_in sockDstAddr;
 				u_int8_t icmp_type;
 				icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 				int iCheck = packetDstCheck(dstAddr, "10.5.51.0","255.255.255.0");
 				if (iCheck == 1)
 				{
 					icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+				}
+				else
+				{
+					sockDstAddr.sin_addr = dstAddr;
+					icmpForward_secondRoute(Router, buffer, sizeof(buffer), sockDstAddr, rou2ExternalAddr.sin_addr);
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
@@ -81,6 +103,31 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 {
 	icmpReply_Edit(buffer);
 	sendMsg(iSockID, buffer, iSize, rou1Addr);
+}
+
+void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in dstAddr, const struct in_addr addrForReplace)
+{
+	const struct in_addr oriSrcAddr = icmpReply_Edit(addrForReplace, buffer,FromUdp);
+	struct msghdr msg;
+	struct iovec iov;
+	int iSockID = Router.iRawSockID;
+	iov.iov_base = buffer;
+	iov.iov_len = iSize;
+	msg.msg_name = &dstAddr;
+	msg.msg_namelen = sizeof(dstAddr);
+	msg.msg_iov = &iov;
+	msg.msg_iovlen = 1;
+	msg.msg_control = NULL;
+	msg.msg_controllen = 20;
+	msg.msg_flags = 0;
+	int err = sendmsg(iSockID, &msg, 0);
+	char buffer2[2048];
+	iov.iov_base = buffer2;
+	iov.iov_len = sizeof(buffer2);
+	int err = recv(iSockID, &msg, 0);
+	icmpForward_log(Router, buffer2, sizeof(buffer2), FromRawSock, ntohs(msg.msg_name->sin_port));
+	icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
+	sendMsg(iSockID, buffer2, sizeof(buffer2), rou1Addr);
 }
 
 

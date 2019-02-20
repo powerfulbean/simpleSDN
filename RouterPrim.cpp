@@ -112,6 +112,11 @@ int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fla
 		string sLog = "ICMP from port : " +  sSrcPort +  ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
 		vLog.push_back(sLog);
 	}
+	else if (flag == FromRawSock)
+	{
+		string sLog = "ICMP from raw sock, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+		vLog.push_back(sLog);
+	}
 	return 1;
 }
 

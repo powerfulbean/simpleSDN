@@ -155,7 +155,7 @@ struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int i
 
 	if (pIpHeader->ip_p != 1)
 	{
-		return;
+		return NULL;
 	}
 
 	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));

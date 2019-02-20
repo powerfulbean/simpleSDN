@@ -106,27 +106,39 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 }
 
 void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr,
-	       	struct sockaddr_in dstAddr, const struct in_addr addrForReplace)
+	       const struct sockaddr_in dstAddr, const struct in_addr addrForReplace)
 {
 	const struct in_addr oriSrcAddr = icmpReply_Edit(addrForReplace, buffer,FromUdp);
-	struct msghdr msg;
-	struct iovec iov;
+	struct msghdr msg1;
+	struct msghdr msg2;
+	struct iovec iov1;
+	struct iovec iov2;
+	struct sockaddr_in senderAddr;
 	int iSockID = Router.iRawSockID;
-	iov.iov_base = buffer;
-	iov.iov_len = iSize;
-	msg.msg_name = &dstAddr;
-	msg.msg_namelen = sizeof(dstAddr);
-	msg.msg_iov = &iov;
-	msg.msg_iovlen = 1;
-	msg.msg_control = NULL;
-	msg.msg_controllen = 20;
-	msg.msg_flags = 0;
-	int err = sendmsg(iSockID, &msg, 0);
+	iov1.iov_base = buffer;
+	iov1.iov_len = iSize;
+	msg1.msg_name = &dstAddr;
+	printf("target dst address: %s  \n", inet_ntoa(dstAddr.sin_addr));
+	msg1.msg_namelen = sizeof(dstAddr);
+	msg1.msg_iov = &iov1;
+	msg1.msg_iovlen = 1;
+	msg1.msg_control = NULL;
+	msg1.msg_controllen = 0;
+	msg1.msg_flags = 0;
+	int err = sendmsg(iSockID, &msg1, 0);
 	char buffer2[2048];
-	iov.iov_base = buffer2;
-	iov.iov_len = sizeof(buffer2);
-	err = recvmsg(iSockID, &msg, 0);
+	iov2.iov_base = buffer2;
+	iov2.iov_len = sizeof(buffer2);
+	msg2.msg_name = &senderAddr;
+	msg2.msg_namelen = sizeof(senderAddr);
+	msg2.msg_iov = &iov2;
+	msg2.msg_iovlen = 1;
+	msg2.msg_control = NULL;
+	msg2.msg_controllen = 0;
+	msg2.msg_flags = 0;
+	err = recvmsg(iSockID, &msg2, 0);
 	icmpForward_log(Router, buffer2, sizeof(buffer2), FromRawSock, ntohs(dstAddr.sin_port));
+	printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 	icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
 	sendMsg(iSockID, buffer2, sizeof(buffer2), rou1Addr);
 }

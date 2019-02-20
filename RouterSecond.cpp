@@ -174,7 +174,11 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	sockDstAddr.sin_addr = dstAddr;
 	sockDstAddr.sin_family = AF_INET;
 
-
+	struct ip * pIpHeader;
+	pIpHeader = (struct ip *) buffer;
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
+	icmp_len = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
 	
 
 	int iRawSockID = Router.iRawSockID;

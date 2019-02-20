@@ -172,9 +172,17 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	sockDstAddr.sin_addr = dstAddr;
 	sockDstAddr.sin_family = AF_INET;
 
+
+	struct ip * pIpHeader;
+	struct icmp * pIcmp;
+	pIpHeader = (struct ip *) buffer;
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
+	short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+
 	int iRawSockID = Router.iRawSockID;
 	iov1.iov_base = (char*) &icmphdr;
-	iov1.iov_len = sizeof(icmphdr);
+	iov1.iov_len = iIcmpTotLen;
 	msg1.msg_name = &sockDstAddr;
 	printf("target dst address: %s  \n", inet_ntoa(sockDstAddr.sin_addr));
 	msg1.msg_namelen = sizeof(sockDstAddr);

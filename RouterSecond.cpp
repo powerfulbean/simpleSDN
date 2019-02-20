@@ -49,6 +49,7 @@ void secondRouter_s2(cRouter & Router)
 			perror("get raw socket error");
 		}
 		Router.iRawSockID = iRawSockID;
+		FD_SET(iRawSockID, &fdSetAll);
 		rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
 		rou2ExternalAddr.sin_family = AF_INET;
 		rou2ExternalAddr.sin_port = htons(0);
@@ -165,24 +166,24 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	struct in_addr srcAddr;
 	struct msghdr msg1;
 	struct iovec iov1;
-	struct icmphdr icmphdr;
+	struct icmp Icmp;
 	struct sockaddr_in sockDstAddr;
 	u_int8_t icmp_type;
-	icmpUnpack(buffer, icmphdr, srcAddr, dstAddr, icmp_type);
+	icmpUnpack(buffer, Icmp, srcAddr, dstAddr, icmp_type);
 	sockDstAddr.sin_addr = dstAddr;
 	sockDstAddr.sin_family = AF_INET;
 
 
-	struct ip * pIpHeader;
+	/*struct ip * pIpHeader;
 	struct icmp * pIcmp;
 	pIpHeader = (struct ip *) buffer;
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
-	short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+	short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;*/
 
 	int iRawSockID = Router.iRawSockID;
-	iov1.iov_base = pIcmp;// (char*)&icmphdr;
-	iov1.iov_len = iIcmpTotLen;
+	iov1.iov_base = &Icmp;// (char*)&icmphdr;
+	iov1.iov_len = sizeof(Icmp);// iIcmpTotLen;
 	msg1.msg_name = &sockDstAddr;
 	printf("target dst address: %s  \n", inet_ntoa(sockDstAddr.sin_addr));
 	msg1.msg_namelen = sizeof(sockDstAddr);

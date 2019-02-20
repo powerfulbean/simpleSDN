@@ -119,8 +119,9 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	struct sockaddr_in senderAddr;
 	struct icmphdr icmphdr;
 	struct sockaddr_in sockDstAddr;
-
-	icmpUnpack(buffer, icmphdr, struct in_addr a, dstAddr, u_int8_t icmp_type);
+	struct in_addr a;
+	u_int8_t icmp_type;
+	icmpUnpack(buffer, icmphdr, a, dstAddr, icmp_type);
 	sockDstAddr.sin_addr = dstAddr;
 	sockDstAddr.sin_family = AF_INET;
 
@@ -147,7 +148,7 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	msg2.msg_controllen = 0;
 	msg2.msg_flags = 0;
 	err = recvmsg(iSockID, &msg2, 0);
-	icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(dstAddr.sin_port));
+	icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(sockDstAddr.sin_port)); // last var has no sense in this statement
 	printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 	icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
 	sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);

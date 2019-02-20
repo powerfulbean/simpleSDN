@@ -110,7 +110,6 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr,
 							 const struct in_addr addrForReplace)
 {
-	const struct in_addr oriSrcAddr = icmpReply_Edit(addrForReplace, buffer,FromUdp);
 	struct in_addr dstAddr;
 	struct msghdr msg1;
 	struct msghdr msg2;
@@ -119,13 +118,13 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	struct sockaddr_in senderAddr;
 	struct icmphdr icmphdr;
 	struct sockaddr_in sockDstAddr;
-	struct in_addr a;
+	struct in_addr oriSrcAddr;
 	u_int8_t icmp_type;
-	icmpUnpack(buffer, icmphdr, a, dstAddr, icmp_type);
+	icmpUnpack(buffer, icmphdr, oriSrcAddr, dstAddr, icmp_type);
 	sockDstAddr.sin_addr = dstAddr;
 	sockDstAddr.sin_family = AF_INET;
 
-	int iSockID = Router.iRawSockID;
+	int iRawSockID = Router.iRawSockID;
 	iov1.iov_base = (char*) &icmphdr;
 	iov1.iov_len = sizeof(icmphdr);
 	msg1.msg_name = &sockDstAddr;
@@ -136,7 +135,16 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	msg1.msg_control = NULL;
 	msg1.msg_controllen = 0;
 	msg1.msg_flags = 0;
-	int err = sendmsg(iSockID, &msg1, 0);
+	int err = sendmsg(iRawSockID, &msg1, 0);
+	if (err == -1)
+	{
+		perror("icmpForward_secondRouter error: sendmsg");
+	}
+	else
+	{
+		perror("icmpForward_secondRouter success: sendmsg")
+	}
+
 	char buffer2[2048];
 	iov2.iov_base = buffer2;
 	iov2.iov_len = sizeof(buffer2);
@@ -147,7 +155,7 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	msg2.msg_control = NULL;
 	msg2.msg_controllen = 0;
 	msg2.msg_flags = 0;
-	err = recvmsg(iSockID, &msg2, 0);
+	err = recvmsg(iRawSockID, &msg2, 0);
 	icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(sockDstAddr.sin_port)); // last var has no sense in this statement
 	printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 	icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);

@@ -155,7 +155,6 @@ void stage1(cRouter &Router,
 	{
 		secondRouter(Router, rou1Addr, rou2Addr);
 		Router.iFPID = fPid;
-		
 	}
 	else
 	{

@@ -85,7 +85,7 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
 
-	// edit ICMP_echoReply
+	// get ICMP_echoReply
 	icmp_type = pIcmp->icmp_type;
 	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
 	printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));

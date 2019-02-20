@@ -58,6 +58,11 @@ void secondRouter_s2(cRouter & Router)
 			{
 				printf("Read a packet from primary router, packet length:%d\n", nread);
 				icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
+				struct in_addr srcAddr;
+				struct in_addr dstAddr;
+				u_int8_t icmp_type;
+				icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+				packetDstCheck(dstAddr, "10.5.51.0")
 				icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
@@ -73,4 +78,30 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 {
 	icmpReply_Edit(buffer);
 	sendMsg(iSockID, buffer, iSize, rou1Addr);
+}
+
+
+int packetDstCheck(struct in_addr &packetDstAddr, string targetDst, string mask)
+{
+
+	struct in_addr netmask;
+	int err = inet_aton(mask,netmask);
+	if (err == 0)
+	{
+		printf("packetDstCheck error: aton");
+	}
+	struct in_addr subnet;
+	subnet.s_addr = netmask.s_addr & subnet.s_addr;
+
+
+
+	string packetDst(inet_ntoa(subnet));
+	if (targetDst == packetDst)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }

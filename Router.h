@@ -19,3 +19,5 @@ void stage1(cRouter &Router,
 void stage2(cRouter &Router,
 	struct sockaddr_in & rou1Addr,
 	struct sockaddr_in & rou2Addr);
+
+int packetDstCheck(struct in_addr &srcAddr, string targetDst, string  mask);

@@ -106,7 +106,7 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 }
 
 void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr,
-	       const struct sockaddr_in dstAddr, const struct in_addr addrForReplace)
+	       struct sockaddr_in dstAddr, const struct in_addr addrForReplace)
 {
 	const struct in_addr oriSrcAddr = icmpReply_Edit(addrForReplace, buffer,FromUdp);
 	struct msghdr msg1;
@@ -140,7 +140,7 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	icmpForward_log(Router, buffer2, sizeof(buffer2), FromRawSock, ntohs(dstAddr.sin_port));
 	printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 	icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
-	sendMsg(iSockID, buffer2, sizeof(buffer2), rou1Addr);
+	sendMsg(Router.iSockID, buffer2, sizeof(buffer2), rou1Addr);
 }
 
 

@@ -65,7 +65,7 @@ void secondRouter_s2(cRouter & Router)
 	}
 	while (1)
 	{
-		fdset = fdSetAll;
+		fdSet = fdSetAll;
 		int iSelect = select(iMaxfdpl, &fdset, NULL, NULL, &timeout);
 		if (iSelect == 0)
 		{
@@ -130,7 +130,7 @@ void secondRouter_s2(cRouter & Router)
 						perror("icmpForward_secondRouter success: recvmsg");
 					}
 
-					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(sockDstAddr.sin_port)); // last var has no sense in this statement
+					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(oriSrcAddr.sin_port)); // last var has no sense in this statement
 					printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 					icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
 					err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);

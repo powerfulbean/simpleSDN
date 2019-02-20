@@ -205,7 +205,8 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	}
 	else
 	{
-		perror("icmpForward_secondRouter success: sendmsg, target dst address: %s  \n", inet_ntoa(sockDstAddr.sin_addr));
+		perror("icmpForward_secondRouter success: sendmsg");
+		printf(": target dst address : %s  \n", inet_ntoa(sockDstAddr.sin_addr));
 	}
 
 

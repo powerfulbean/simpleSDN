@@ -40,4 +40,4 @@ struct sockaddr_in & rou2Addr);
 void icmpReply_Edit(char* buffer);
 struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int iFlag);
 int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);
-int icmpUnpack(char* buffer, struct icmphdr &icmphdr£¬ struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);
+int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);

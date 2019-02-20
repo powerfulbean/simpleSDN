@@ -101,7 +101,7 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 	return 1;
 }
 
-int icmpUnpack(char* buffer, struct icmphdr &icmphdr£¬ struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
+int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
 {
 	struct ip * pIpHeader;
 	struct icmp * pIcmp;

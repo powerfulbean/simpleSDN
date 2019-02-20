@@ -91,6 +91,7 @@ void secondRouter_s2(cRouter & Router)
 				else
 				{
 					sockDstAddr.sin_addr = dstAddr;
+					sockDstAddr.sin_family = AF_INET;
 					icmpForward_secondRouter(Router, buffer, sizeof(buffer),rou1Addr, sockDstAddr, rou2ExternalAddr.sin_addr);
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);

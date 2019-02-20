@@ -102,7 +102,7 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 	return 1;
 }
 
-int icmpUnpack(char* buffer, struct icmp * &icmp, short & icmp_len, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
+int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
 {
 	struct ip * pIpHeader;
 	struct icmp * pIcmp;
@@ -118,9 +118,7 @@ int icmpUnpack(char* buffer, struct icmp * &icmp, short & icmp_len, struct in_ad
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
-	icmp = pIcmp;
-	icmp_len = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
-	
+	memcpy(&icmphdr, pIcmp, sizeof(icmphdr));
 	// get ICMP_echoReply
 	icmp_type = pIcmp->icmp_type;
 	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));

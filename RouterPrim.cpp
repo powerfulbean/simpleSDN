@@ -55,7 +55,7 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 					int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
 					if (a != 1)
 					{
-						return;
+						continue;
 					}
 					sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 					//icmpReply_primRouter(tun_fd, buffer, nread);

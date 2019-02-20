@@ -1,10 +1,6 @@
-router 1, pid: 2735, port: 55335
-ICMP from port : 44186, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 44186, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 44186, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 44186, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 44186, src: 10.0.2.15, dst : 10.5.51.3, type : 8
-ICMP from port : 44186, src: 10.0.2.15, dst : 10.5.51.3, type : 8
-ICMP from port : 44186, src: 10.0.2.15, dst : 10.5.51.3, type : 8
-ICMP from port : 44186, src: 10.0.2.15, dst : 10.5.51.3, type : 8
+router 1, pid: 3905, port: 53867
+ICMP from port : 48185, src: 10.0.2.15, dst : 10.5.51.3, type : 8
+ICMP from port : 48185, src: 10.0.2.15, dst : 10.5.51.3, type : 8
+ICMP from port : 48185, src: 10.0.2.15, dst : 10.5.51.3, type : 8
+ICMP from port : 48185, src: 10.0.2.15, dst : 10.5.51.3, type : 8
 router 1 closed

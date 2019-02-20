@@ -155,7 +155,8 @@ struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int i
 
 	if (pIpHeader->ip_p != 1)
 	{
-		return NULL;
+
+		return pIpHeader->ip_src;
 	}
 
 	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
@@ -164,7 +165,7 @@ struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int i
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 
-	if (iFlad == FromUdp)
+	if (iFlag == FromUdp)
 	{
 		// edit IP packet
 		replacedAddr = pIpHeader->ip_src;

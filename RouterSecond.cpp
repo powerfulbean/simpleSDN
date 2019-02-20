@@ -142,7 +142,7 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	}
 	else
 	{
-		perror("icmpForward_secondRouter success: sendmsg")
+		perror("icmpForward_secondRouter success: sendmsg");
 	}
 
 	char buffer2[2048];

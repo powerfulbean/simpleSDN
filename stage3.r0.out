@@ -1,11 +1,7 @@
-primary port: 56706
-router 1, pid: 2728, port: 34708
+primary port: 34182
+router 1, pid: 3655, port: 47057
 ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 34708, src: 192.168.201.2, dst : 10.0.2.15, type : 3
 ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 34708, src: 192.168.201.2, dst : 10.0.2.15, type : 3
 ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 34708, src: 192.168.201.2, dst : 10.0.2.15, type : 3
 ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 34708, src: 192.168.201.2, dst : 10.0.2.15, type : 3
 router 0 closed

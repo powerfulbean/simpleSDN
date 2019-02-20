@@ -80,7 +80,6 @@ void secondRouter_s2(cRouter & Router)
 				icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
 				struct in_addr srcAddr;
 				struct in_addr dstAddr;
-				struct sockaddr_in sockDstAddr;
 				u_int8_t icmp_type;
 				icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 				int iCheck = packetDstCheck(dstAddr, "10.5.51.0","255.255.255.0");
@@ -90,9 +89,7 @@ void secondRouter_s2(cRouter & Router)
 				}
 				else
 				{
-					sockDstAddr.sin_addr = dstAddr;
-					sockDstAddr.sin_family = AF_INET;
-					icmpForward_secondRouter(Router, buffer, sizeof(buffer),rou1Addr, sockDstAddr, rou2ExternalAddr.sin_addr);
+					icmpForward_secondRouter(Router, buffer, sizeof(buffer),rou1Addr,rou2ExternalAddr.sin_addr);
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
@@ -121,15 +118,18 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	struct iovec iov2;
 	struct sockaddr_in senderAddr;
 	struct icmphdr icmphdr;
+	struct sockaddr_in sockDstAddr;
 
 	icmpUnpack(buffer, icmphdr, struct in_addr a, dstAddr, u_int8_t icmp_type);
+	sockDstAddr.sin_addr = dstAddr;
+	sockDstAddr.sin_family = AF_INET;
 
 	int iSockID = Router.iRawSockID;
 	iov1.iov_base = (char*) &icmphdr;
 	iov1.iov_len = sizeof(icmphdr);
-	msg1.msg_name = &dstAddr;
-	printf("target dst address: %s  \n", inet_ntoa(dstAddr.sin_addr));
-	msg1.msg_namelen = sizeof(dstAddr);
+	msg1.msg_name = &sockDstAddr;
+	printf("target dst address: %s  \n", inet_ntoa(sockDstAddr.sin_addr));
+	msg1.msg_namelen = sizeof(sockDstAddr);
 	msg1.msg_iov = &iov1;
 	msg1.msg_iovlen = 1;
 	msg1.msg_control = NULL;

@@ -58,7 +58,7 @@ int  recvMsg(int sockID, char *buf, unsigned int iSize,
         { cout<<"receive data fail!";}
         else
         {
-		printf("recvMsg: sender said %s \n", buf);
+		//printf("recvMsg: sender said %s \n", buf);
         }
 	int iRou2Port = ntohs(rou2Addr.sin_port);
 	inet_ntop(AF_INET,&rou2Addr.sin_addr,pRou2Addr,sizeof(pRou2Addr));

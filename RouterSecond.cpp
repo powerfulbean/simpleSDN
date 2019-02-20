@@ -102,8 +102,11 @@ void secondRouter_s2(cRouter & Router)
 					}
 					else
 					{
-						oriSrcAddr = srcAddr;
-						icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+						if (Router.iStage == 3)
+						{
+							oriSrcAddr = srcAddr;
+							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+						}
 					}
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);
@@ -189,7 +192,6 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	iov1.iov_base = pIcmp;// (char*)&icmphdr;
 	iov1.iov_len = iIcmpTotLen;
 	msg1.msg_name = &sockDstAddr;
-	printf("target dst address: %s  \n", inet_ntoa(sockDstAddr.sin_addr));
 	msg1.msg_namelen = sizeof(sockDstAddr);
 	msg1.msg_iov = &iov1;
 	msg1.msg_iovlen = 1;
@@ -203,7 +205,7 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	}
 	else
 	{
-		perror("icmpForward_secondRouter success: sendmsg");
+		perror("icmpForward_secondRouter success: sendmsg, target dst address: %s  \n", inet_ntoa(sockDstAddr.sin_addr));
 	}
 
 

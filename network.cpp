@@ -30,11 +30,11 @@ void getDynmcPortSrv(const struct sockaddr_in & locAddr,
         close(sockID);
 }
 
-void sendMsg(int sockID2,const char* buf,unsigned int iSize,
+int sendMsg(int sockID2,const char* buf,unsigned int iSize,
 	      const struct sockaddr_in rou1Addr)
 {
 	socklen_t len = sizeof(rou1Addr);
-	sendto(sockID2,buf,iSize,0,(struct sockaddr*)&rou1Addr,len);
+	int err = sendto(sockID2,buf,iSize,0,(struct sockaddr*)&rou1Addr,len);
 	char pRou1Addr[16];
         unsigned int iRou1Port;
         inet_ntop(AF_INET,&rou1Addr.sin_addr,pRou1Addr,sizeof(pRou1Addr));// translate the router 1 ip address to ascii
@@ -42,6 +42,7 @@ void sendMsg(int sockID2,const char* buf,unsigned int iSize,
 	cout<<"sendMsg: receiver  address:"<<pRou1Addr<<endl;
         cout<<"sendMsg: receiver port: "<<iRou1Port<<endl;
 	cout<<"sendMsg: end"<<endl<<endl;
+	return err;
 }
 	
 int  recvMsg(int sockID, char *buf, unsigned int iSize,

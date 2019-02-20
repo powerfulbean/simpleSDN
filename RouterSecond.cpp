@@ -156,10 +156,27 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	msg2.msg_controllen = 0;
 	msg2.msg_flags = 0;
 	err = recvmsg(iRawSockID, &msg2, 0);
+	if (err == -1)
+	{
+		perror("icmpForward_secondRouter error: recvmsg");
+	}
+	else
+	{
+		perror("icmpForward_secondRouter success: recvmsg");
+	}
+
 	icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(sockDstAddr.sin_port)); // last var has no sense in this statement
 	printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 	icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
-	sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
+	err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
+	if (err == -1)
+	{
+		perror("icmpForward_secondRouter error: sendMsg");
+	}
+	else
+	{
+		perror("icmpForward_secondRouter success: sendMsg");
+	}
 }
 
 

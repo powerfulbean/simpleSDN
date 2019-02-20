@@ -155,6 +155,7 @@ struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int i
 
 	if (pIpHeader->ip_p != 1)
 	{
+
 		return pIpHeader->ip_src;
 	}
 

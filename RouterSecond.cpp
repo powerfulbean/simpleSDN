@@ -42,6 +42,10 @@ void secondRouter_s2(cRouter & Router)
 	if (Router.iStage == 3)
 	{
 		iRawSockID = getIcmpRawSocket();
+		if(iRawSockID<0)
+		{
+			perror("get raw socket error");
+		}
 		Router.iRawSockID = iRawSockID;
 		rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
 		rou2ExternalAddr.sin_family = AF_INET;

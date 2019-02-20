@@ -1,5 +1,5 @@
-primary port: 48780
-router 1, pid: 4935, port: 51634
+primary port: 42499
+router 1, pid: 5581, port: 32831
 ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
 ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
 ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8

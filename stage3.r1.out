@@ -1,10 +1,10 @@
-router 1, pid: 4935, port: 51634
-ICMP from port : 48780, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router 1, pid: 5581, port: 32831
+ICMP from port : 42499, src: 10.0.2.15, dst : 128.52.130.149, type : 8
 ICMP from raw sock, src: 192.168.201.2, dst : 192.168.201.2, type : 3
-ICMP from port : 48780, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+ICMP from port : 42499, src: 10.0.2.15, dst : 128.52.130.149, type : 8
 ICMP from raw sock, src: 192.168.201.2, dst : 192.168.201.2, type : 3
-ICMP from port : 48780, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+ICMP from port : 42499, src: 10.0.2.15, dst : 128.52.130.149, type : 8
 ICMP from raw sock, src: 192.168.201.2, dst : 192.168.201.2, type : 3
-ICMP from port : 48780, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+ICMP from port : 42499, src: 10.0.2.15, dst : 128.52.130.149, type : 8
 ICMP from raw sock, src: 192.168.201.2, dst : 192.168.201.2, type : 3
 router 1 closed

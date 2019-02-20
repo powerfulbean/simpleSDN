@@ -72,7 +72,7 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 				}
 				else
 				{
-					printf("Read a packet from primary router, packet length:%d\n", nread);
+					printf("Read a packet from secondary router, packet length:%d\n", nread);
 					icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
 					cwrite(tun_fd, buffer, nread);// send packet back to tunnel
 												  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);

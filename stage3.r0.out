@@ -1,0 +1,7 @@
+primary port: 41306
+router 1, pid: 4293, port: 49082
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router 0 closed

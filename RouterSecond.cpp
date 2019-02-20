@@ -80,9 +80,9 @@ void secondRouter_s2(cRouter & Router)
 				u_int8_t icmp_type;
 				icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 				int iCheck = packetDstCheck(dstAddr, "10.5.51.0","255.255.255.0");
+				cout<<"check: "<<iCheck<<endl;
 				if (iCheck == 1)
 				{
-					cout<<"iCheck == 1"<<endl;
 					icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 				}
 				else
@@ -143,7 +143,7 @@ int packetDstCheck(struct in_addr &packetDstAddr, string targetDst, string mask)
 		printf("packetDstCheck error: aton");
 	}
 	struct in_addr subnet;
-	subnet.s_addr = netmask.s_addr & subnet.s_addr;
+	subnet.s_addr = netmask.s_addr & packetDstAddr.s_addr;
 
 	string packetDst(inet_ntoa(subnet));
 	if (targetDst == packetDst)

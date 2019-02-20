@@ -101,6 +101,34 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 	return 1;
 }
 
+int icmpUnpack(char* buffer, struct icmphdr &icmphdr£¬ struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
+{
+	struct ip * pIpHeader;
+	struct icmp * pIcmp;
+	pIpHeader = (struct ip *) buffer;
+
+	if (pIpHeader->ip_p != 1)
+	{
+		return 0;
+	}
+
+	srcAddr = pIpHeader->ip_src;
+	dstAddr = pIpHeader->ip_dst;
+
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
+	memcpy(&icmphdr, pIcmp, sizeof(icmphdr));
+	// get ICMP_echoReply
+	icmp_type = pIcmp->icmp_type;
+	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
+	printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
+	printf("service type: %d  ", pIpHeader->ip_p);
+	printf("icmp type: %d", pIcmp->icmp_type);
+	cout << endl;
+
+	return 1;
+}
+
 /* About the function:
 void icmpReply_Edit(char* buffer)
 was built based on the itroduction of netinet/ip.h ipheader on

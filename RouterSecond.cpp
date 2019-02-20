@@ -111,17 +111,22 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 }
 
 void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr,
-	       struct sockaddr_in dstAddr, const struct in_addr addrForReplace)
+							 const struct in_addr addrForReplace)
 {
 	const struct in_addr oriSrcAddr = icmpReply_Edit(addrForReplace, buffer,FromUdp);
+	struct in_addr dstAddr;
 	struct msghdr msg1;
 	struct msghdr msg2;
 	struct iovec iov1;
 	struct iovec iov2;
 	struct sockaddr_in senderAddr;
+	struct icmphdr icmphdr;
+
+	icmpUnpack(buffer, icmphdr, struct in_addr a, dstAddr, u_int8_t icmp_type);
+
 	int iSockID = Router.iRawSockID;
-	iov1.iov_base = buffer;
-	iov1.iov_len = iSize;
+	iov1.iov_base = (char*) &icmphdr;
+	iov1.iov_len = sizeof(icmphdr);
 	msg1.msg_name = &dstAddr;
 	printf("target dst address: %s  \n", inet_ntoa(dstAddr.sin_addr));
 	msg1.msg_namelen = sizeof(dstAddr);

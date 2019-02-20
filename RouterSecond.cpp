@@ -137,10 +137,10 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	msg2.msg_controllen = 0;
 	msg2.msg_flags = 0;
 	err = recvmsg(iSockID, &msg2, 0);
-	icmpForward_log(Router, buffer2, sizeof(buffer2), FromRawSock, ntohs(dstAddr.sin_port));
+	icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(dstAddr.sin_port));
 	printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 	icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
-	sendMsg(Router.iSockID, buffer2, sizeof(buffer2), rou1Addr);
+	sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
 }
 
 

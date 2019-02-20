@@ -36,7 +36,7 @@ void secondRouter_s2(cRouter & Router)
 	int iSockID = Router.iSockID;
 	int iRawSockID;
 	int iMaxfdpl;
-	fd_set fdSetAll, rd;
+	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
 	FD_ZERO(&fdSetAll);

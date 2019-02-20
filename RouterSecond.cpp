@@ -136,6 +136,7 @@ void secondRouter_s2(cRouter & Router)
 					else
 					{
 						perror("icmpForward_secondRouter success: recvmsg");
+						printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 					}
 
 					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement

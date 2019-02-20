@@ -43,11 +43,11 @@ void secondRouter_s2(cRouter & Router)
 	{
 		iRawSockID = getIcmpRawSocket();
 		Router.iRawSockID = iRawSockID;
-		rou2ExternalAddr.sin_addr.s_addr = htonl("192.168.201.2");
+		rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
 		rou2ExternalAddr.sin_family = AF_INET;
 		rou2ExternalAddr.sin_port = htons(0);
-		socklen_t len = sizeof(rou2Addr);
-		if (!bind(iRawSockID, &rou2ExternalAddr, len))
+		socklen_t len = sizeof(rou2ExternalAddr);
+		if (!bind(iRawSockID,(struct sockaddr*) &rou2ExternalAddr, len))
 		{
 			printf("secondRouter_s2 error, bind error");
 		}
@@ -76,18 +76,19 @@ void secondRouter_s2(cRouter & Router)
 				icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
 				struct in_addr srcAddr;
 				struct in_addr dstAddr;
-				const struct sockaddr_in sockDstAddr;
+				struct sockaddr_in sockDstAddr;
 				u_int8_t icmp_type;
 				icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 				int iCheck = packetDstCheck(dstAddr, "10.5.51.0","255.255.255.0");
 				if (iCheck == 1)
 				{
+					cout<<"iCheck == 1"<<endl;
 					icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 				}
 				else
 				{
 					sockDstAddr.sin_addr = dstAddr;
-					icmpForward_secondRoute(Router, buffer, sizeof(buffer), sockDstAddr, rou2ExternalAddr.sin_addr);
+					icmpForward_secondRouter(Router, buffer, sizeof(buffer),rou1Addr, sockDstAddr, rou2ExternalAddr.sin_addr);
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
@@ -105,7 +106,8 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 	sendMsg(iSockID, buffer, iSize, rou1Addr);
 }
 
-void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in dstAddr, const struct in_addr addrForReplace)
+void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr,
+	       	struct sockaddr_in dstAddr, const struct in_addr addrForReplace)
 {
 	const struct in_addr oriSrcAddr = icmpReply_Edit(addrForReplace, buffer,FromUdp);
 	struct msghdr msg;
@@ -124,8 +126,8 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	char buffer2[2048];
 	iov.iov_base = buffer2;
 	iov.iov_len = sizeof(buffer2);
-	int err = recv(iSockID, &msg, 0);
-	icmpForward_log(Router, buffer2, sizeof(buffer2), FromRawSock, ntohs(msg.msg_name->sin_port));
+	err = recvmsg(iSockID, &msg, 0);
+	icmpForward_log(Router, buffer2, sizeof(buffer2), FromRawSock, ntohs(dstAddr.sin_port));
 	icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
 	sendMsg(iSockID, buffer2, sizeof(buffer2), rou1Addr);
 }

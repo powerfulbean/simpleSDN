@@ -62,8 +62,11 @@ void secondRouter_s2(cRouter & Router)
 				struct in_addr dstAddr;
 				u_int8_t icmp_type;
 				icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-				packetDstCheck(dstAddr, "10.5.51.0","255.255.255.0");
-				icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+				int iCheck = packetDstCheck(dstAddr, "10.5.51.0","255.255.255.0");
+				if (iCheck == 1)
+				{
+					icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
 			timeout.tv_sec = 15;

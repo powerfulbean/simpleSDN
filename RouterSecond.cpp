@@ -90,7 +90,11 @@ void secondRouter_s2(cRouter & Router)
 					struct in_addr srcAddr;
 					struct in_addr dstAddr;
 					u_int8_t icmp_type;
-					icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+					int iProtoType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+					if (iProtoType != 1)
+					{
+						continue;
+					}
 					int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 					if (iCheck == 1)
 					{

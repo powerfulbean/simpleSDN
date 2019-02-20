@@ -93,9 +93,9 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 
 	// get ICMP_echoReply
 	icmp_type = pIcmp->icmp_type;
-	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
-	printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
-	printf("service type: %d  ", pIpHeader->ip_p);
+	//printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
+	//printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
+	//printf("service type: %d  ", pIpHeader->ip_p);
 	printf("icmp type: %d", pIcmp->icmp_type);
 	cout<<endl;
 
@@ -121,11 +121,11 @@ int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, s
 	memcpy(&icmphdr, pIcmp, sizeof(icmphdr));
 	// get ICMP_echoReply
 	icmp_type = pIcmp->icmp_type;
-	printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
-	printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
-	printf("service type: %d  ", pIpHeader->ip_p);
+	//printf("src address: %s  ", inet_ntoa(pIpHeader->ip_src));
+	//printf("dst address: %s  ", inet_ntoa(pIpHeader->ip_dst));
+	//printf("service type: %d  ", pIpHeader->ip_p);
 	printf("icmp type: %d", pIcmp->icmp_type);
-	cout << endl;
+	//cout << endl;
 
 	return 1;
 }

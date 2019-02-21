@@ -237,9 +237,6 @@ u_int8_t getIcmpType(char* buffer)
 		return 0;
 	}
 
-	srcAddr = pIpHeader->ip_src;
-	dstAddr = pIpHeader->ip_dst;
-
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
 

@@ -139,17 +139,22 @@ void secondRouter_s2(cRouter & Router)
 						printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 					}
 
-					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
-					printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
-					icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
-					err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
-					if (err == -1)
+					u_int8_t icmpType = getIcmpType(buffer);
+
+					if (icmpType == 0)
 					{
-						perror("icmpForward_secondRouter error: sendMsg");
-					}
-					else
-					{
-						perror("icmpForward_secondRouter success: sendMsg");
+						icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
+						printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
+						icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
+						err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
+						if (err == -1)
+						{
+							perror("icmpForward_secondRouter error: sendMsg");
+						}
+						else
+						{
+							perror("icmpForward_secondRouter success: sendMsg");
+						}
 					}
 				}
 			}

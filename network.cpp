@@ -226,4 +226,24 @@ struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int i
 	return replacedAddr;
 }
 
+u_int8_t getIcmpType(char* buffer)
+{
+	struct ip * pIpHeader;
+	struct icmp * pIcmp;
+	pIpHeader = (struct ip *) buffer;
+
+	if (pIpHeader->ip_p != 1)
+	{
+		return 0;
+	}
+
+	srcAddr = pIpHeader->ip_src;
+	dstAddr = pIpHeader->ip_dst;
+
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
+
+	return pIcmp->icmp_type;
+}
+
 

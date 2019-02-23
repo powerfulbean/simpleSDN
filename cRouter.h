@@ -12,7 +12,7 @@ class cRouter{
 		int iRouterID;
 		int iPortNum;
 		int iFPID;// store the return value of fork()
-		vector<string,int> vConfig;
+		vector<string> vConfig;
 		vector<string> vLog;
 		int iConfigReg;
 		int iSockID;

@@ -17,14 +17,16 @@ class cRouter{
 		int iConfigReg;
 		int iSockID;
 		int iRawSockID;
+		int m_iDropAfter;
 
 
-		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 0; iSockID = -1; iRawSockID = -1; }
+		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 0; iSockID = -1; iRawSockID = -1; m_iDropAfter = 3; }
 		void readConfigFile(char* filePath);
 		void writeLogFile();
 		int parser(const string &temp, vector<string> &output);
 		int syntax();
 		int stageEngine();
+		int stageToCase(int iStage);
 		void close();
 };
 

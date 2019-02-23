@@ -30,6 +30,7 @@ using namespace std;
 int getUdpSocket();
 int getIcmpRawSocket();
 void setTempAddr(const char* pIp,struct sockaddr_in & locAddr);
+//void setAddr(const char* pIp, int iPort, struct sockaddr_in & locAddr);
 void getDynmcPortSrv(const struct sockaddr_in & locAddr,
                         struct sockaddr_in & outputAddr);
 int sendMsg(int sockID2,const char* buf, unsigned int iSize,

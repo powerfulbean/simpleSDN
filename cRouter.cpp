@@ -2,18 +2,42 @@
 
 int cRouter::stageEngine()
 {
-	int iStageLen = 2;
+	//int iStageLen = 2;
 	iConfigReg += 1;
-	if(iConfigReg*iStageLen<=vConfig.size())
+	if(iConfigReg<=vConfig.size())
 	{       
-		iStage = stoi(vConfig[(iConfigReg-1)*2]);
-		iRouteNum = stoi(vConfig[(iConfigReg-1)*2+1]);
-}
+		iStage = stoi(vConfig[( iConfigReg++ -1)]);
+		switch (stageToCase(iStage))
+		{
+		case 0:
+			iRouteNum = stoi(vConfig[( iConfigReg++ - 1)]);
+			break;
+		case 1:
+			iRouteNum = stoi(vConfig[(iConfigReg++ - 1)]);
+			m_iDropAfter = stoi(vConfig[(iConfigReg++ - 1)]);
+			break;
+		default:
+			break;
+		}
+		
+	}
 	else
 	{
 		return 0;
 	}
 	return iConfigReg;
+}
+
+int cRouter::stageToCase(int iStage)
+{
+	if (iStage <= 3)
+	{
+		return 0;
+	}
+	else if (iStage > 3 && iStage <= 4)
+	{
+		return 1;
+	}
 }
 	
 void cRouter::close()

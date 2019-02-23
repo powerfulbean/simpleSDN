@@ -81,6 +81,12 @@ void cRouter::readConfigFile(char* filePath)
 					//iRouteNum = stoi(output[i]);
 					vConfig.push_back(output[i]);
 				}
+				else if (output[i] == "drop_after")
+				{
+					i++;
+					//iRouteNum = stoi(output[i]);
+					vConfig.push_back(output[i]);
+				}
 			}
 		}
 	}

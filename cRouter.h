@@ -28,7 +28,7 @@ class cRouter{
 		int stageEngine();
 		int stageToCase(int iStage);
 		void close();
-		int nextConfig()
+		int nextConfig();
 };
 
 

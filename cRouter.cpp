@@ -38,6 +38,7 @@ int cRouter::stageToCase(int iStage)
 	{
 		return 1;
 	}
+	return -1;
 }
 	
 void cRouter::close()

@@ -29,10 +29,10 @@ int cRouter::stageEngine()
 
 int cRouter::nextConfig()
 {
-	if (iConfigReg == vConfig.size())
+	if (iConfigReg > vConfig.size())
 	{
 		cout << "Error: stage£º " << iStage << "need more legal line in the configuration file" << endl;
-		return -1;
+		return 0;
 	}
 	int iCurrent = iConfigReg;
 	iConfigReg++;

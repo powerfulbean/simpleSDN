@@ -20,7 +20,7 @@ flow_entry flow_entry::reverse()
 	return reverseEntry;
 }
 
-bool flow_entry::operator< (const flow_entry key2)
+bool flow_entry::operator< (const flow_entry key2) const
 {
 	if (m_srcIp != key2.m_srcIp)
 	{

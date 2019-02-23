@@ -19,6 +19,7 @@ struct flow_entry
 		m_protocol(protocol) {};
 	flow_entry(octane_control msg);
 	flow_entry reverse();
+	bool operator< (const flow_entry & key2);
 };
 
 struct flow_action

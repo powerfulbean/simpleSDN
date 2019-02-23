@@ -20,6 +20,32 @@ flow_entry flow_entry::reverse()
 	return reverseEntry;
 }
 
+bool flow_entry::operator< (const flow_entry & key2)
+{
+	if (m_srcIp != key2.m_srcIp)
+	{
+		return m_srcIp < key2.m_srcIp;
+	}
+	else 
+	{
+		if (m_srcPort != key2.m_srcPort)
+		{
+			return m_srcPort < key2.m_srcPort;
+		}
+		else
+		{
+			if (m_dstIp != key2.m_dstIp)
+			{
+				return m_dstIp < key2.m_dstIp;
+			}
+			else
+			{
+				return m_dstPort < key2.m_dstPort;
+			}
+		}
+	}
+}
+
 flow_action::flow_action(octane_control msg)
 {
 	m_action = msg.octane_action;

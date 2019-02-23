@@ -1,5 +1,111 @@
 #include "cRouter.h"
 
+flow_entry::flow_entry(octane_control msg)
+{
+	m_dstIp = msg.octane_dest_ip;
+	m_dstPort = msg.octane_dest_port;
+	m_srcIp = msg.octane_source_ip;
+	m_srcPort = msg.octane_source_port;
+	m_protocol = msg.octane_protocol;
+}
+
+flow_entry flow_entry::reverse()
+{
+	flow_entry reverseEntry;
+	reverseEntry.m_dstIp = m_srcIp;
+	reverseEntry.m_dstPort = m_srcPort;
+	reverseEntry.m_srcIp = m_dstIp;
+	reverseEntry.m_srcPort = m_dstPort;
+	reverseEntry.m_protocol = m_protocol;
+	return reverseEntry;
+}
+
+flow_action::flow_action(octane_control msg)
+{
+	m_action = msg.octane_action;
+	m_fwdPort = msg.octane_port;
+}
+
+string flow_table::insert(octane_control msg)
+{
+	flow_entry entry(msg);
+	flow_action action(msg);
+	if (contains(entry))
+	{
+		cout << "flow_table_insert warning: replace existed extry";
+	}
+	m_mTable[entry] = action;
+	string output = ", rule installed (" + 
+		to_string(entry.m_srcIp) + ", " + to_string(entry.m_srcPort) + ", " + 
+		to_string(entry.m_dstIp) + ", " + to_string(entry.m_dstPort)+ ", " + to_string(entry.m_protocol) + 
+		") action ACTION.";
+	return output;
+}
+
+vector<string> flow_table::dbInsert(octane_control msg)
+{
+	flow_entry entry(msg);
+	flow_action action(msg);
+	flow_entry entryRev = entry.reverse();
+	if (contains(entry))
+	{
+		cout << "flow_table_insert warning: replace existed extry";
+	}
+	m_mTable[entry] = action;
+	m_mTable[entryRev] = action;
+	vector<string> log;
+	string output1 = ", rule installed (" +
+		to_string(entry.m_srcIp) + ", " + to_string(entry.m_srcPort) + ", " +
+		to_string(entry.m_dstIp) + ", " + to_string(entry.m_dstPort) + ", " + to_string(entry.m_protocol) +
+		") action ACTION.";
+	string output2 = ", rule installed (" +
+		to_string(entryRev.m_srcIp) + ", " + to_string(entryRev.m_srcPort) + ", " +
+		to_string(entryRev.m_dstIp) + ", " + to_string(entryRev.m_dstPort) + ", " + to_string(entryRev.m_protocol) +
+		") action ACTION.";
+	log.push_back(output1);
+	log.push_back(output2);
+	return log;
+}
+
+string flow_table::find(octane_control msg)
+{
+	;
+}
+
+string flow_table::remove(octane_control msg)
+{
+	;
+}
+
+bool flow_table::contains(octane_control msg)
+{
+	flow_entry entry(msg);
+	map<flow_entry, flow_action>::iterator it;
+	it = m_mTable.find(entry);
+	if (it == m_mTable.end())
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool flow_table::contains(flow_entry entry)
+{
+	map<flow_entry, flow_action>::iterator it;
+	it = m_mTable.find(entry);
+	if (it == m_mTable.end())
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 int cRouter::stageEngine()
 {
 	//int iStageLen = 2;

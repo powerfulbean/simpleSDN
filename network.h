@@ -27,6 +27,25 @@
 
 using namespace std;
 
+struct octane_control {
+	uint8_t octane_action;
+	uint8_t octane_flags;
+	uint16_t octane_seqno;
+	uint32_t octane_source_ip;
+	uint32_t octane_dest_ip;
+	uint16_t octane_source_port; 
+	uint16_t octane_dest_port; 
+	uint16_t octane_protocol; 
+	uint16_t octane_port;
+
+	octane_control(uint8_t action, uint8_t flags, uint16_t seqno, uint32_t src_ip, uint32_t dst_ip,
+		uint16_t src_port, uint16_t dst_port, uint16_t protocol, uint16_t octPort = 0) :
+		octane_action(action), octane_flags(flags), octane_seqno(seqno), octane_source_ip(src_ip),
+		octane_dest_ip(dst_ip), octane_source_port(src_port), octane_dest_port(dst_port),
+		octane_protocol(protocol), octane_port(octPort) {};
+};
+
+
 int getUdpSocket();
 int getIcmpRawSocket();
 void setTempAddr(const char* pIp,struct sockaddr_in & locAddr);

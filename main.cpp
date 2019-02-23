@@ -13,6 +13,10 @@ int main(int argc, char * argv[])
 		configFilePath = argv[i];
 	}
 	Router.readConfigFile(configFilePath);
+	for (auto i : Router.vConfig)
+	{
+		cout << i << endl;
+	}
 
 	while(Router.stageEngine())
 	{

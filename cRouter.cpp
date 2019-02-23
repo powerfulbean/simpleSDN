@@ -20,7 +20,7 @@ flow_entry flow_entry::reverse()
 	return reverseEntry;
 }
 
-bool flow_entry::operator< (const flow_entry & key2)
+bool flow_entry::operator< (const flow_entry key2)
 {
 	if (m_srcIp != key2.m_srcIp)
 	{
@@ -95,12 +95,14 @@ vector<string> flow_table::dbInsert(octane_control msg)
 
 string flow_table::find(octane_control msg)
 {
-	;
+	string temp;
+	return temp;
 }
 
 string flow_table::remove(octane_control msg)
 {
-	;
+	string temp;
+	return temp;
 }
 
 bool flow_table::contains(octane_control msg)

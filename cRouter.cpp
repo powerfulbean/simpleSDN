@@ -3,18 +3,17 @@
 int cRouter::stageEngine()
 {
 	//int iStageLen = 2;
-	iConfigReg += 1;
 	if(iConfigReg<=vConfig.size())
 	{       
-		iStage = stoi(vConfig[( iConfigReg++ -1)]);
+		iStage = stoi(vConfig[(nextConfig() -1)]);
 		switch (stageToCase(iStage))
 		{
 		case 0:
-			iRouteNum = stoi(vConfig[( iConfigReg++ - 1)]);
+			iRouteNum = stoi(vConfig[(nextConfig() - 1)]);
 			break;
 		case 1:
-			iRouteNum = stoi(vConfig[(iConfigReg++ - 1)]);
-			m_iDropAfter = stoi(vConfig[(iConfigReg++ - 1)]);
+			iRouteNum = stoi(vConfig[(nextConfig() - 1)]);
+			m_iDropAfter = stoi(vConfig[(nextConfig() - 1)]);
 			break;
 		default:
 			break;
@@ -26,6 +25,18 @@ int cRouter::stageEngine()
 		return 0;
 	}
 	return iConfigReg;
+}
+
+int cRouter::nextConfig()
+{
+	if (iConfigReg == vConfig.size())
+	{
+		cout << "Error: stage£º " << iStage << "need more legal line in the configuration file" << endl;
+		return -1;
+	}
+	int iCurrent = iConfigReg;
+	iConfigReg++;
+	return iCurrent;
 }
 
 int cRouter::stageToCase(int iStage)

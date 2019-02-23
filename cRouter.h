@@ -12,7 +12,7 @@ class cRouter{
 		int iRouterID;
 		int iPortNum;
 		int iFPID;// store the return value of fork()
-		vector<string> vConfig;
+		vector<string,int> vConfig;
 		vector<string> vLog;
 		int iConfigReg;
 		int iSockID;
@@ -20,7 +20,7 @@ class cRouter{
 		int m_iDropAfter;
 
 
-		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 0; iSockID = -1; iRawSockID = -1; m_iDropAfter = 3; }
+		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 1; iSockID = -1; iRawSockID = -1; m_iDropAfter = 3; }
 		void readConfigFile(char* filePath);
 		void writeLogFile();
 		int parser(const string &temp, vector<string> &output);
@@ -28,6 +28,7 @@ class cRouter{
 		int stageEngine();
 		int stageToCase(int iStage);
 		void close();
+		int nextConfig()
 };
 
 

@@ -272,14 +272,12 @@ void stage1(cRouter &Router,
 	{
 		secondRouter(Router, rou1Addr, rou2Addr);
 		Router.iFPID = fPid;
-		Router.iRouterID = 0;
 	}
 	else
 	{
 		cout << "child process pid: " << fPid << endl << endl;
 		Router.iFPID = fPid;
 		primaryRouter(sockID, Router, rou2Addr);
-		Router.iRouterID = 1;
 	}
 }
 

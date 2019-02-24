@@ -90,12 +90,12 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	int iOctSockID = getRawSocket(253);
+	/*int iOctSockID = getRawSocket(253);
 	if (iOctSockID == -1)
 	{
 		perror("get OctaneSocket error!");
 	}
-	Router.m_iOctSockID = iOctSockID;
+	Router.m_iOctSockID = iOctSockID;*/
 	struct timeval timeout;
 	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
@@ -148,26 +148,26 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 
 						int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
-						if (iCheck == 1)
-						{
-							int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
-							if (iCheck2 == 1)
-							{
-								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
-							}
-							else
-							{
-								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
-							}
-							//sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr); // send control message
-						}
-						else
-						{
-							Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
-							Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
-							//sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr);// send control message
-							//sendMsg(Router.m_iOctSockID, (char*)&msg1_re, sizeof(msg1_re), rou2Addr);// send control message
-						}
+						//if (iCheck == 1)
+						//{
+						//	int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
+						//	if (iCheck2 == 1)
+						//	{
+						//		Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
+						//	}
+						//	else
+						//	{
+						//		Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
+						//	}
+						//	//sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr); // send control message
+						//}
+						//else
+						//{
+						//	Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+						//	Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+						//	//sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr);// send control message
+						//	//sendMsg(Router.m_iOctSockID, (char*)&msg1_re, sizeof(msg1_re), rou2Addr);// send control message
+						//}
 						
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 					}

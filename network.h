@@ -43,11 +43,13 @@ struct octane_control {
 		octane_action(action), octane_flags(flags), octane_seqno(seqno), octane_source_ip(src_ip),
 		octane_dest_ip(dst_ip), octane_source_port(src_port), octane_dest_port(dst_port),
 		octane_protocol(protocol), octane_port(octPort) {};
+	octane_control() {};
 };
 
 
 int getUdpSocket();
 int getIcmpRawSocket();
+int getRawSocket(int protocol);
 void setTempAddr(const char* pIp,struct sockaddr_in & locAddr);
 //void setAddr(const char* pIp, int iPort, struct sockaddr_in & locAddr);
 void getDynmcPortSrv(const struct sockaddr_in & locAddr,
@@ -61,4 +63,5 @@ void icmpReply_Edit(char* buffer);
 struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int iFlag);
 int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);
 int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);
+int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint16_t &sSrc_port, uint16_t &sDst_port, u_int8_t &ip_type);
 u_int8_t getIcmpType(char* buffer);

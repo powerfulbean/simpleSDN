@@ -10,6 +10,11 @@ int getIcmpRawSocket()
 	return socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 }
 
+int getRawSocket(int protocol)
+{
+	return socket(AF_INET, SOCK_RAW, protocol);
+}
+
 void setTempAddr(const char* pIp, struct sockaddr_in & locAddr)
 {
         bzero(&locAddr,sizeof(locAddr));
@@ -84,7 +89,7 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 
 	if (pIpHeader->ip_p != 1)
 	{
-		return 0;
+		return pIpHeader->ip_p;
 	}
 
 	srcAddr = pIpHeader->ip_src;
@@ -132,6 +137,22 @@ int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, s
 	return 1;
 }
 
+int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint16_t &sSrc_port, uint16_t &sDst_port, u_int8_t &ip_type)
+{
+	struct ip * pIpHeader;
+	pIpHeader = (struct ip *) buffer;
+
+	ip_type = pIpHeader->ip_p;
+	sSrc_addr = pIpHeader->ip_src.s_addr;
+	sDst_addr = pIpHeader->ip_dst.s_addr;
+
+	if (ip_type == 1)
+	{
+		sSrc_port == 0xFFFF;
+		sDst_port == 0xFFFF;
+	}
+	return 1;
+}
 /* About the function:
 void icmpReply_Edit(char* buffer)
 was built based on the itroduction of netinet/ip.h ipheader on

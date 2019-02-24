@@ -40,7 +40,7 @@ public:
 	
 	flow_table() {};
 	string insert(octane_control msg);
-	vector<string> dbInsert(octane_control msg);
+	vector<string> dbInsert(octane_control msg, uint16_t newFwdPort);
 	string find(octane_control msg);
 	string remove(octane_control msg);
 	bool contains(octane_control msg);
@@ -64,12 +64,7 @@ class cRouter{
 		int iRawSockID;
 		int m_iDropAfter;
 
-		// octane part:
-		uint16_t m_iSeqnoCnt;
-		flow_table m_rouFlowTable;
-		map<uint16_t, octane_control> unAckBuffer;
-
-		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 1; iSockID = -1; iRawSockID = -1; m_iDropAfter = 3; }
+		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 1; iSockID = -1; iRawSockID = -1; m_iDropAfter = 3; m_iSeqnoCnt = 1; }
 		void readConfigFile(char* filePath);
 		void writeLogFile();
 		int parser(const string &temp, vector<string> &output);
@@ -78,6 +73,15 @@ class cRouter{
 		int stageToCase(int iStage);
 		void close();
 		int nextConfig();
+
+		// octane part:
+		uint16_t m_iSeqnoCnt;
+		flow_table m_rouFlowTable;
+		map<uint16_t, octane_control> unAckBuffer;
+		int m_iOctSockID;
+
+		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort);
+		int cRouter::createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort)
 };
 
 

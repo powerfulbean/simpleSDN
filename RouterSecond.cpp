@@ -231,22 +231,27 @@ void secondRouter_s4(cRouter & Router)
 					struct in_addr dstAddr;
 					u_int8_t icmp_type;
 					int iProtoType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-					if (iProtoType != 1)
+					if (iProtoType == 1)
 					{
-						continue;
-					}
-					int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
-					if (iCheck == 1)
-					{
-						icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-					}
-					else
-					{
-						if (Router.iStage == 3)
+						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
+						if (iCheck == 1)
 						{
-							oriSrcAddr = srcAddr;
-							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+							icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 						}
+						else
+						{
+							if (Router.iStage == 3)
+							{
+								oriSrcAddr = srcAddr;
+								icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+							}
+						}
+					}
+					else if (iProtoType == 253)
+					{
+						octane_control * pOctMsg = (octane_control *) buffer;
+						string sLog = Router.m_rouFlowTable.insert(*pOctMsg);
+						Router.vLog.push_back(sLog);
 					}
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);

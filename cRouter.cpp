@@ -64,30 +64,35 @@ string flow_table::insert(octane_control msg)
 	string output = ", rule installed (" + 
 		to_string(entry.m_srcIp) + ", " + to_string(entry.m_srcPort) + ", " + 
 		to_string(entry.m_dstIp) + ", " + to_string(entry.m_dstPort)+ ", " + to_string(entry.m_protocol) + 
-		") action ACTION.";
+		") action " + to_string(action.m_action);
 	return output;
 }
 
-vector<string> flow_table::dbInsert(octane_control msg)
+vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort = -1)
 {
 	flow_entry entry(msg);
 	flow_action action(msg);
 	flow_entry entryRev = entry.reverse();
+	flow_action actionRev(msg);
 	if (contains(entry))
 	{
 		cout << "flow_table_insert warning: replace existed extry";
 	}
 	m_mTable[entry] = action;
-	m_mTable[entryRev] = action;
+	if (newFwdPort != -1)
+	{
+		actionRev.m_fwdPort = newFwdPort;
+	}
+	m_mTable[entryRev] = actionRev;
 	vector<string> log;
 	string output1 = ", rule installed (" +
 		to_string(entry.m_srcIp) + ", " + to_string(entry.m_srcPort) + ", " +
 		to_string(entry.m_dstIp) + ", " + to_string(entry.m_dstPort) + ", " + to_string(entry.m_protocol) +
-		") action ACTION.";
+		") action " + to_string(action.m_action) ;
 	string output2 = ", rule installed (" +
 		to_string(entryRev.m_srcIp) + ", " + to_string(entryRev.m_srcPort) + ", " +
 		to_string(entryRev.m_dstIp) + ", " + to_string(entryRev.m_dstPort) + ", " + to_string(entryRev.m_protocol) +
-		") action ACTION.";
+		") action " + to_string(actionRev.m_action);
 	log.push_back(output1);
 	log.push_back(output2);
 	return log;
@@ -324,5 +329,56 @@ int cRouter::parser(const string &target, vector<string> &output)
 		}
 	}
 	return iCount;
+}
+
+int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort)
+{
+	uint32_t sSrc_addr;
+	uint32_t sDst_addr;
+	uint16_t sSrc_port;
+	uint16_t sDst_port;
+	u_int8_t ip_type;
+
+
+	ipUnpack(buffer, sSrc_addr, sDst_addr, sSrc_port, sDst_port, ip_type);
+
+	msg.octane_action = octane_action ;
+	msg.octane_flags = 0;
+	msg.octane_seqno = m_iSeqnoCnt++;
+	msg.octane_source_ip = sSrc_addr;
+	msg.octane_dest_ip = sDst_addr;
+	msg.octane_source_port = sSrc_port;
+	msg.octane_dest_port = sDst_port;
+	msg.octane_protocol = ip_type;
+	msg.octane_port = sTargetPort;
+
+	return 1;
+}
+
+int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control oriMsg, uint16_t sTargetPort = -1)
+{
+	uint32_t sSrc_addr;
+	uint32_t sDst_addr;
+	uint16_t sSrc_port;
+	uint16_t sDst_port;
+	u_int8_t ip_type;
+
+	msg.octane_action = oriMsg.octane_action;
+	msg.octane_flags = 0;
+	msg.octane_seqno = m_iSeqnoCnt++;
+	msg.octane_source_ip = oriMsg.octane_dest_ip; 
+	msg.octane_dest_ip = oriMsg.octane_source_ip;
+	msg.octane_source_port = oriMsg.octane_dest_port;
+	msg.octane_dest_port = oriMsg.octane_source_port;
+	msg.octane_protocol = oriMsg.octane_protocol;
+	if (sTargetPort == -1)
+	{
+		msg.octane_port = oriMsg.octane_port;
+	}
+	else
+	{
+		msg.octane_port = sTargetPort;
+	}
+	return 1;
 }
 

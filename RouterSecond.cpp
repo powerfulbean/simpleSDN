@@ -247,50 +247,47 @@ void secondRouter_s4(cRouter & Router)
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
-			if (Router.iStage == 3)
+			if (FD_ISSET(iRawSockID, &fdSet))
 			{
-				if (FD_ISSET(iRawSockID, &fdSet))
+				char buffer2[2048];
+				struct sockaddr_in senderAddr;
+				struct iovec iov2;
+				struct msghdr msg2;
+				iov2.iov_base = buffer2;
+				iov2.iov_len = sizeof(buffer2);
+				msg2.msg_name = &senderAddr;
+				msg2.msg_namelen = sizeof(senderAddr);
+				msg2.msg_iov = &iov2;
+				msg2.msg_iovlen = 1;
+				msg2.msg_control = NULL;
+				msg2.msg_controllen = 0;
+				msg2.msg_flags = 0;
+				int err = recvmsg(iRawSockID, &msg2, 0);
+				if (err == -1)
 				{
-					char buffer2[2048];
-					struct sockaddr_in senderAddr;
-					struct iovec iov2;
-					struct msghdr msg2;
-					iov2.iov_base = buffer2;
-					iov2.iov_len = sizeof(buffer2);
-					msg2.msg_name = &senderAddr;
-					msg2.msg_namelen = sizeof(senderAddr);
-					msg2.msg_iov = &iov2;
-					msg2.msg_iovlen = 1;
-					msg2.msg_control = NULL;
-					msg2.msg_controllen = 0;
-					msg2.msg_flags = 0;
-					int err = recvmsg(iRawSockID, &msg2, 0);
+					perror("icmpForward_secondRouter error: recvmsg");
+				}
+				else
+				{
+					perror("icmpForward_secondRouter success: recvmsg");
+					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
+				}
+
+				u_int8_t icmpType = getIcmpType(buffer);
+
+				if (icmpType == 0)
+				{
+					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
+					printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
+					icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
+					err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
 					if (err == -1)
 					{
-						perror("icmpForward_secondRouter error: recvmsg");
+						perror("icmpForward_secondRouter error: sendMsg");
 					}
 					else
 					{
-						perror("icmpForward_secondRouter success: recvmsg");
-						printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
-					}
-
-					u_int8_t icmpType = getIcmpType(buffer);
-
-					if (icmpType == 0)
-					{
-						icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
-						printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
-						icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
-						err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
-						if (err == -1)
-						{
-							perror("icmpForward_secondRouter error: sendMsg");
-						}
-						else
-						{
-							perror("icmpForward_secondRouter success: sendMsg");
-						}
+						perror("icmpForward_secondRouter success: sendMsg");
 					}
 				}
 			}

@@ -40,6 +40,10 @@ int sendMsg(int sockID2,const char* buf,unsigned int iSize,
 {
 	socklen_t len = sizeof(rou1Addr);
 	int err = sendto(sockID2,buf,iSize,0,(struct sockaddr*)&rou1Addr,len);
+	if (err == -1)
+	{
+		perror("sendMsg error");
+	}
 	char pRou1Addr[16];
         unsigned int iRou1Port;
         inet_ntop(AF_INET,&rou1Addr.sin_addr,pRou1Addr,sizeof(pRou1Addr));// translate the router 1 ip address to ascii

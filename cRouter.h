@@ -1,6 +1,7 @@
 //jindou
 #pragma once
 #include "network.h"
+#include "sample_tunnel.h"
 #include <map>
 using namespace std;
 
@@ -57,11 +58,16 @@ class cRouter{
 		int iFPID;// store the return value of fork()
 		vector<string> vConfig;
 		vector<string> vLog;
+		
 		int iConfigReg;
 		int iSockID;
 		int iRawSockID;
 		int m_iDropAfter;
 
+		// octane part:
+		uint16_t m_iSeqnoCnt;
+		flow_table m_rouFlowTable;
+		map<uint16_t, octane_control> unAckBuffer;
 
 		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 1; iSockID = -1; iRawSockID = -1; m_iDropAfter = 3; }
 		void readConfigFile(char* filePath);

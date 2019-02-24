@@ -1,6 +1,5 @@
 #pragma once
 #include "cRouter.h"
-#include "sample_tunnel.h"
 void primaryRouter(int sockID, cRouter & Router,
 	sockaddr_in &rou2Addr);
 void secondRouter(cRouter & Router, const struct sockaddr_in rou1Addr, struct sockaddr_in &rou2Addr);
@@ -13,12 +12,18 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 
 void primaryRouter_s2(cRouter & Router,struct sockaddr_in &rou2Addr);
 void secondRouter_s2(cRouter & Router);
+void primaryRouter_s4(cRouter & Router, struct sockaddr_in &rou2Addr);
+void secondRouter_s4(cRouter & Router);
 
 void stage1(cRouter &Router,
 	struct sockaddr_in & rou1Addr,
 	struct sockaddr_in & rou2Addr);
 
 void stage2(cRouter &Router,
+	struct sockaddr_in & rou1Addr,
+	struct sockaddr_in & rou2Addr);
+
+void stage4(cRouter &Router,
 	struct sockaddr_in & rou1Addr,
 	struct sockaddr_in & rou2Addr);
 

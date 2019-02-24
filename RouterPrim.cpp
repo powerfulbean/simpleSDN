@@ -86,6 +86,75 @@ void primaryRouter_s2(cRouter & Router, sockaddr_in &rou2Addr)
 	
 }
 
+void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
+{
+	int tun_fd = set_tunnel_reader();
+	int iSockID = Router.iSockID;
+
+	struct timeval timeout;
+	fd_set fdSetAll, fdSet;
+	timeout.tv_sec = 15;
+	timeout.tv_usec = 0;
+	FD_ZERO(&fdSetAll);
+	FD_SET(tun_fd, &fdSetAll);
+	FD_SET(iSockID, &fdSetAll);
+	int iMaxfdpl = (tun_fd > iSockID) ? (tun_fd + 1) : (iSockID + 1);
+	while (1)
+	{
+		fdSet = fdSetAll;
+		int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, &timeout);
+		if (iSelect == 0)
+		{
+			cout << "timeout!" << endl;
+			return;
+		}
+		else
+		{
+			char buffer[2048];
+			if (FD_ISSET(tun_fd, &fdSet))
+			{
+				memset(buffer, 0, 2048);
+				int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
+				if (nread < 0)
+				{
+					exit(1);
+				}
+				else
+				{
+					printf("Read a packet from tunnel, packet length:%d\n", nread);
+					int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
+					if (a != 1)
+					{
+						continue;
+					}
+					sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+					//icmpReply_primRouter(tun_fd, buffer, nread);
+				}
+			}
+			if (FD_ISSET(iSockID, &fdSet))
+			{
+				memset(buffer, 0, 2048);
+				struct sockaddr_in rou2Addr;
+				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+				if (nread < 0)
+				{
+					exit(1);
+				}
+				else
+				{
+					printf("Read a packet from secondary router, packet length:%d\n", nread);
+					icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
+					cwrite(tun_fd, buffer, nread);// send packet back to tunnel
+												  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+												  //icmpReply_primRouter(tun_fd, buffer, nread);
+				}
+			}
+			timeout.tv_sec = 15;
+			timeout.tv_usec = 0;
+		}
+	}
+
+}
 int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int flag, int iPort)
 {
 	vector<string> &vLog = Router.vLog;
@@ -160,12 +229,14 @@ void stage1(cRouter &Router,
 	{
 		secondRouter(Router, rou1Addr, rou2Addr);
 		Router.iFPID = fPid;
+		Router.iRouterID = 0;
 	}
 	else
 	{
 		cout << "child process pid: " << fPid << endl << endl;
 		Router.iFPID = fPid;
 		primaryRouter(sockID, Router, rou2Addr);
+		Router.iRouterID = 1;
 	}
 }
 
@@ -182,6 +253,21 @@ void stage2(cRouter &Router,
 	{
 		//tunnel_reader();
 		primaryRouter_s2(Router, rou2Addr);
+	}
+}
+
+void stage4(cRouter &Router,
+	struct sockaddr_in & rou1Addr,
+	struct sockaddr_in & rou2Addr)
+{
+	stage1(Router, rou1Addr, rou2Addr);
+	if (Router.iFPID == 0) // if it is secondary router
+	{
+		secondRouter_s4(Router);
+	}
+	else// if it is primary router
+	{
+		primaryRouter_s4(Router);
 	}
 }
 

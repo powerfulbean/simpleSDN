@@ -140,7 +140,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size; i++)
+						for (int i = 0; i < tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
@@ -159,14 +159,14 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							{
 								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							}
-							sendMsg(Router.m_iOctSockID, msg1, sizeof(msg1), rou2Addr); // send control message
+							sendMsg(Router.m_iOctSockID, (char*)msg1, sizeof(msg1), rou2Addr); // send control message
 						}
 						else
 						{
 							Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
 							Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
-							sendMsg(Router.m_iOctSockID, msg1, sizeof(msg1), rou2Addr);// send control message
-							sendMsg(Router.m_iOctSockID, msg1_re, sizeof(msg1_re), rou2Addr);// send control message
+							sendMsg(Router.m_iOctSockID, (char*)msg1, sizeof(msg1), rou2Addr);// send control message
+							sendMsg(Router.m_iOctSockID, (char*)msg1_re, sizeof(msg1_re), rou2Addr);// send control message
 						}
 						
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);

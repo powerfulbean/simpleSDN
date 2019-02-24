@@ -159,14 +159,14 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							{
 								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							}
-							//sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr); // send control message
+							sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr); // send control message
 						}
 						else
 						{
 							Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
 							Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
-							//sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr);// send control message
-							//sendMsg(Router.m_iOctSockID, (char*)&msg1_re, sizeof(msg1_re), rou2Addr);// send control message
+							sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr);// send control message
+							sendMsg(Router.m_iOctSockID, (char*)&msg1_re, sizeof(msg1_re), rou2Addr);// send control message
 						}
 						
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);

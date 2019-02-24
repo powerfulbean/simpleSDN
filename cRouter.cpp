@@ -62,8 +62,8 @@ string flow_table::insert(octane_control msg)
 	}
 	m_mTable[entry] = action;
 	string output = ", rule installed (" + 
-		to_string(entry.m_srcIp) + ", " + to_string(entry.m_srcPort) + ", " + 
-		to_string(entry.m_dstIp) + ", " + to_string(entry.m_dstPort)+ ", " + to_string(entry.m_protocol) + 
+		string(inet_ntoa(entry.m_srcIp)) + ", " + to_string(int(inet_ntohs(entry.m_srcPort))) + ", " +
+		string(inet_ntoa(entry.m_dstIp)) + ", " + to_string(int(inet_ntohs(entry.m_dstPort)))+ ", " + to_string(entry.m_protocol) +
 		") action " + to_string(action.m_action);
 	return output;
 }
@@ -86,12 +86,12 @@ vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort = -1
 	m_mTable[entryRev] = actionRev;
 	vector<string> log;
 	string output1 = ", rule installed (" +
-		to_string(entry.m_srcIp) + ", " + to_string(entry.m_srcPort) + ", " +
-		to_string(entry.m_dstIp) + ", " + to_string(entry.m_dstPort) + ", " + to_string(entry.m_protocol) +
+		string(inet_ntoa(entry.m_srcIp)) + ", " + to_string(int(inet_ntohs(entry.m_srcPort))) + ", " +
+		string(inet_ntoa(entry.m_dstIp)) + ", " + to_string(int(inet_ntohs(entry.m_dstPort))) + ", " + to_string(entry.m_protocol) +
 		") action " + to_string(action.m_action) ;
 	string output2 = ", rule installed (" +
-		to_string(entryRev.m_srcIp) + ", " + to_string(entryRev.m_srcPort) + ", " +
-		to_string(entryRev.m_dstIp) + ", " + to_string(entryRev.m_dstPort) + ", " + to_string(entryRev.m_protocol) +
+		string(inet_ntoa(entryRev.m_srcIp)) + ", " + to_string(int(inet_ntohs(entryRev.m_srcPort))) + ", " +
+		string(inet_ntoa(entryRev.m_dstIp)) + ", " + to_string(int(inet_ntohs(entryRev.m_dstPort))) + ", " + to_string(entryRev.m_protocol) +
 		") action " + to_string(actionRev.m_action);
 	log.push_back(output1);
 	log.push_back(output2);

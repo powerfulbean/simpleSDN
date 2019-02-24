@@ -131,7 +131,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 					int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
 					if (a == 1) // it is a ICMP packet
 					{
-						printf("Read a ICMP packet \n", nread);
+						printf("Prim Router Read a ICMP packet \n", nread);
 						struct octane_control localMsg, msg1,msg1_re;
 						struct in_addr srcAddr, dstAddr;
 						u_int8_t icmp_type;

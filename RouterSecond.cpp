@@ -232,7 +232,8 @@ void secondRouter_s4(cRouter & Router)
 					u_int8_t icmp_type;
 					int iProtoType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 					if (iProtoType == 1)
-					{
+					{	
+						printf("Second Router Read a ICMP packet \n");
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{
@@ -240,11 +241,8 @@ void secondRouter_s4(cRouter & Router)
 						}
 						else
 						{
-							if (Router.iStage == 3)
-							{
-								oriSrcAddr = srcAddr;
-								icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
-							}
+							oriSrcAddr = srcAddr;
+							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
 						}
 					}
 					else if (iProtoType == 253)

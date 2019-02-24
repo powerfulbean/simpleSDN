@@ -81,7 +81,7 @@ class cRouter{
 		int m_iOctSockID;
 
 		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort);
-		int cRouter::createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort);
+		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort);
 };
 
 

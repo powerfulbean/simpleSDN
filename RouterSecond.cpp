@@ -240,6 +240,7 @@ void secondRouter_s4(cRouter & Router)
 					}
 					else if (iProtoType == 253)
 					{
+						printf("Second Router Read a Control Message packet \n");
 						octane_control * pOctMsg = (octane_control *) buffer;
 						string sLog = Router.m_rouFlowTable.insert(*pOctMsg);
 						Router.vLog.push_back(sLog);

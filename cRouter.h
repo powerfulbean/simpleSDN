@@ -40,7 +40,7 @@ public:
 	
 	flow_table() {};
 	string insert(octane_control msg);
-	vector<string> dbInsert(octane_control msg, uint16_t newFwdPort = -1);
+	vector<string> dbInsert(octane_control msg, uint16_t newFwdPort = 65535);
 	string find(octane_control msg);
 	string remove(octane_control msg);
 	bool contains(octane_control msg);

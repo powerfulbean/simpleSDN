@@ -65,13 +65,13 @@ string flow_table::insert(octane_control msg)
 	src1.s_addr = entry.m_srcIp;
 	dst1.s_addr = entry.m_dstIp;
 	string output = ", rule installed (" + 
-		string(inet_ntoa(src1)) + ", " + to_string(int(inet_ntohs(entry.m_srcPort))) + ", " +
-		string(inet_ntoa(dst1)) + ", " + to_string(int(inet_ntohs(entry.m_dstPort)))+ ", " + to_string(entry.m_protocol) +
+		string(inet_ntoa(src1)) + ", " + to_string(int(ntohs(entry.m_srcPort))) + ", " +
+		string(inet_ntoa(dst1)) + ", " + to_string(int(ntohs(entry.m_dstPort)))+ ", " + to_string(entry.m_protocol) +
 		") action " + to_string(action.m_action);
 	return output;
 }
 
-vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort = -1)
+vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort)
 {
 	flow_entry entry(msg);
 	flow_action action(msg);
@@ -82,7 +82,7 @@ vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort = -1
 		cout << "flow_table_insert warning: replace existed extry";
 	}
 	m_mTable[entry] = action;
-	if (newFwdPort != -1)
+	if (newFwdPort != 65535)
 	{
 		actionRev.m_fwdPort = newFwdPort;
 	}
@@ -94,12 +94,12 @@ vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort = -1
 	dst1.s_addr = entry.m_dstIp;
 	dst2.s_addr = entryRev.m_dstIp;
 	string output1 = ", rule installed (" +
-		string(inet_ntoa(src1)) + ", " + to_string(int(inet_ntohs(entry.m_srcPort))) + ", " +
-		string(inet_ntoa(dst1)) + ", " + to_string(int(inet_ntohs(entry.m_dstPort))) + ", " + to_string(entry.m_protocol) +
+		string(inet_ntoa(src1)) + ", " + to_string(int(ntohs(entry.m_srcPort))) + ", " +
+		string(inet_ntoa(dst1)) + ", " + to_string(int(ntohs(entry.m_dstPort))) + ", " + to_string(entry.m_protocol) +
 		") action " + to_string(action.m_action) ;
 	string output2 = ", rule installed (" +
-		string(inet_ntoa(src2)) + ", " + to_string(int(inet_ntohs(entryRev.m_srcPort))) + ", " +
-		string(inet_ntoa(dst2)) + ", " + to_string(int(inet_ntohs(entryRev.m_dstPort))) + ", " + to_string(entryRev.m_protocol) +
+		string(inet_ntoa(src2)) + ", " + to_string(int(ntohs(entryRev.m_srcPort))) + ", " +
+		string(inet_ntoa(dst2)) + ", " + to_string(int(ntohs(entryRev.m_dstPort))) + ", " + to_string(entryRev.m_protocol) +
 		") action " + to_string(actionRev.m_action);
 	log.push_back(output1);
 	log.push_back(output2);

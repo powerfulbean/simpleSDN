@@ -181,29 +181,22 @@ void secondRouter_s4(cRouter & Router)
 	timeout.tv_usec = 0;
 	FD_ZERO(&fdSetAll);
 	FD_SET(iSockID, &fdSetAll);
-	if (Router.iStage == 3)
+	iRawSockID = getIcmpRawSocket();
+	if (iRawSockID<0)
 	{
-		iRawSockID = getIcmpRawSocket();
-		if (iRawSockID<0)
-		{
-			perror("get raw socket error");
-		}
-		Router.iRawSockID = iRawSockID;
-		FD_SET(iRawSockID, &fdSetAll);
-		rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
-		rou2ExternalAddr.sin_family = AF_INET;
-		rou2ExternalAddr.sin_port = htons(0);
-		socklen_t len = sizeof(rou2ExternalAddr);
-		if (-1 == bind(iRawSockID, (struct sockaddr*) &rou2ExternalAddr, len))
-		{
-			perror("secondRouter_s2 error, bind error");
-		}
-		iMaxfdpl = (iRawSockID > iSockID) ? (iRawSockID + 1) : (iSockID + 1);
+		perror("get raw socket error");
 	}
-	else if (Router.iStage == 2)
+	Router.iRawSockID = iRawSockID;
+	FD_SET(iRawSockID, &fdSetAll);
+	rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
+	rou2ExternalAddr.sin_family = AF_INET;
+	rou2ExternalAddr.sin_port = htons(0);
+	socklen_t len = sizeof(rou2ExternalAddr);
+	if (-1 == bind(iRawSockID, (struct sockaddr*) &rou2ExternalAddr, len))
 	{
-		iMaxfdpl = Router.iSockID + 1;
+		perror("secondRouter_s2 error, bind error");
 	}
+	iMaxfdpl = (iRawSockID > iSockID) ? (iRawSockID + 1) : (iSockID + 1);
 	while (1)
 	{
 		fdSet = fdSetAll;

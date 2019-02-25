@@ -140,7 +140,7 @@ void secondRouter_s2(cRouter & Router)
 					}
 
 					u_int8_t icmpType = getIcmpType(buffer);
-
+					cout<<"Raw socket second router icmpType: " << icmpType<<endl;
 					if (icmpType == 0)
 					{
 						icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement

@@ -161,7 +161,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							}
 							char octaneIpBuffer[2048];
 							memset(octaneIpBuffer, 0, 2048);
-							buildIpHeader(octaneIpBuffer, sizeof(octaneIpBuffer), 253, "127.0.0.1","127.0.0.1", (char *)&msg1, sizeof(msg1));
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, "127.0.0.1","127.0.0.1", (char *)&msg1, sizeof(msg1));
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
 						}
 						else

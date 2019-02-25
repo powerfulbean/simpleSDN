@@ -243,7 +243,7 @@ void secondRouter_s4(cRouter & Router)
 						printf("Second Router Read a Control Message packet \n");
 						octane_control octMsg;
 						octaneUnpack(buffer, &octMsg);
-						string sLog = Router.m_rouFlowTable.insert(octMsg);
+						string sLog = "router: " + to_string(Router.iRouterID)+Router.m_rouFlowTable.insert(octMsg);
 						Router.vLog.push_back(sLog);
 					}
 				}

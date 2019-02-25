@@ -68,4 +68,4 @@ int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, s
 int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint16_t &sSrc_port, uint16_t &sDst_port, u_int8_t &ip_type);
 u_int8_t getIcmpType(char* buffer);
 
-void buildIpPacket(char* buffer, unsigned int iBufferSize, int iProtocol, char* pSrcAddr, char* pDstAddr, char* payload, unsigned int iPayloadSize);
+void buildIpPacket(char* buffer, unsigned int iBufferSize, int iProtocol, string sSrcAddr, string sDstAddr, char* payload, unsigned int iPayloadSize);

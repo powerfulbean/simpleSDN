@@ -141,7 +141,7 @@ int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, s
 	return 1;
 }
 
-void buildIpPacket(char* buffer, unsigned int iBufferSize,int iProtocol, char* pSrcAddr, char* pDstAddr, char* payload, unsigned int iPayloadSize)
+void buildIpPacket(char* buffer, unsigned int iBufferSize,int iProtocol, string sSrcAddr, string sDstAddr, char* payload, unsigned int iPayloadSize)
 {
 
 	int iIP4_HDRLEN = 20;
@@ -158,8 +158,8 @@ void buildIpPacket(char* buffer, unsigned int iBufferSize,int iProtocol, char* p
 	IpHeader.ip_id = htons(0);
 	IpHeader.ip_off = 0;
 	IpHeader.ip_p = iProtocol;
-	IpHeader.ip_src.s_addr = inet_addr(pSrcAddr);
-	IpHeader.ip_dst.s_addr = inet_addr(pDstAddr);
+	IpHeader.ip_src.s_addr = inet_addr(sSrcAddr.data());
+	IpHeader.ip_dst.s_addr = inet_addr(sDstAddr.data());
 	IpHeader.ip_ttl = 255;
 	IpHeader.ip_sum = checksum((char*)&IpHeader, iIP4_HDRLEN);
 	

@@ -90,7 +90,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	int iOctSockID = getRawSocket(IPPROTO_UDP);
+	int iOctSockID = getRawSocket(253);
 	if (iOctSockID == -1)
 	{
 		perror("get OctaneSocket error!");

@@ -12,7 +12,7 @@ int getIcmpRawSocket()
 
 int getRawSocket(int protocol)
 {
-	return socket(AF_INET, SOCK_RAW, protocol);
+	return socket(AF_INET, SOCK_DGRAM, protocol);
 }
 
 void setTempAddr(const char* pIp, struct sockaddr_in & locAddr)
@@ -205,7 +205,7 @@ void ipChangeProtocol(char* buffer, int iProtocol)
 {
 	struct ip * pIpHeader;
 	pIpHeader = (struct ip *) buffer;
-
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 															  // edit IP packet
 	struct in_addr tempAddr = pIpHeader->ip_dst;
 	pIpHeader->ip_dst = pIpHeader->ip_src;

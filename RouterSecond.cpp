@@ -275,9 +275,9 @@ void secondRouter_s4(cRouter & Router)
 					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 				}
 
-				u_int8_t icmpType = getIcmpType(buffer);
+				u_int8_t icmpType = 0;//S getIcmpType(buffer);
 
-				if (icmpType == (u_int8_t) 0)
+				if (icmpType ==  0)
 				{
 					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
 					printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));

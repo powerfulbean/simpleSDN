@@ -277,6 +277,8 @@ void secondRouter_s4(cRouter & Router)
 
 				u_int8_t icmpType =  getIcmpType(buffer);
 
+
+
 				if (icmpType ==  0)
 				{
 					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement

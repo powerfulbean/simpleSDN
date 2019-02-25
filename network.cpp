@@ -194,8 +194,9 @@ int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint1
 	sSrc_addr = pIpHeader->ip_src.s_addr;
 	sDst_addr = pIpHeader->ip_dst.s_addr;
 
-	if (ip_type == 1)
+	if (ip_type == (u_int8_t)1)
 	{
+		cout << "network.cpp: ipUnpack: it is a ICMP packet \n";
 		sSrc_port == 0xFFFF;
 		sDst_port == 0xFFFF;
 	}
@@ -317,7 +318,7 @@ u_int8_t getIcmpType(char* buffer)
 
 	if (pIpHeader->ip_p != 1)
 	{
-		return 0;
+		return -1;
 	}
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;

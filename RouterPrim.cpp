@@ -169,8 +169,15 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						{
 							Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
 							Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
-							sendMsg(Router.iSockID, (char*)&msg1, sizeof(msg1), rou2Addr);// send control message
-							sendMsg(Router.iSockID, (char*)&msg1_re, sizeof(msg1_re), rou2Addr);// send control message
+							char octaneIpBuffer[2048];
+							char octaneIpBufferRev[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							memset(octaneIpBufferRev, 0, 2048);
+							string localAddr = "127.0.0.1";
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
+							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
 						}
 						
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);

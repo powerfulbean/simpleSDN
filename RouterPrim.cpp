@@ -91,11 +91,11 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
 	//int iOctSockID = getRawSocket(253);
-	if (iOctSockID == -1)
+	/*if (iOctSockID == -1)
 	{
 		perror("get OctaneSocket error!");
-	}
-	Router.m_iOctSockID = iOctSockID;
+	}*/
+	//Router.m_iOctSockID = iOctSockID;
 	struct timeval timeout;
 	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
@@ -162,7 +162,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							char octaneIpBuffer[2048];
 							memset(octaneIpBuffer, 0, 2048);
 							buildIpHeader(octaneIpBuffer, sizeof(octaneIpBuffer), 253, "127.0.0.1","127.0.0.1", (char *)&msg1, sizeof(msg1));
-							sendMsg(Router.iSockID, octaneIpBuffer1, sizeof(octaneIpBuffer), rou2Addr); // send control message
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
 						}
 						else
 						{

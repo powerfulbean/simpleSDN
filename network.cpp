@@ -79,6 +79,21 @@ int  recvMsg(int sockID, char *buf, unsigned int iSize,
 	return count;
 }
 
+
+int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
+{
+	struct ip * pIpHeader;
+	struct octane_message * pOctane;
+	pIpHeader = (struct ip *) buffer;
+
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pOctane = (struct octane_message *)(buffer + iIpHeaderLen);
+	short iOctaneTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen; // this part is learnt from 
+	memcpy(pOutOctane, pOctane, iOctaneTotLen);
+
+	return iOctaneTotLen;
+}
+
 /* About the function:
 	icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
 	was built based on the itroduction of ipheader length calculation by "zthgreat"

@@ -12,7 +12,7 @@ void primaryRouter(const int sockID, cRouter & Router, sockaddr_in & rou2Addr)
 	string sMsgRecv(buf);
 	inet_ntop(AF_INET, &rou2Addr.sin_addr, pRou2Addr, sizeof(pRou2Addr));
 	int iRou2Port = ntohs(rou2Addr.sin_port);
-	string temp2 = "router 1, pid: " + sMsgRecv + ", port: " + to_string(iRou2Port);
+	string temp2 = "router: 1, pid: " + sMsgRecv + ", port: " + to_string(iRou2Port);
 	vLog.push_back(temp2);
 }
 

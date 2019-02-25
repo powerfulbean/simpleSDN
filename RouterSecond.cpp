@@ -22,7 +22,7 @@ void secondRouter(cRouter & Router, const sockaddr_in rou1Addr, struct sockaddr_
 	cout << "router2: local address: " << pRou2Addr << endl;
 	cout << "router2: local  port: " << iRou2Port << endl;
 	cout << endl;
-	string temp2 = "router 1, pid: " + sPid + ", port: " + to_string(iRou2Port);
+	string temp2 = "router: 1, pid: " + sPid + ", port: " + to_string(iRou2Port);
 	vLog.push_back(temp2);
 }
 

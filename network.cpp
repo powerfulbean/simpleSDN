@@ -12,7 +12,7 @@ int getIcmpRawSocket()
 
 int getRawSocket(int protocol)
 {
-	return socket(AF_INET, SOCK_DGRAM, protocol);
+	return socket(AF_INET, SOCK_RAW, protocol);
 }
 
 void setTempAddr(const char* pIp, struct sockaddr_in & locAddr)

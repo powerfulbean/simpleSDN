@@ -144,25 +144,26 @@ int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, s
 void buildIpPacket(char* buffer, unsigned int iBufferSize,int iProtocol, char* pSrcAddr, char* pDstAddr, char* payload, unsigned int iPayloadSize)
 {
 
-	if (iBufferSize < IP4_HDRLEN + iPayloadSize)
+	int iIP4_HDRLEN = 20;
+	if (iBufferSize < iIP4_HDRLEN + iPayloadSize)
 	{
 		cout << "buildIpPacket error: the buffer is too small! \n";
 		return;
 	}
 	struct ip IpHeader;
-	iphdr.ip_hl = IP4_HDRLEN / sizeof(uint32_t);
+	iphdr.ip_hl = iIP4_HDRLEN / sizeof(uint32_t);
 	IpHeader.ip_v = 4;
 	IpHeader.ip_tos = 0;
-	IpHeader.ip_len = htons(IP4_HDRLEN + iPayloadSize);
+	IpHeader.ip_len = htons(iIP4_HDRLEN + iPayloadSize);
 	IpHeader.ip_id = htons(0);
-	IpHeader.iphdr.ip_off = 0;
+	IpHeader.ip_off = 0;
 	IpHeader.ip_p = iProtocol;
-	IpHeader.ip_src = inet_addr(pSrcAddr);
-	IpHeader.ip_dst = inet_addr(pDstAddr);
+	IpHeader.ip_src.s_addr = inet_addr(pSrcAddr);
+	IpHeader.ip_dst.s_addr = inet_addr(pDstAddr);
 	IpHeader.ip_ttl = 255;
-	IpHeader.ip_sum = checksum((char*)&IpHeader, IP4_HDRLEN);
+	IpHeader.ip_sum = checksum((char*)&IpHeader, iIP4_HDRLEN);
 	
-	memcpy(buffer, &IpHeader, IP4_HDRLEN * sizeof(uint8_t));
+	memcpy(buffer, &IpHeader, iIP4_HDRLEN * sizeof(uint8_t));
 	memcpy(buffer + iPayloadSize, payload, iPayloadSize * sizeof(uint8_t));
 
 	return;

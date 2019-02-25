@@ -201,6 +201,20 @@ void icmpReply_Edit(char* buffer)
 	
 }
 
+void ipChangeProtocol(char* buffer, int iProtocol)
+{
+	struct ip * pIpHeader;
+	pIpHeader = (struct ip *) buffer;
+
+															  // edit IP packet
+	struct in_addr tempAddr = pIpHeader->ip_dst;
+	pIpHeader->ip_dst = pIpHeader->ip_src;
+	pIpHeader->ip_src = tempAddr;
+	pIpHeader->ip_p = iProtocol;
+	pIpHeader->ip_sum = 0;
+	pIpHeader->ip_sum = checksum((char*)pIpHeader, iIpHeaderLen);
+	printf("service type after changing: %d  \n", pIpHeader->ip_p);
+}
 
 struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int iFlag)
 {

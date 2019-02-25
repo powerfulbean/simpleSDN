@@ -90,7 +90,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	int iOctSockID = getRawSocket(253);
+	//int iOctSockID = getRawSocket(253);
 	if (iOctSockID == -1)
 	{
 		perror("get OctaneSocket error!");
@@ -159,14 +159,17 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							{
 								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							}
-							sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr); // send control message
+							char octaneIpBuffer[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							buildIpHeader(octaneIpBuffer, sizeof(octaneIpBuffer), 253, "127.0.0.1","127.0.0.1", (char *)&msg1, sizeof(msg1));
+							sendMsg(Router.iSockID, octaneIpBuffer1, sizeof(octaneIpBuffer), rou2Addr); // send control message
 						}
 						else
 						{
 							Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
 							Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
-							sendMsg(Router.m_iOctSockID, (char*)&msg1, sizeof(msg1), rou2Addr);// send control message
-							sendMsg(Router.m_iOctSockID, (char*)&msg1_re, sizeof(msg1_re), rou2Addr);// send control message
+							sendMsg(Router.iSockID, (char*)&msg1, sizeof(msg1), rou2Addr);// send control message
+							sendMsg(Router.iSockID, (char*)&msg1_re, sizeof(msg1_re), rou2Addr);// send control message
 						}
 						
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);

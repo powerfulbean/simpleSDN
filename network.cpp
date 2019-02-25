@@ -151,7 +151,7 @@ void buildIpPacket(char* buffer, unsigned int iBufferSize,int iProtocol, char* p
 		return;
 	}
 	struct ip IpHeader;
-	iphdr.ip_hl = iIP4_HDRLEN / sizeof(uint32_t);
+	IpHeader.ip_hl = iIP4_HDRLEN / sizeof(uint32_t);
 	IpHeader.ip_v = 4;
 	IpHeader.ip_tos = 0;
 	IpHeader.ip_len = htons(iIP4_HDRLEN + iPayloadSize);

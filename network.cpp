@@ -320,7 +320,7 @@ u_int8_t getIcmpType(char* buffer)
 	{
 		printf("\n not  icmp %x ",pIpHeader->ip_p);
 		printf("\n not  icmp %d \n ",pIpHeader->ip_p);
-		return -1;
+	//	return -1;
 	}
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;

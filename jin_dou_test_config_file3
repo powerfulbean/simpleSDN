@@ -4,8 +4,9 @@
 #num_routers 1 # this is the number of secondary router
 
 
-stage 2#sssss
+stage 4#sssss
 num_routers 1#sssss
+drop_after 3#
 
 
 #sdfasdfasdf:

@@ -318,14 +318,15 @@ u_int8_t getIcmpType(char* buffer)
 
 	if (pIpHeader->ip_p != 1)
 	{
-		printf("\n not  icmp %d \n ", pIpHeader->ip_p);
+		printf("\n not  icmp %x ",pIpHeader->ip_p);
+		printf("\n not  icmp %d \n ",pIpHeader->ip_p);
 		return -1;
 	}
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
 
-	return ntohs(pIcmp->icmp_type);
+	return pIcmp->icmp_type;
 }
 
 

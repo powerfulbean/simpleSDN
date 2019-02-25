@@ -318,7 +318,7 @@ u_int8_t getIcmpType(char* buffer)
 
 	if (pIpHeader->ip_p != 1)
 	{
-		printf("\n not  icmp \n")
+		printf("\n not  icmp \n");
 		return -1;
 	}
 

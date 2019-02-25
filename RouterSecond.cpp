@@ -275,7 +275,7 @@ void secondRouter_s4(cRouter & Router)
 					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 				}
 
-				uint8_t icmpType =  getIcmpType(buffer);
+				uint8_t icmpType =  getIcmpType(buffer2);
 
 				printf("\n rawsocket rawsocket icmp type: %x \n ",icmpType);
 

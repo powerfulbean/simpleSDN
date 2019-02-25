@@ -277,7 +277,7 @@ void secondRouter_s4(cRouter & Router)
 
 				uint8_t icmpType =  getIcmpType(buffer);
 
-				cout << "\n rawsocket icmp type: " << icmpType << endl;
+				printf("\n rawsocket rawsocket icmp type: %x \n ",icmpType);
 
 				if (icmpType ==  0)
 				{

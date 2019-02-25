@@ -1,5 +1,5 @@
-router 1, pid: 5055, port: 45079
+router 1, pid: 5441, port: 43902
 , rule installed (10.0.2.15, 65535, 128.52.130.149, 65535, 1) action 1
 , rule installed (128.52.130.149, 65535, 10.0.2.15, 65535, 1) action 1
-ICMP from port : 59300, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+ICMP from port : 53485, src: 10.0.2.15, dst : 128.52.130.149, type : 8
 router 1 closed

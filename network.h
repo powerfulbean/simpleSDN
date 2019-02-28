@@ -20,7 +20,7 @@
 
 #include "icmp_checksum.h"
 
-
+#define OCTANE_PROTOCOL_NUM 253
 #define SERV_PORT 80
 #define FromTunnel 5511
 #define FromUdp 5512
@@ -65,8 +65,9 @@ void ipChangeProtocol(char* buffer,int iProtocol);
 struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int iFlag);
 int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);
 int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);
-int octaneUnpack(char* buffer, struct octane_control *pOctane);
+uint16_t octaneUnpack(char* buffer, struct octane_control *pOctane);
 int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint16_t &sSrc_port, uint16_t &sDst_port, u_int8_t &ip_type);
 u_int8_t getIcmpType(char* buffer);
+void octaneReply_Edit(char* buffer);
 
 void buildIpPacket(char* buffer, unsigned int iBufferSize, int iProtocol, string sSrcAddr, string sDstAddr, char* payload, unsigned int iPayloadSize);

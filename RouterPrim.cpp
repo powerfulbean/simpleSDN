@@ -163,11 +163,12 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							string localAddr = "127.0.0.1";
 							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
+							Router.m_unAckBuffer[iSeqno] = msg1;
 						}
 						else
 						{
-							Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
-							Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+							int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
 							char octaneIpBuffer[2048];
 							char octaneIpBufferRev[2048];
 							memset(octaneIpBuffer, 0, 2048);
@@ -177,6 +178,8 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
 							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
+							Router.m_unAckBuffer[iSeqno1] = msg1;
+							Router.m_unAckBuffer[iSeqno2] = msg1_re;
 						}
 						
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);

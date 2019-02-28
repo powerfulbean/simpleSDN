@@ -253,8 +253,8 @@ void secondRouter_s4(cRouter & Router)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.insert(octMsg);
 							Router.vLog.push_back(sLog);
-							/*Router.m_MsgCount[iSeqno]++;
-							if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
+							Router.m_MsgCount[iSeqno]++;
+							/*if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
 							{
 								Router.m_MsgCount.erase(iSeqno);
 								Router.m_unAckBuffer[iSeqno] = octMsg;

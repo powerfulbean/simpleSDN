@@ -339,7 +339,7 @@ int cRouter::parser(const string &target, vector<string> &output)
 	return iCount;
 }
 
-int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort)
+int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort , bool truelySend )
 {
 	uint32_t sSrc_addr;
 	uint32_t sDst_addr;
@@ -352,7 +352,14 @@ int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsi
 	int iThisSeqno = m_iSeqnoCnt;
 	msg.octane_action = octane_action ;
 	msg.octane_flags = 0;
-	msg.octane_seqno = m_iSeqnoCnt++;
+	if (truelySend == true)
+	{
+		msg.octane_seqno = m_iSeqnoCnt++;
+	}
+	else
+	{
+		msg.octane_seqno = 0;
+	}
 	msg.octane_source_ip = sSrc_addr;
 	msg.octane_dest_ip = sDst_addr;
 	msg.octane_source_port = sSrc_port;
@@ -363,7 +370,7 @@ int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsi
 	return iThisSeqno;
 }
 
-int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control oriMsg, uint16_t sTargetPort = -1)
+int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control oriMsg, uint16_t sTargetPort , bool truelySend)
 {
 	uint32_t sSrc_addr;
 	uint32_t sDst_addr;
@@ -373,7 +380,14 @@ int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control ori
 	int iThisSeqno = m_iSeqnoCnt;
 	msg.octane_action = oriMsg.octane_action;
 	msg.octane_flags = 0;
-	msg.octane_seqno = m_iSeqnoCnt++;
+	if (truelySend == true)
+	{
+		msg.octane_seqno = m_iSeqnoCnt++;
+	}
+	else
+	{
+		msg.octane_seqno = 0;
+	}
 	msg.octane_source_ip = oriMsg.octane_dest_ip; 
 	msg.octane_dest_ip = oriMsg.octane_source_ip;
 	msg.octane_source_port = oriMsg.octane_dest_port;

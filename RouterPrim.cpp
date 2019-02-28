@@ -136,7 +136,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						struct in_addr srcAddr, dstAddr;
 						u_int8_t icmp_type;
 						// create a orctane message for this primary router 
-						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port));
+						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port),false);
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
 						for (int i = 0; i < tempLog.size(); i++)

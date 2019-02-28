@@ -81,8 +81,8 @@ class cRouter{
 		map<uint16_t, int> m_MsgCount; // for secondary router to store the time of receiving the same msg; 
 		int m_iOctSockID;
 
-		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort);
-		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort);
+		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort, bool truelySend = true);
+		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort = -1, bool truelySend = true);
 
 		void printUnAckBuffer();
 };

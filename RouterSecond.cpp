@@ -260,7 +260,7 @@ void secondRouter_s4(cRouter & Router)
 						octane_control octMsg;
 						int iSeqno = octaneUnpack(buffer, &octMsg);
 						cout << "iSeqno: " << iSeqno << endl;
-						if (Router.m_unAckBuffer.find(iSeqno) == Router.m_unAckBuffer.end())
+						//if (Router.m_droppedMsg.find(octMsg) == Router.m_droppedMsg.end())
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.insert(octMsg);
 							Router.vLog.push_back(sLog);

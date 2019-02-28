@@ -77,13 +77,13 @@ class cRouter{
 		// octane part:
 		uint16_t m_iSeqnoCnt;
 		flow_table m_rouFlowTable;
-		map<uint16_t, octane_control> m_unAckBuffer;// for primary router to store unacked msg; for secondary router to store dropped msg
+		map<int, octane_control> m_unAckBuffer;// for primary router to store unacked msg; for secondary router to store dropped msg
 		map<int, int> m_MsgCount; // for secondary router to store the time of receiving the same msg; 
 		int m_iOctSockID;
 
 		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort, bool truelySend = true);
 		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort = -1, bool truelySend = true);
-
+		
 		void printUnAckBuffer();
 };
 

@@ -329,19 +329,3 @@ u_int8_t getIcmpType(char* buffer)
 	return pIcmp->icmp_type;
 }
 
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-		return;
-	}
-
-	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
-	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
-	pOctane->octane_flags = 1;
-
-	return;
-}
-=======
->>>>>>> parent of 6953547... Add reply of octane
-=======
->>>>>>> parent of 6953547... Add reply of octane

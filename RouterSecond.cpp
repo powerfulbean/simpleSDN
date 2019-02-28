@@ -211,7 +211,6 @@ void secondRouter_s4(cRouter & Router)
 			if (FD_ISSET(iSockID, &fdSet))
 			{
 				char buffer[2048];
-				struct sockaddr_in rou1Addr;
 				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 				if (nread < 0)
 				{

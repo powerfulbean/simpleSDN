@@ -263,7 +263,7 @@ void secondRouter_s4(cRouter & Router)
 						if (Router.m_droppedMsg.find(octMsg) == Router.m_droppedMsg.end())
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.insert(octMsg);
-							/*Router.vLog.push_back(sLog);
+							Router.vLog.push_back(sLog);
 							if (Router.m_MsgCount.find(octMsg) == Router.m_MsgCount.end())
 							{
 								Router.m_MsgCount[octMsg] = 1;
@@ -272,12 +272,12 @@ void secondRouter_s4(cRouter & Router)
 							{
 								int iTemp = Router.m_MsgCount[octMsg];
 								Router.m_MsgCount[octMsg] = iTemp + 1;
-							}*/
-							/*if (Router.m_MsgCount[octMsg] == Router.m_iDropAfter)
+							}
+							if (Router.m_MsgCount[octMsg] == Router.m_iDropAfter)
 							{
 								Router.m_MsgCount.erase(octMsg);
 								Router.m_droppedMsg[octMsg] = flow_action(octMsg);
-							}*/
+							}
 							octaneReply_Edit(buffer);
 							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 						}

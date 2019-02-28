@@ -181,7 +181,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							Router.m_unAckBuffer[iSeqno1] = msg1;
 							Router.m_unAckBuffer[iSeqno2] = msg1_re;
 						}
-						
+						Router.printUnAckBuffer();
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 					}
 

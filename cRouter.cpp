@@ -390,3 +390,12 @@ int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control ori
 	return iThisSeqno;
 }
 
+void cRouter::printUnAckBuffer()
+{
+	//Output unAckBuffer
+	cout << endl;
+	for (auto i : m_unAckBuffer)
+	{
+		cout << "seqno: " << i.first << "is not acked" << endl;
+	}
+}

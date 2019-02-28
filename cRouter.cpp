@@ -91,7 +91,7 @@ string flow_table::insert(octane_control msg)
 	string sCheck = flowCheck(entry);
 	if (sCheck.size()!=0)
 	{
-		cout <<endl<< sCheck << endl;
+		return sCheck;
 	}
 	flow_action action(msg);
 	m_mTable[entry] = action;
@@ -110,7 +110,9 @@ vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort)
 	string sCheck = flowCheck(msg);
 	if (sCheck.size() != 0)
 	{
-		cout << endl << sCheck << endl;
+		vector<string> vCheck;
+		vCheck.push_back(sCheck);
+		return vCheck;
 	}
 	flow_entry entry(msg);
 	flow_action action(msg);

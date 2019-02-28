@@ -259,7 +259,7 @@ void secondRouter_s4(cRouter & Router)
 								Router.m_unAckBuffer[iSeqno] = octMsg;
 							}
 							octaneReply_Edit(buffer);
-							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+							//sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 						}
 					}
 				}

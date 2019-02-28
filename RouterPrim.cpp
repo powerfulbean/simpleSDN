@@ -188,6 +188,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 					}
 					else if (iProtoType == 253)
 					{
+						printf("Prim Router Read a Octane packet \n", nread);
 						// check seqno and remove related record from the unack_buffer
 						octane_control octMsg;
 						uint16_t iSeqno = octaneUnpack(buffer, &octMsg);

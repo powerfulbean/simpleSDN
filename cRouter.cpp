@@ -75,6 +75,9 @@ string flow_table::flowCheck(const flow_entry & entry) // return a string longer
 	string output;
 	if (contains(entry))
 	{
+		struct in_addr src1, dst1;
+		src1.s_addr = entry.m_srcIp;
+		dst1.s_addr = entry.m_dstIp;
 		output = ", rule hit (" +
 			string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
 			string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +

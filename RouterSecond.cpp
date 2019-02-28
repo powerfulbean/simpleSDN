@@ -271,6 +271,10 @@ void secondRouter_s4(cRouter & Router)
 							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 						}
 					}
+					else
+					{
+						continue;
+					}
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
@@ -318,6 +322,10 @@ void secondRouter_s4(cRouter & Router)
 					{
 						perror("icmpForward_secondRouter success: sendMsg");
 					}
+				}
+				else
+				{
+					continue;
 				}
 			}
 			timeout.tv_sec = 15;

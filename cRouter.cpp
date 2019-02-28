@@ -408,8 +408,13 @@ void cRouter::printUnAckBuffer()
 {
 	//Output unAckBuffer
 	cout << endl;
+	if (m_unAckBuffer.size() == 0)
+	{
+		cout << "unAckBuffer is empty now" << endl;
+	}
 	for (auto i : m_unAckBuffer)
 	{
 		cout << "seqno: " << i.first << " is not acked" <<" current seqno is: "<<m_iSeqnoCnt<< endl;
 	}
+	return;
 }

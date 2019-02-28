@@ -262,13 +262,13 @@ void secondRouter_s4(cRouter & Router)
 								int iTemp = Router.m_MsgCount[iSeqno];
 								Router.m_MsgCount[iSeqno] = iTemp + 1;
 							}
-							/*if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
+							if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
 							{
 								Router.m_MsgCount.erase(iSeqno);
 								Router.m_unAckBuffer[iSeqno] = octMsg;
 							}
 							octaneReply_Edit(buffer);
-							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);*/
+							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 						}
 					}
 				}

@@ -354,7 +354,7 @@ int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsi
 	msg.octane_flags = 0;
 	if (truelySend == true)
 	{
-		msg.octane_seqno = htons(m_iSeqnoCnt++);
+		msg.octane_seqno = m_iSeqnoCnt++;
 	}
 	else
 	{

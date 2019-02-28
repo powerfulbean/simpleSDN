@@ -62,6 +62,7 @@ class cRouter{
 		int iConfigReg;
 		int iSockID;
 		int iRawSockID;
+		int m_iDropAfter;
 
 		cRouter() { iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 1; iSockID = -1; iRawSockID = -1; m_iDropAfter = 3; m_iSeqnoCnt = 1; }
 		void readConfigFile(char* filePath);
@@ -76,15 +77,11 @@ class cRouter{
 		// octane part:
 		uint16_t m_iSeqnoCnt;
 		flow_table m_rouFlowTable;
-		map<uint16_t, octane_control> m_unAckBuffer;// for primary router to store unacked msg; for secondary router to store dropped msg
-		map<uint16_t, int> m_MsgCount; // for secondary router to store the time of receiving the same msg; 
+		map<uint16_t, octane_control> unAckBuffer;
 		int m_iOctSockID;
-		int m_iDropAfter;
 
 		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort);
 		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort);
-		void printUnAckBuffer();
-		void printFlowTable();
 };
 
 

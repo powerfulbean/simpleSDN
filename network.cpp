@@ -80,18 +80,18 @@ int  recvMsg(int sockID, char *buf, unsigned int iSize,
 }
 
 
-uint16_t octaneUnpack(char* buffer, struct octane_control *pOutOctane)
+int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 {
 	struct ip * pIpHeader;
-	struct octane_control * pOctane;
+	struct octane_message * pOctane;
 	pIpHeader = (struct ip *) buffer;
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
-	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
+	pOctane = (struct octane_message *)(buffer + iIpHeaderLen);
 	short iOctaneTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen; // this part is learnt from 
 	memcpy(pOutOctane, pOctane, iOctaneTotLen);
-	
-	return ntohs(pOctane->octane_seqno);
+
+	return iOctaneTotLen;
 }
 
 /* About the function:
@@ -329,21 +329,3 @@ u_int8_t getIcmpType(char* buffer)
 	return pIcmp->icmp_type;
 }
 
-void octaneReply_Edit(char* buffer)
-{
-	struct ip * pIpHeader;
-	struct octane_control * pOctane;
-	pIpHeader = (struct ip *) buffer;
-
-	if (pIpHeader->ip_p != OCTANE_PROTOCOL_NUM)
-	{
-
-		return;
-	}
-
-	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
-	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
-	pOctane->octane_flags = 1;
-
-	return;
-}

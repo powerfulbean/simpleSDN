@@ -350,18 +350,17 @@ int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsi
 
 	ipUnpack(buffer, sSrc_addr, sDst_addr, sSrc_port, sDst_port, ip_type);
 
-	int iThisSeqno = m_iSeqnoCnt;
 	msg.octane_action = octane_action ;
 	msg.octane_flags = 0;
-	msg.octane_seqno = htons(m_iSeqnoCnt++);
+	msg.octane_seqno = m_iSeqnoCnt++;
 	msg.octane_source_ip = sSrc_addr;
 	msg.octane_dest_ip = sDst_addr;
 	msg.octane_source_port = sSrc_port;
 	msg.octane_dest_port = sDst_port;
 	msg.octane_protocol = ip_type;
-	msg.octane_port = htons(sTargetPort);
+	msg.octane_port = sTargetPort;
 
-	return iThisSeqno;
+	return 1;
 }
 
 int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control oriMsg, uint16_t sTargetPort = -1)
@@ -372,10 +371,9 @@ int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control ori
 	uint16_t sDst_port;
 	u_int8_t ip_type;
 
-	int iThisSeqno = m_iSeqnoCnt;
 	msg.octane_action = oriMsg.octane_action;
 	msg.octane_flags = 0;
-	msg.octane_seqno = htons(m_iSeqnoCnt++);
+	msg.octane_seqno = m_iSeqnoCnt++;
 	msg.octane_source_ip = oriMsg.octane_dest_ip; 
 	msg.octane_dest_ip = oriMsg.octane_source_ip;
 	msg.octane_source_port = oriMsg.octane_dest_port;
@@ -389,25 +387,6 @@ int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control ori
 	{
 		msg.octane_port = sTargetPort;
 	}
-	return iThisSeqno;
+	return 1;
 }
 
-void cRouter::printUnAckBuffer()
-{
-	//Output unAckBuffer
-	cout <<endl;
-	for (auto i : m_unAckBuffer)
-	{
-		cout << "seqno: " << i.first << "is not acked"<< endl;
-	}
-}
-
-void cRouter::printFlowTable()
-{
-	//Output unAckBuffer
-	cout << endl;
-	for (auto i : m_unAckBuffer)
-	{
-		cout << "seqno: " << i.first << "is installed"<< endl;
-	}
-}

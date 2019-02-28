@@ -212,6 +212,15 @@ void secondRouter_s4(cRouter & Router)
 			{
 				char buffer[2048];
 				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+
+				flow_entry entry(buffer);
+				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+				if (sCheck.size() != 0)
+				{
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
+				}
+
 				if (nread < 0)
 				{
 					exit(1);
@@ -302,6 +311,14 @@ void secondRouter_s4(cRouter & Router)
 				{
 					perror("icmpForward_secondRouter success: recvmsg");
 					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
+				}
+
+				flow_entry entry(buffer);
+				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+				if (sCheck.size() != 0)
+				{
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
 				}
 
 				uint8_t icmpType =  getIcmpType(buffer2);

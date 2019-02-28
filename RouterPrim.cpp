@@ -121,6 +121,15 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 			{
 				memset(buffer, 0, 2048);
 				int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
+
+				flow_entry entry(buffer);
+				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+				if (sCheck.size() != 0)
+				{
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
+				}
+
 				if (nread < 0)
 				{
 					exit(1);
@@ -135,14 +144,8 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						struct octane_control localMsg, msg1,msg1_re;
 						struct in_addr srcAddr, dstAddr;
 						u_int8_t icmp_type;
+
 						// create a orctane message for this primary router 
-						flow_entry entry(buffer);
-						string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-						if (sCheck.size() != 0)
-						{
-							string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-							cout << endl << sLog;
-						}
 						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port),false);
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
@@ -202,6 +205,15 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 				memset(buffer, 0, 2048);
 				struct sockaddr_in rou2Addr;
 				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+
+				flow_entry entry(buffer);
+				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+				if (sCheck.size() != 0)
+				{
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
+				}
+
 				if (nread < 0)
 				{
 					exit(1);

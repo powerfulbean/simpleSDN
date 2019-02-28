@@ -184,7 +184,10 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						Router.printUnAckBuffer();
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 					}
-
+					else
+					{
+						continue;
+					}
 				}
 			}
 			if (FD_ISSET(iSockID, &fdSet))
@@ -216,6 +219,10 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							Router.m_unAckBuffer.erase(iSeqno);
 							Router.printUnAckBuffer();
 						}
+					}
+					else
+					{
+						continue;
 					}
 				}
 			}

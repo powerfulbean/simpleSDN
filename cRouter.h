@@ -19,6 +19,7 @@ struct flow_entry
 		m_srcIp(srcIp), m_srcPort(srcPort), m_dstIp(dstIp), m_dstPort(dstPort),
 		m_protocol(protocol) {};
 	flow_entry(octane_control msg);
+	flow_entry(char* buffer);
 	flow_entry reverse();
 	bool operator< (const flow_entry key2) const;
 };
@@ -45,6 +46,7 @@ public:
 	string remove(octane_control msg);
 	bool contains(octane_control msg);
 	bool contains(flow_entry entry);
+	string flowCheck(const flow_entry & msg);
 };
 
 
@@ -83,7 +85,7 @@ class cRouter{
 
 		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort, bool truelySend = true);
 		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort = -1, bool truelySend = true);
-		
+
 		void printUnAckBuffer();
 };
 

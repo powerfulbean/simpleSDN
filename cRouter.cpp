@@ -9,6 +9,24 @@ flow_entry::flow_entry(octane_control msg)
 	m_protocol = msg.octane_protocol;
 }
 
+flow_entry::flow_entry(char* buffer)
+{
+	uint32_t sSrc_addr;
+	uint32_t sDst_addr;
+	uint16_t sSrc_port;
+	uint16_t sDst_port;
+	uint8_t ip_type;
+
+	ipUnpack(buffer, sSrc_addr, sDst_addr, sSrc_port, sDst_port, ip_type);
+
+	m_dstIp = sDst_addr;
+	m_dstPort = sDst_port;
+	m_srcIp = sSrc_addr;
+	m_srcPort = sSrc_port;
+	m_protocol = ip_type;
+}
+
+
 flow_entry flow_entry::reverse()
 {
 	flow_entry reverseEntry;
@@ -52,14 +70,28 @@ flow_action::flow_action(octane_control msg)
 	m_fwdPort = msg.octane_port;
 }
 
+string flow_table::flowCheck(const flow_entry & entry) // return a string longer than 0 if it exists
+{
+	string output;
+	if (contains(entry))
+	{
+		output = ", rule hit (" +
+			string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
+			string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +
+			")";
+		cout << output <<endl;
+	}
+	return output;
+}
 string flow_table::insert(octane_control msg)
 {
 	flow_entry entry(msg);
-	flow_action action(msg);
-	if (contains(entry))
+	string sCheck = flowCheck(entry);
+	if (sCheck.size()!=0)
 	{
-		cout << "flow_table_insert warning: replace existed extry";
+		cout <<endl<< sCheck << endl;
 	}
+	flow_action action(msg);
 	m_mTable[entry] = action;
 	struct in_addr src1, dst1;
 	src1.s_addr = entry.m_srcIp;
@@ -73,6 +105,11 @@ string flow_table::insert(octane_control msg)
 
 vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort)
 {
+	string sCheck = flowCheck(msg);
+	if (sCheck.size() != 0)
+	{
+		cout << endl << sCheck << endl;
+	}
 	flow_entry entry(msg);
 	flow_action action(msg);
 	flow_entry entryRev = entry.reverse();
@@ -418,3 +455,4 @@ void cRouter::printUnAckBuffer()
 	}
 	return;
 }
+

@@ -410,7 +410,7 @@ void cRouter::printUnAckBuffer()
 	cout << endl;
 	if (m_unAckBuffer.size() == 0)
 	{
-		cout << "unAckBuffer is empty now" << endl;
+		cout << "unAckBuffer is empty now. " <<" current seqno is: " << m_iSeqnoCnt << endl;
 	}
 	for (auto i : m_unAckBuffer)
 	{

@@ -147,7 +147,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
 							cout << endl << sLog << endl;
 						}
-						else
+						//else
 						{
 							// create a orctane message for this primary router 
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port), false);

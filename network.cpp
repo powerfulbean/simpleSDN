@@ -347,3 +347,42 @@ u_int8_t getIcmpType(char* buffer)
 	return pIcmp->icmp_type;
 }
 
+bool octane_control::operator< (const octane_control key2) const
+{
+	if (octane_source_ip != key2.octane_source_ip)
+	{
+		return octane_source_ip < key2.octane_source_ip;
+	}
+	else
+	{
+		if (octane_source_port != key2.octane_source_port)
+		{
+			return octane_source_port < key2.octane_source_port;
+		}
+		else
+		{
+			if (octane_dest_ip != key2.octane_dest_ip)
+			{
+				return octane_dest_ip < key2.octane_dest_ip;
+			}
+			else
+			{
+				if (octane_dest_port != key2.octane_dest_port)
+				{
+					return octane_dest_port < key2.octane_dest_port;
+				}
+				else
+				{
+					if (octane_action < key2.octane_action)
+					{
+						return octane_action < key2.octane_action;
+					}
+					else
+					{
+						return octane_port < key2.octane_port;
+					}
+				}
+			}
+		}
+	}
+}

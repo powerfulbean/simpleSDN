@@ -88,13 +88,11 @@ string flow_table::flowCheck(const flow_entry & entry) // return a string longer
 string flow_table::insert(octane_control msg)
 {
 	flow_entry entry(msg);
-	string sCheck = flowCheck(entry);
-	if (sCheck.size()!=0)
-	{
-		string output;
-		return output;
-	}
 	flow_action action(msg);
+	if (contains(entry))
+	{
+		cout << "flow_table_insert warning: replace existed extry";
+	}
 	m_mTable[entry] = action;
 	struct in_addr src1, dst1;
 	src1.s_addr = entry.m_srcIp;
@@ -108,12 +106,6 @@ string flow_table::insert(octane_control msg)
 
 vector<string> flow_table::dbInsert(octane_control msg, uint16_t newFwdPort)
 {
-	string sCheck = flowCheck(msg);
-	if (sCheck.size() != 0)
-	{
-		vector<string> vCheck;
-		return vCheck;
-	}
 	flow_entry entry(msg);
 	flow_action action(msg);
 	flow_entry entryRev = entry.reverse();

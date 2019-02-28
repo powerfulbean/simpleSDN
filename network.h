@@ -45,6 +45,7 @@ struct octane_control {
 		octane_dest_ip(dst_ip), octane_source_port(src_port), octane_dest_port(dst_port),
 		octane_protocol(protocol), octane_port(octPort) {};
 	octane_control() {};
+	bool operator< (const octane_control key2) const;
 };
 
 

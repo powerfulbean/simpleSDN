@@ -169,6 +169,7 @@ void secondRouter_s2(cRouter & Router)
 void secondRouter_s4(cRouter & Router)
 {
 	char buffer[2048];
+	bool bRefreshTimeout = true;
 	struct sockaddr_in rou1Addr;
 	struct timeval timeout;
 	struct sockaddr_in rou2ExternalAddr;
@@ -210,6 +211,7 @@ void secondRouter_s4(cRouter & Router)
 		{
 			if (FD_ISSET(iSockID, &fdSet))
 			{
+				bRefreshTimeout = true;
 				char buffer[2048];
 				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 
@@ -282,13 +284,14 @@ void secondRouter_s4(cRouter & Router)
 					}
 					else
 					{
-						continue;
+						bRefreshTimeout = false;
 					}
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
 			if (FD_ISSET(iRawSockID, &fdSet))
 			{
+				bRefreshTimeout = true;
 				char buffer2[2048];
 				struct sockaddr_in senderAddr;
 				struct iovec iov2;
@@ -342,11 +345,14 @@ void secondRouter_s4(cRouter & Router)
 				}
 				else
 				{
-					continue;
+					bRefreshTimeout = false;
 				}
 			}
-			timeout.tv_sec = 15;
-			timeout.tv_usec = 0;
+			if (bRefreshTimeout == true)
+			{
+				timeout.tv_sec = 15;
+				timeout.tv_usec = 0;
+			}
 		}
 	}
 

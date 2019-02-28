@@ -210,7 +210,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 					{
 						// check seqno and remove related record from the unack_buffer
 						octane_control octMsg;
-						uint16_t iSeqno = octaneUnpack(buffer, &octMsg);
+						int iSeqno = octaneUnpack(buffer, &octMsg);
 						if (octMsg.octane_flags == 1)
 						{
 							Router.m_unAckBuffer.erase(iSeqno);

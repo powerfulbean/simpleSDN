@@ -255,19 +255,20 @@ void secondRouter_s4(cRouter & Router)
 							Router.vLog.push_back(sLog);
 							if (Router.m_MsgCount.find(iSeqno) == Router.m_MsgCount.end())
 							{
-								Router.m_MsgCount[iSeqno] = 0;
+								Router.m_MsgCount[iSeqno] = 1;
 							}
 							else
 							{
-								Router.m_MsgCount[iSeqno]++;
+								int iTemp = Router.m_MsgCount[iSeqno];
+								Router.m_MsgCount[iSeqno] = iTemp + 1;
 							}
-							if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
+							/*if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
 							{
 								Router.m_MsgCount.erase(iSeqno);
 								Router.m_unAckBuffer[iSeqno] = octMsg;
 							}
 							octaneReply_Edit(buffer);
-							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);*/
 						}
 					}
 				}

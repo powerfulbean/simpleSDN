@@ -128,8 +128,8 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 				else
 				{
 					printf("Read a packet from tunnel, packet length:%d\n", nread);
-					int iProtoType = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
-					if (iProtoType == 1) // it is a ICMP packet
+					int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
+					if (a == 1) // it is a ICMP packet
 					{
 						printf("Prim Router Read a ICMP packet \n", nread);
 						struct octane_control localMsg, msg1,msg1_re;
@@ -151,26 +151,24 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						if (iCheck == 1)
 						{
 							int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
-							int iSeqno;
 							if (iCheck2 == 1)
 							{
-								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
+								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
 							}
 							else
 							{
-								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
+								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							}
 							char octaneIpBuffer[2048];
 							memset(octaneIpBuffer, 0, 2048);
 							string localAddr = "127.0.0.1";
-							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), OCTANE_PROTOCOL_NUM, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
-							Router.m_unAckBuffer[iSeqno] = msg1;
 						}
 						else
 						{
-							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
-							int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+							Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+							Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
 							char octaneIpBuffer[2048];
 							char octaneIpBufferRev[2048];
 							memset(octaneIpBuffer, 0, 2048);
@@ -180,23 +178,11 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
 							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
-							Router.m_unAckBuffer[iSeqno1] = msg1;
-							Router.m_unAckBuffer[iSeqno2] = msg1_re;
 						}
-						Router.printUnAckBuffer();
+						
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 					}
-					else if (iProtoType == 253)
-					{
-						// check seqno and remove related record from the unack_buffer
-						octane_control octMsg;
-						uint16_t iSeqno = octaneUnpack(buffer, &octMsg);
-						if (octMsg.octane_flags == 1)
-						{
-							Router.m_unAckBuffer.erase(iSeqno);
-							Router.printUnAckBuffer();
-						}
-					}
+
 				}
 			}
 			if (FD_ISSET(iSockID, &fdSet))

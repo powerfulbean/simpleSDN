@@ -345,5 +345,5 @@ void octaneReply_Edit(char* buffer)
 	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
 	pOctane->octane_flags = 1;
 
-	return replacedAddr;
+	return;
 }

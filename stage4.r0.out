@@ -1,6 +1,15 @@
-primary port: 53485
-router 1, pid: 5441, port: 43902
+primary port: 39443
+router: 1, pid: 5526, port: 38989
 ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
 router: 0, rule installed (10.0.2.15, 65535, 128.52.130.149, 65535, 1) action 1
 router: 0, rule installed (128.52.130.149, 65535, 10.0.2.15, 65535, 1) action 1
+ICMP from port : 38989, src: 128.52.130.149, dst : 10.0.2.15, type : 0
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router: 0, rule installed (10.0.2.15, 65535, 128.52.130.149, 65535, 1) action 1
+router: 0, rule installed (128.52.130.149, 65535, 10.0.2.15, 65535, 1) action 1
+ICMP from port : 38989, src: 128.52.130.149, dst : 10.0.2.15, type : 0
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router: 0, rule installed (10.0.2.15, 65535, 128.52.130.149, 65535, 1) action 1
+router: 0, rule installed (128.52.130.149, 65535, 10.0.2.15, 65535, 1) action 1
+ICMP from port : 38989, src: 128.52.130.149, dst : 10.0.2.15, type : 0
 router 0 closed

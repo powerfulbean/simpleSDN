@@ -137,7 +137,6 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						u_int8_t icmp_type;
 						// create a orctane message for this primary router 
 						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port));
-
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
 						for (int i = 0; i < tempLog.size(); i++)
@@ -145,7 +144,6 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
 						}
-
 						int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)

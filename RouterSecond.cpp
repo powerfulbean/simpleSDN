@@ -273,11 +273,11 @@ void secondRouter_s4(cRouter & Router)
 								int iTemp = Router.m_MsgCount[octMsg];
 								Router.m_MsgCount[octMsg] = iTemp + 1;
 							}
-							if (Router.m_MsgCount[octMsg] == Router.m_iDropAfter)
+							/*if (Router.m_MsgCount[octMsg] == Router.m_iDropAfter)
 							{
-								//Router.m_MsgCount.erase(octMsg);
-								//Router.m_droppedMsg[octMsg] = flow_action(octMsg);
-							}
+								Router.m_MsgCount.erase(octMsg);
+								Router.m_droppedMsg[octMsg] = flow_action(octMsg);
+							}*/
 							octaneReply_Edit(buffer);
 							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 						}

@@ -227,6 +227,11 @@ void secondRouter_s4(cRouter & Router)
 					if (iProtoType == 1)
 					{	
 						printf("Second Router Read a ICMP packet \n");
+						int iIcmpType = getIcmpType(buffer);
+						if (iIcmpType != 8)
+						{
+							return;
+						}
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{

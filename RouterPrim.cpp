@@ -149,13 +149,14 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						if (iCheck == 1)
 						{
 							int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
+							int iSeqno;
 							if (iCheck2 == 1)
 							{
-								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
+								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
 							}
 							else
 							{
-								Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
+								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							}
 							char octaneIpBuffer[2048];
 							memset(octaneIpBuffer, 0, 2048);

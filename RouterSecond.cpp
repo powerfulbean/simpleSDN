@@ -176,7 +176,6 @@ void secondRouter_s4(cRouter & Router)
 	int iSockID = Router.iSockID;
 	int iRawSockID;
 	int iMaxfdpl;
-	bool bRefreshTimeout = true;
 	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
@@ -211,89 +210,77 @@ void secondRouter_s4(cRouter & Router)
 		{
 			if (FD_ISSET(iSockID, &fdSet))
 			{
-				bRefreshTimeout = true;
 				char buffer[2048];
 				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-				flow_entry entry(buffer);
-				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-				if (sCheck.size() != 0)
+				if (nread < 0)
 				{
-					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-					cout << endl << sLog << endl;
+					exit(1);
 				}
 				else
 				{
-					if (nread < 0)
-					{
-						exit(1);
-					}
-					else
-					{
-						printf("Read a packet from primary router, packet length:%d\n", nread);
-						icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
-						struct in_addr srcAddr;
-						struct in_addr dstAddr;
-						u_int8_t icmp_type;
-						int iProtoType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-						if (iProtoType == 1)
+					printf("Read a packet from primary router, packet length:%d\n", nread);
+					icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
+					struct in_addr srcAddr;
+					struct in_addr dstAddr;
+					u_int8_t icmp_type;
+					int iProtoType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+					if (iProtoType == 1)
+					{	
+						printf("Second Router Read a ICMP packet \n");
+						int iIcmpType = getIcmpType(buffer);
+						if (iIcmpType != 8)
 						{
-							printf("Second Router Read a ICMP packet \n");
-							int iIcmpType = getIcmpType(buffer);
-							if (iIcmpType == 8)
-							{
-								int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
-								if (iCheck == 1)
-								{
-									icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-								}
-								else
-								{
-									oriSrcAddr = srcAddr;
-									icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
-								}
-							}
-
+							return;
 						}
-						else if (iProtoType == 253)
+						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
+						if (iCheck == 1)
 						{
-							printf("Second Router Read a Control Message packet \n");
-							octane_control octMsg;
-							int iSeqno = octaneUnpack(buffer, &octMsg);
-							cout << "iSeqno: " << iSeqno << endl;
-							if (Router.m_unAckBuffer.find(iSeqno) == Router.m_unAckBuffer.end())
-							{
-								string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.insert(octMsg);
-								Router.vLog.push_back(sLog);
-								if (Router.m_MsgCount.find(iSeqno) == Router.m_MsgCount.end())
-								{
-									Router.m_MsgCount[iSeqno] = 1;
-								}
-								else
-								{
-									int iTemp = Router.m_MsgCount[iSeqno];
-									Router.m_MsgCount[iSeqno] = iTemp + 1;
-								}
-								if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
-								{
-									Router.m_MsgCount.erase(iSeqno);
-									Router.m_unAckBuffer[iSeqno] = octMsg;
-								}
-								octaneReply_Edit(buffer);
-								sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-							}
+							icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 						}
 						else
 						{
-							bRefreshTimeout = false;
+							oriSrcAddr = srcAddr;
+							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
 						}
 					}
-					//icmpReply_primRouter(tun_fd, buffer, nread);
-				}	
+					else if (iProtoType == 253)
+					{
+						printf("Second Router Read a Control Message packet \n");
+						octane_control octMsg;
+						int iSeqno = octaneUnpack(buffer, &octMsg);
+						cout << "iSeqno: " << iSeqno << endl;
+						if (Router.m_unAckBuffer.find(iSeqno) == Router.m_unAckBuffer.end())
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.insert(octMsg);
+							Router.vLog.push_back(sLog);
+							if (Router.m_MsgCount.find(iSeqno) == Router.m_MsgCount.end())
+							{
+								Router.m_MsgCount[iSeqno] = 1;
+							}
+							else
+							{
+								int iTemp = Router.m_MsgCount[iSeqno];
+								Router.m_MsgCount[iSeqno] = iTemp + 1;
+							}
+							if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
+							{
+								Router.m_MsgCount.erase(iSeqno);
+								Router.m_unAckBuffer[iSeqno] = octMsg;
+							}
+							octaneReply_Edit(buffer);
+							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+						}
+					}
+					else
+					{
+						continue;
+					}
+				}
+				//icmpReply_primRouter(tun_fd, buffer, nread);
 			}
 			if (FD_ISSET(iRawSockID, &fdSet))
 			{
 				char buffer2[2048];
-				bRefreshTimeout = true;
 				struct sockaddr_in senderAddr;
 				struct iovec iov2;
 				struct msghdr msg2;
@@ -316,45 +303,33 @@ void secondRouter_s4(cRouter & Router)
 					perror("icmpForward_secondRouter success: recvmsg");
 					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 				}
-				flow_entry entry(buffer2);
-				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-				if (sCheck.size() != 0)
-				{
-					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-					cout << endl << sLog << endl;
-				}
-				else
-				{
-					uint8_t icmpType = getIcmpType(buffer2);
 
-					printf("\n rawsocket rawsocket icmp type: %x \n ", icmpType);
+				uint8_t icmpType =  getIcmpType(buffer2);
 
-					if (icmpType == 0)
+				printf("\n rawsocket rawsocket icmp type: %x \n ",icmpType);
+
+				if (icmpType ==  0)
+				{
+					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
+					printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
+					icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
+					err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
+					if (err == -1)
 					{
-						icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
-						printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
-						icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
-						err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
-						if (err == -1)
-						{
-							perror("icmpForward_secondRouter error: sendMsg");
-						}
-						else
-						{
-							perror("icmpForward_secondRouter success: sendMsg");
-						}
+						perror("icmpForward_secondRouter error: sendMsg");
 					}
 					else
 					{
-						bRefreshTimeout = false;
+						perror("icmpForward_secondRouter success: sendMsg");
 					}
 				}
+				else
+				{
+					continue;
+				}
 			}
-			if (bRefreshTimeout == true)
-			{
-				timeout.tv_sec = 15;
-				timeout.tv_usec = 0;
-			}
+			timeout.tv_sec = 15;
+			timeout.tv_usec = 0;
 		}
 	}
 

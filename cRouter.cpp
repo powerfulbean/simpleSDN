@@ -82,6 +82,7 @@ string flow_table::flowCheck(const flow_entry & entry) // return a string longer
 			string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
 			string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +
 			")";
+		cout << output <<endl;
 	}
 	return output;
 }

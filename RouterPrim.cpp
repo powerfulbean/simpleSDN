@@ -97,7 +97,6 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 	}*/
 	//Router.m_iOctSockID = iOctSockID;
 	struct timeval timeout;
-	bool bRefreshTimeout = true;
 	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
@@ -120,141 +119,122 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 			char buffer[2048];
 			if (FD_ISSET(tun_fd, &fdSet))
 			{
-				bRefreshTimeout = true;
 				memset(buffer, 0, 2048);
 				int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
-				flow_entry entry(buffer);
-				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-				if (sCheck.size() != 0)
+				if (nread < 0)
 				{
-					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-					cout << endl << sLog << endl;
+					exit(1);
 				}
 				else
 				{
-					if (nread < 0)
+					printf("Read a packet from tunnel, packet length:%d\n", nread);
+					int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
+					if (a == 1) // it is a ICMP packet
 					{
-						exit(1);
-					}
-					else
-					{
-						printf("Read a packet from tunnel, packet length:%d\n", nread);
-						int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
-						if (a == 1) // it is a ICMP packet
+						printf("Prim Router Read a ICMP packet \n", nread);
+						struct octane_control localMsg, msg1,msg1_re;
+						struct in_addr srcAddr, dstAddr;
+						u_int8_t icmp_type;
+						// create a orctane message for this primary router 
+						flow_entry entry(buffer);
+						string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+						if (sCheck.size() != 0)
 						{
-							printf("Prim Router Read a ICMP packet \n", nread);
-							struct octane_control localMsg, msg1, msg1_re;
-							struct in_addr srcAddr, dstAddr;
-							u_int8_t icmp_type;
-							// create a orctane message for this primary router 
-							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port), false);
-							//insert rules in flow_table and get the respective log
-							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-							for (int i = 0; i < tempLog.size(); i++)
+							string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+							cout << endl << sLog;
+						}
+						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port),false);
+						//insert rules in flow_table and get the respective log
+						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+						for (int i = 0; i < tempLog.size(); i++)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+							Router.vLog.push_back(sLog);
+						}
+						int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
+						if (iCheck == 1)
+						{
+							int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
+							int iSeqno;
+							if (iCheck2 == 1)
 							{
-								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
-								Router.vLog.push_back(sLog);
-							}
-							int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-							int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
-							if (iCheck == 1)
-							{
-								int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
-								int iSeqno;
-								if (iCheck2 == 1)
-								{
-									iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
-								}
-								else
-								{
-									iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
-								}
-								char octaneIpBuffer[2048];
-								memset(octaneIpBuffer, 0, 2048);
-								string localAddr = "127.0.0.1";
-								buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
-								sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
-								Router.m_unAckBuffer[iSeqno] = msg1;
+								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
 							}
 							else
 							{
-								int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
-								int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
-								char octaneIpBuffer[2048];
-								char octaneIpBufferRev[2048];
-								memset(octaneIpBuffer, 0, 2048);
-								memset(octaneIpBufferRev, 0, 2048);
-								string localAddr = "127.0.0.1";
-								buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
-								buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
-								sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
-								sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
-								Router.m_unAckBuffer[iSeqno1] = msg1;
-								Router.m_unAckBuffer[iSeqno2] = msg1_re;
+								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							}
-							Router.printUnAckBuffer();
-							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+							char octaneIpBuffer[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							string localAddr = "127.0.0.1";
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
+							Router.m_unAckBuffer[iSeqno] = msg1;
 						}
 						else
 						{
-							bRefreshTimeout = false;
+							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+							int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+							char octaneIpBuffer[2048];
+							char octaneIpBufferRev[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							memset(octaneIpBufferRev, 0, 2048);
+							string localAddr = "127.0.0.1";
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
+							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
+							Router.m_unAckBuffer[iSeqno1] = msg1;
+							Router.m_unAckBuffer[iSeqno2] = msg1_re;
 						}
+						Router.printUnAckBuffer();
+						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+					}
+					else
+					{
+						continue;
 					}
 				}
 			}
 			if (FD_ISSET(iSockID, &fdSet))
 			{
-				bRefreshTimeout = true;
 				memset(buffer, 0, 2048);
 				struct sockaddr_in rou2Addr;
 				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
-				flow_entry entry(buffer);
-				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-				if (sCheck.size() != 0)
+				if (nread < 0)
 				{
-					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-					cout << endl << sLog << endl;
+					exit(1);
 				}
 				else
 				{
-					if (nread < 0)
+					printf("Read a packet from secondary router, packet length:%d\n", nread);
+					int iIcmpProtocol = icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
+					if (iIcmpProtocol == 1)// its a icmp pscket
 					{
-						exit(1);
+						cwrite(tun_fd, buffer, nread);// send packet back to tunnel
+													  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+													  //icmpReply_primRouter(tun_fd, buffer, nread);
+					}
+					else if (iIcmpProtocol == OCTANE_PROTOCOL_NUM)
+					{
+						// check seqno and remove related record from the unack_buffer
+						octane_control octMsg;
+						int iSeqno = octaneUnpack(buffer, &octMsg);
+						if (octMsg.octane_flags == 1)
+						{
+							Router.m_unAckBuffer.erase(iSeqno);
+							Router.printUnAckBuffer();
+						}
 					}
 					else
 					{
-						printf("Read a packet from secondary router, packet length:%d\n", nread);
-						int iIcmpProtocol = icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
-						if (iIcmpProtocol == 1)// its a icmp pscket
-						{
-							cwrite(tun_fd, buffer, nread);// send packet back to tunnel
-														  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-														  //icmpReply_primRouter(tun_fd, buffer, nread);
-						}
-						else if (iIcmpProtocol == OCTANE_PROTOCOL_NUM)
-						{
-							// check seqno and remove related record from the unack_buffer
-							octane_control octMsg;
-							int iSeqno = octaneUnpack(buffer, &octMsg);
-							if (octMsg.octane_flags == 1)
-							{
-								Router.m_unAckBuffer.erase(iSeqno);
-								Router.printUnAckBuffer();
-							}
-						}
-						else
-						{
-							bRefreshTimeout = false;
-						}
+						continue;
 					}
 				}
-				
 			}
-			if (bRefreshTimeout == true)
-			{
-				timeout.tv_sec = 15;
-				timeout.tv_usec = 0;
-			}
+			timeout.tv_sec = 15;
+			timeout.tv_usec = 0;
 		}
 	}
 

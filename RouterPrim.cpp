@@ -184,6 +184,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						Router.printUnAckBuffer();
 						sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 					}
+
 				}
 			}
 			if (FD_ISSET(iSockID, &fdSet))
@@ -197,26 +198,11 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 				}
 				else
 				{
-					int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
-					if (a == 1) // it is a ICMP packet
-					{
-						printf("Read a packet from secondary router, packet length:%d\n", nread);
-						cwrite(tun_fd, buffer, nread);// send packet back to tunnel
-													  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-													  //icmpReply_primRouter(tun_fd, buffer, nread);
-					}
-					else if (a == OCTANE_PROTOCOL_NUM)
-					{
-						// check seqno and remove related record from the unack_buffer
-						printf("Prim Router Read a Control Message packet \n");
-						octane_control octMsg;
-						uint16_t iSeqno = octaneUnpack(buffer, &octMsg);
-						if (octMsg.octane_flags == 1)
-						{
-							Router.m_unAckBuffer.erase(iSeqno);
-							Router.printUnAckBuffer();
-						}
-					}
+					printf("Read a packet from secondary router, packet length:%d\n", nread);
+					icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
+					cwrite(tun_fd, buffer, nread);// send packet back to tunnel
+												  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+												  //icmpReply_primRouter(tun_fd, buffer, nread);
 				}
 			}
 			timeout.tv_sec = 15;

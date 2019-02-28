@@ -349,7 +349,7 @@ int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsi
 
 
 	ipUnpack(buffer, sSrc_addr, sDst_addr, sSrc_port, sDst_port, ip_type);
-
+	int iThisSeqno = m_iSeqnoCnt;
 	msg.octane_action = octane_action ;
 	msg.octane_flags = 0;
 	msg.octane_seqno = m_iSeqnoCnt++;
@@ -360,7 +360,7 @@ int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsi
 	msg.octane_protocol = ip_type;
 	msg.octane_port = sTargetPort;
 
-	return 1;
+	return iThisSeqno;
 }
 
 int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control oriMsg, uint16_t sTargetPort = -1)
@@ -370,7 +370,7 @@ int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control ori
 	uint16_t sSrc_port;
 	uint16_t sDst_port;
 	u_int8_t ip_type;
-
+	int iThisSeqno = m_iSeqnoCnt;
 	msg.octane_action = oriMsg.octane_action;
 	msg.octane_flags = 0;
 	msg.octane_seqno = m_iSeqnoCnt++;
@@ -387,6 +387,6 @@ int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control ori
 	{
 		msg.octane_port = sTargetPort;
 	}
-	return 1;
+	return iThisSeqno;
 }
 

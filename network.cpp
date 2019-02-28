@@ -331,6 +331,7 @@ u_int8_t getIcmpType(char* buffer)
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return;
 	}
 
@@ -340,5 +341,7 @@ u_int8_t getIcmpType(char* buffer)
 
 	return;
 }
+=======
+>>>>>>> parent of 6953547... Add reply of octane
 =======
 >>>>>>> parent of 6953547... Add reply of octane

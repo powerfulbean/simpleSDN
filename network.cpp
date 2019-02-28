@@ -103,14 +103,13 @@ void octaneReply_Edit(char* buffer)
 	if (pIpHeader->ip_p != OCTANE_PROTOCOL_NUM)
 	{
 
-		return pIpHeader->ip_src;
+		return;
 	}
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
 	pOctane->octane_flags = 1;
-
-	return replacedAddr;
+	return;
 }
 
 /* About the function:

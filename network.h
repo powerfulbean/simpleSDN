@@ -20,7 +20,7 @@
 
 #include "icmp_checksum.h"
 
-
+#define OCTANE_PROTOCOL_NUM 253
 #define SERV_PORT 80
 #define FromTunnel 5511
 #define FromUdp 5512

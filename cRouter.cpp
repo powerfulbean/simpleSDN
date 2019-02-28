@@ -396,6 +396,6 @@ void cRouter::printUnAckBuffer()
 	cout << endl;
 	for (auto i : m_unAckBuffer)
 	{
-		cout << "seqno: " << i.first << "is not acked" << endl;
+		cout << "seqno: " << i.first << "is not acked" <<" current seqno is: "<<m_iSeqnoCnt<< endl;
 	}
 }

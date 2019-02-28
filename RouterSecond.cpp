@@ -249,7 +249,7 @@ void secondRouter_s4(cRouter & Router)
 						octane_control octMsg;
 						int iSeqno = octaneUnpack(buffer, &octMsg);
 						cout << "iSeqno: " << iSeqno << endl;
-						if (Router.m_unAckBuffer.find(iSeqno) == Router.m_unAckBuffer.end())
+						/*if (Router.m_unAckBuffer.find(iSeqno) == Router.m_unAckBuffer.end())
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.insert(octMsg);
 							Router.vLog.push_back(sLog);
@@ -259,9 +259,9 @@ void secondRouter_s4(cRouter & Router)
 								Router.m_MsgCount.erase(iSeqno);
 								Router.m_unAckBuffer[iSeqno] = octMsg;
 							}
-							//octaneReply_Edit(buffer);
-							//sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-						}
+							octaneReply_Edit(buffer);
+							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+						}*/
 					}
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);

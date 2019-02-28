@@ -247,9 +247,20 @@ void secondRouter_s4(cRouter & Router)
 					{
 						printf("Second Router Read a Control Message packet \n");
 						octane_control octMsg;
-						octaneUnpack(buffer, &octMsg);
-						string sLog = "router: " + to_string(Router.iRouterID)+Router.m_rouFlowTable.insert(octMsg);
-						Router.vLog.push_back(sLog);
+						int iSeqno = octaneUnpack(buffer, &octMsg);
+						if (Router.m_unAckBuffer.find(iSeqno) == Router.m_unAckBuffer.end())
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.insert(octMsg);
+							Router.vLog.push_back(sLog);
+							Router.m_MsgCount[iSeqno]++;
+							if (Router.m_MsgCount[iSeqno] == Router.m_iDropAfter)
+							{
+								Router.m_MsgCount.erase(iSeqno);
+								Router.m_unAckBuffer[iSeqno] = octMsg;
+							}
+							octaneReply_Edit(buffer);
+							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+						}
 					}
 				}
 				//icmpReply_primRouter(tun_fd, buffer, nread);

@@ -94,6 +94,25 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 	return pOctane->octane_seqno;
 }
 
+void octaneReply_Edit(char* buffer)
+{
+	struct ip * pIpHeader;
+	struct octane_control * pOctane;
+	pIpHeader = (struct ip *) buffer;
+
+	if (pIpHeader->ip_p != OCTANE_PROTOCOL_NUM)
+	{
+
+		return pIpHeader->ip_src;
+	}
+
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
+	pOctane->octane_flags = 1;
+
+	return replacedAddr;
+}
+
 /* About the function:
 	icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type)
 	was built based on the itroduction of ipheader length calculation by "zthgreat"

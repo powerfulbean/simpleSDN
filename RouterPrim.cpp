@@ -298,8 +298,8 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 		}
 		if (timeout.tv_sec == MAXVALUE && timeout.tv_usec == 0) {
 			cout << endl << "There are no timers in the event queue" << endl;
-			timeout.tv_sec = idelTimeout.tv_sec;
-			timeout.tv_usec = idelTimeout.tv_usec;
+			timeout.tv_sec = 15;
+			timeout.tv_usec = 0;
 			bEventTimeout = false;
 		}
 		int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, &timeout);

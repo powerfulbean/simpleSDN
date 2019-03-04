@@ -311,6 +311,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 		{
 			if (bEventTimeout == true)
 			{
+				cout <<endl<< "event time out!" << endl;
 				// start of using the code of test-app.cc provided by csci551.
 				// Timer expired, Hence process it 
 				timersManager.ExecuteNextTimer();
@@ -323,8 +324,8 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 					timersManager.NextTimerTime(&timeout);
 				}
 				// end of using the code of test-app.cc provided by csci551.
-				timeout.tv_sec = idelTimeout.tv_sec;
-				timeout.tv_usec = idelTimeout.tv_usec;
+				timeout.tv_sec = 15;
+				timeout.tv_usec = 0;
 			}
 			else
 			{

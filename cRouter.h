@@ -80,7 +80,7 @@ class cRouter{
 		// octane part:
 		uint16_t m_iSeqnoCnt;
 		flow_table m_rouFlowTable;
-		map<int, octane_control> m_unAckBuffer;// for primary router to store unacked msg; 
+		map<int, handle> m_unAckBuffer;// <iSeq, iHandle>for primary router to store the handle of the timer of the unacked msg; 
 		map<octane_control, int> m_MsgCount; // for secondary router to store the time of receiving the same msg; 
 		map<octane_control, flow_action> m_droppedMsg; //for secondary router to store dropped msg
 		int m_iOctSockID;

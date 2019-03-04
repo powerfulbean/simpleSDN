@@ -28,3 +28,15 @@ void stage4(cRouter &Router,
 	struct sockaddr_in & rou2Addr);
 
 int packetDstCheck(struct in_addr &srcAddr, string targetDst, string  mask);
+
+class cOctaneTimer : public TimerCallback
+{
+public:
+	octane_control m_iOctaneMsg;
+	int m_iSeq;
+	int Expire();
+	sockaddr_in m_rou2Addr;
+	int m_iSockID;
+
+	cOctaneTimer(int iSockID, sockaddr_in &rou2Addr, octane_control & msg, int iSeq) : m_iSockID(iSockID), m_iOctaneMsg(msg), m_iSeq(iSeq), m_rou2Addr(rou2Addr){};
+};

@@ -246,7 +246,11 @@ void secondRouter_s4(cRouter & Router)
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{
-							icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+							int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
+							if (iCheck2 != 1)
+							{
+								icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+							}
 						}
 						else
 						{

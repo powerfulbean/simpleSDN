@@ -284,10 +284,10 @@ void secondRouter_s4(cRouter & Router)
 								Router.m_droppedMsg[octMsg] = flow_action(octMsg);
 							}
 							octaneReply_Edit(buffer);
-							if (iCount++ == 3)
+							//if (iCount++ == 3)
 							{
 								sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-								iCount = 0;
+								//iCount = 0;
 							}
 							
 						}

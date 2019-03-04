@@ -9,8 +9,10 @@ SOURCE = main.cpp \
 	
 SUPPORT = README.stage1.txt README.stage2.txt makefile 
 
-proja:ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o
-	g++ ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o -o proja
+SUB_DIR = ./timers
+
+proja:ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o $(SUB_DIR)/timers.o
+	g++ ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o $(SUB_DIR)/timers.o -o proja
 ProjectA_main.o:main.cpp
 	g++ -c main.cpp -o ProjectA_main.o
 cRouter.o:cRouter.cpp
@@ -25,6 +27,9 @@ RouterSecond.o: RouterSecond.cpp
 	g++ -c RouterSecond.cpp -o RouterSecond.o
 checkSum.o: icmp_checksum.c
 	g++ -c icmp_checksum.c -o checkSum.o
+
+	
+	
 clean:
 	rm -f proja *.o
 tar:

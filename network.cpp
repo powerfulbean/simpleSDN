@@ -349,25 +349,25 @@ u_int8_t getIcmpType(char* buffer)
 
 bool octane_control::operator< (const octane_control key2) const
 {
-	if (octane_source_ip != key2.octane_source_ip)
+	if (octane_source_ip != key2.octane_source_ip  && octane_source_ip != htons(0xFFFFFFFF))
 	{
 		return octane_source_ip < key2.octane_source_ip;
 	}
 	else
 	{
-		if (octane_source_port != key2.octane_source_port)
+		if (octane_source_port != key2.octane_source_port && octane_source_port != htons(0xFFFF))
 		{
 			return octane_source_port < key2.octane_source_port;
 		}
 		else
 		{
-			if (octane_dest_ip != key2.octane_dest_ip)
+			if (octane_dest_ip != key2.octane_dest_ip && octane_dest_ip != htons(0xFFFFFFFF))
 			{
 				return octane_dest_ip < key2.octane_dest_ip;
 			}
 			else
 			{
-				if (octane_dest_port != key2.octane_dest_port)
+				if (octane_dest_port != key2.octane_dest_port && octane_dest_port != htons(0xFFFF))
 				{
 					return octane_dest_port < key2.octane_dest_port;
 				}

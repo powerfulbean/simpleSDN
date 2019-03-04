@@ -290,6 +290,9 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 	{
 		bool bEventTimeout = false;
 		fdSet = fdSetAll;
+		struct timeval temp;
+		temp.tv_sec = timeout.tv_sec;
+		temp.tv_usec = timeout.tv_usec;
 		timersManager.NextTimerTime(&timeout);
 		if (timeout.tv_sec == 0 && timeout.tv_usec == 0) {
 			cout << endl << " The timer at the head on the queue has expired " << endl;
@@ -298,8 +301,8 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 		}
 		if (timeout.tv_sec == MAXVALUE && timeout.tv_usec == 0) {
 			cout << endl << "There are no timers in the event queue" << endl;
-			timeout.tv_sec = 15;
-			timeout.tv_usec = 0;
+			timeout.tv_sec = temp.tv_sec;
+			timeout.tv_usec = temp.tv_usec;
 			bEventTimeout = false;
 		}
 		else
@@ -396,8 +399,8 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
 							
 							// Add timer and register the handle number																		   // Add timer and register the handle number
-							cOctaneTimer octaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno);
-							handle t1 = timersManager.AddTimer(2000, &octaneTimer);
+							cOctaneTimer * octaneTimer = new cOctaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno);
+							handle t1 = timersManager.AddTimer(2000, octaneTimer);
 							Router.m_unAckBuffer[iSeqno] = t1;
 						}
 						else
@@ -415,10 +418,10 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
 
 							// Add timer and register the handle number
-							cOctaneTimer octaneTimer1(Router.iSockID, rou2Addr, msg1, iSeqno1);
-							cOctaneTimer octaneTimer2(Router.iSockID, rou2Addr, msg1_re, iSeqno2);
-							handle t1 = timersManager.AddTimer(2000, &octaneTimer1);
-							handle t2 = timersManager.AddTimer(2000, &octaneTimer2);
+							cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno1);
+							cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1_re, iSeqno2);
+							handle t1 = timersManager.AddTimer(2000, octaneTimer1);
+							handle t2 = timersManager.AddTimer(2000, octaneTimer2);
 							Router.m_unAckBuffer[iSeqno1] = t1;
 							Router.m_unAckBuffer[iSeqno2] = t2;
 						}

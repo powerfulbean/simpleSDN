@@ -178,7 +178,7 @@ void primaryRouter_s4_old(cRouter & Router, sockaddr_in &rou2Addr)
 								string localAddr = "127.0.0.1";
 								buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
 								sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
-								Router.m_unAckBuffer[iSeqno] = msg1;
+								//Router.m_unAckBuffer[iSeqno] = msg1;
 							}
 							else
 							{
@@ -290,10 +290,10 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 	{
 		bool bEventTimeout = false;
 		fdSet = fdSetAll;
-		timersManager_->NextTimerTime(&timeout);
+		timersManager.NextTimerTime(&timeout);
 		if (timeout.tv_sec == 0 && timeout.tv_usec == 0) {
 			// The timer at the head on the queue has expired 
-			timersManager_->ExecuteNextTimer();
+			timersManager.ExecuteNextTimer();
 			bEventTimeout = true;
 		}
 		if (timeout.tv_sec == MAXVALUE && timeout.tv_usec == 0) {
@@ -308,14 +308,14 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 			{
 				// start of using the code of test-app.cc provided by csci551.
 				// Timer expired, Hence process it 
-				timersManager_->ExecuteNextTimer();
+				timersManager.ExecuteNextTimer();
 				// Execute all timers that have expired.
-				timersManager_->NextTimerTime(&timeout);
+				timersManager.NextTimerTime(&timeout);
 				while (timeout.tv_sec == 0 && timeout.tv_usec == 0)
 				{
 					// Timer at the head of the queue has expired 
-					timersManager_->ExecuteNextTimer();
-					timersManager_->NextTimerTime(&timeout);
+					timersManager.ExecuteNextTimer();
+					timersManager.NextTimerTime(&timeout);
 				}
 				// end of using the code of test-app.cc provided by csci551.
 				timeout.tv_sec = idelTimeout.tv_sec;
@@ -388,7 +388,11 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 							string localAddr = "127.0.0.1";
 							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
-							Router.m_unAckBuffer[iSeqno] = msg1;
+							
+							// Add timer and register the handle number																		   // Add timer and register the handle number
+							cOctaneTimer octaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno);
+							handle t1 = timersManager.AddTimer(2000, &octaneTimer);
+							Router.m_unAckBuffer[iSeqno] = t1;
 						}
 						else
 						{
@@ -474,7 +478,6 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 		{
 			timeout.tv_sec = 15;
 			timeout.tv_usec = 0;
-		}
 		}
 	}
 }

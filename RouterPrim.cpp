@@ -302,6 +302,10 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 			timeout.tv_usec = 0;
 			bEventTimeout = false;
 		}
+		else
+		{
+			bEventTimeout = true;
+		}
 		int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, &timeout);
 		if (iSelect == 0)
 		{

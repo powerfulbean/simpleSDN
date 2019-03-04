@@ -214,8 +214,8 @@ int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint1
 
 	if (ip_type == 1)
 	{
-		sSrc_port = 0xFFFF;
-		sDst_port = 0xFFFF;
+		sSrc_port = htons(0xFFFF);
+		sDst_port = htons(0xFFFF);
 		cout << "network.cpp: ipUnpack: it is a ICMP packet: port: " << to_string(sDst_port);
 	}
 	return 1;

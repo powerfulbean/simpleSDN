@@ -177,6 +177,7 @@ void secondRouter_s4(cRouter & Router)
 	int iSockID = Router.iSockID;
 	int iRawSockID;
 	int iMaxfdpl;
+	int iCount = 0;
 	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
@@ -283,7 +284,12 @@ void secondRouter_s4(cRouter & Router)
 								Router.m_droppedMsg[octMsg] = flow_action(octMsg);
 							}
 							octaneReply_Edit(buffer);
-							//sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+							if (iCount++ == 3)
+							{
+								sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+								iCount = 0;
+							}
+							
 						}
 					}
 					else

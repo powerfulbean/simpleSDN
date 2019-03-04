@@ -292,14 +292,15 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 		fdSet = fdSetAll;
 		timersManager.NextTimerTime(&timeout);
 		if (timeout.tv_sec == 0 && timeout.tv_usec == 0) {
-			// The timer at the head on the queue has expired 
+			cout << endl << " The timer at the head on the queue has expired " << endl;
 			timersManager.ExecuteNextTimer();
 			bEventTimeout = true;
 		}
 		if (timeout.tv_sec == MAXVALUE && timeout.tv_usec == 0) {
-			// There are no timers in the event queue 
+			cout << endl << "There are no timers in the event queue" << endl;
 			timeout.tv_sec = idelTimeout.tv_sec;
 			timeout.tv_usec = idelTimeout.tv_usec;
+			bEventTimeout = false;
 		}
 		int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, &timeout);
 		if (iSelect == 0)

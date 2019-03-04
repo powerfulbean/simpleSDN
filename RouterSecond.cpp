@@ -283,7 +283,7 @@ void secondRouter_s4(cRouter & Router)
 								Router.m_droppedMsg[octMsg] = flow_action(octMsg);
 							}
 							octaneReply_Edit(buffer);
-							//sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+							sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 						}
 					}
 					else

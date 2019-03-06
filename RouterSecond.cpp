@@ -322,7 +322,7 @@ void secondRouter_s4(cRouter & Router)
 					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 				}
 
-				flow_entry entry(buffer);
+				flow_entry entry(buffer2);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
 				if (sCheck.size() != 0)
 				{
@@ -526,7 +526,7 @@ void secondRouter_s5(cRouter & Router)
 					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 				}
 
-				flow_entry entry(buffer);
+				flow_entry entry(buffer2);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
 				
 

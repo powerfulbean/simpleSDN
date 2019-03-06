@@ -85,6 +85,22 @@ string flow_table::flowCheck(const flow_entry & entry) // return a string longer
 	}
 	return output;
 }
+
+
+string flow_table::defaultInsert()
+{
+	flow_entry entry(0xFFFFFFFF, 0xFFFF, 0xFFFFFFFF, 0xFFFF, 0xFFFF);
+	flow_action action(0xFFFF, 3);
+	m_mTable[entry] = action;
+	struct in_addr src1, dst1;
+	src1.s_addr = entry.m_srcIp;
+	dst1.s_addr = entry.m_dstIp;
+	string output = ", rule installed (" +
+		string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
+		string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +
+		") action " + to_string(action.m_action);
+	return output;
+}
 string flow_table::insert(octane_control msg)
 {
 	flow_entry entry(msg);

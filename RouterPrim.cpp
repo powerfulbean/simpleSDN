@@ -588,6 +588,7 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 					{
 						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
 						cout << endl << sLog << endl;
+						Router.vLog.push_back(sLog);
 					}
 					else
 					{
@@ -670,6 +671,7 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 			{
 				string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
 				cout << endl << sLog << endl;
+				Router.vLog.push_back(sLog);
 			}
 			if (nread < 0)
 			{
@@ -845,7 +847,7 @@ void stage4(cRouter &Router,
 	}
 }
 
-void stage4(cRouter &Router,
+void stage5(cRouter &Router,
 	struct sockaddr_in & rou1Addr,
 	struct sockaddr_in & rou2Addr)
 {

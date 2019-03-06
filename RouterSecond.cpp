@@ -532,6 +532,7 @@ void secondRouter_s5(cRouter & Router)
 				{
 					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
 					cout << endl << sLog << endl;
+					Router.vLog.push_back(sLog);
 				}
 
 				uint8_t icmpType = getIcmpType(buffer2);

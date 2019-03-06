@@ -845,3 +845,18 @@ void stage4(cRouter &Router,
 	}
 }
 
+void stage4(cRouter &Router,
+	struct sockaddr_in & rou1Addr,
+	struct sockaddr_in & rou2Addr)
+{
+	stage1(Router, rou1Addr, rou2Addr);
+	if (Router.iFPID == 0) // if it is secondary router
+	{
+		secondRouter_s5(Router);
+	}
+	else// if it is primary router
+	{
+		primaryRouter_s5(Router, rou2Addr);
+	}
+}
+

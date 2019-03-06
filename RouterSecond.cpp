@@ -421,12 +421,6 @@ void secondRouter_s5(cRouter & Router)
 
 				flow_entry entry(buffer);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-				if (sCheck.size() != 0)
-				{
-					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-					cout << endl << sLog << endl;
-					Router.vLog.push_back(sLog);
-				}
 
 				if (nread < 0)
 				{
@@ -457,6 +451,12 @@ void secondRouter_s5(cRouter & Router)
 						{
 							oriSrcAddr = srcAddr;
 							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+						}
+						if (sCheck.size() != 0)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+							cout << endl << sLog << endl;
+							Router.vLog.push_back(sLog);
 						}
 					}
 					else if (iProtoType == 253)
@@ -528,12 +528,7 @@ void secondRouter_s5(cRouter & Router)
 
 				flow_entry entry(buffer);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-				if (sCheck.size() != 0)
-				{
-					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-					cout << endl << sLog << endl;
-					Router.vLog.push_back(sLog);
-				}
+				
 
 				uint8_t icmpType = getIcmpType(buffer2);
 
@@ -557,6 +552,12 @@ void secondRouter_s5(cRouter & Router)
 				else
 				{
 					bRefreshTimeout = false;
+				}
+				if (sCheck.size() != 0)
+				{
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
+					Router.vLog.push_back(sLog);
 				}
 			}
 			if (bRefreshTimeout == true)

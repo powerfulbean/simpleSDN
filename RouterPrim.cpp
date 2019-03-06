@@ -667,12 +667,7 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 
 			flow_entry entry(buffer);
 			string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-			if (sCheck.size() != 0)
-			{
-				string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-				cout << endl << sLog << endl;
-				Router.vLog.push_back(sLog);
-			}
+			
 			if (nread < 0)
 			{
 				exit(1);
@@ -681,6 +676,12 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 			{
 				printf("Read a packet from secondary router, packet length:%d\n", nread);
 				int iIcmpProtocol = icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
+				if (sCheck.size() != 0)
+				{
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
+					Router.vLog.push_back(sLog);
+				}
 				if (iIcmpProtocol == 1)// its a icmp pscket
 				{
 					cwrite(tun_fd, buffer, nread);// send packet back to tunnel

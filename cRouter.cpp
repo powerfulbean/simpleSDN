@@ -58,9 +58,28 @@ bool flow_entry::operator< (const flow_entry key2) const
 			}
 			else
 			{
-				return m_dstPort < key2.m_dstPort;
+				if (m_dstPort != key2.m_dstPort)
+				{
+					return m_dstPort < key2.m_dstPort;
+				}
+				else
+				{
+					return m_protocol < key2.m_protocol;
+				}
 			}
 		}
+	}
+}
+
+bool flow_entry::operator == (const flow_entry key2) const
+{
+	if (m_srcIp == key2.m_srcIp && m_dstIp == key2.m_dstIp && m_srcPort == key2.m_srcPort && m_dstPort == key2.m_dstPort && m_protocol == key2.m_protocol)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -171,8 +190,13 @@ bool flow_table::contains(octane_control msg)
 {
 	flow_entry entry(msg);
 	map<flow_entry, flow_action>::iterator it;
+	flow_entry defaultEntry(0xFFFFFFFF, 0xFFFF, 0xFFFFFFFF, 0xFFFF, 0xFFFF);
 	it = m_mTable.find(entry);
 	if (it == m_mTable.end())
+	{
+		return false;
+	}
+	else if (it->first == defaultEntry)
 	{
 		return false;
 	}
@@ -469,3 +493,8 @@ void cRouter::printUnAckBuffer()
 	return;
 }
 
+
+void cRouter::Drop()
+{
+	;
+}

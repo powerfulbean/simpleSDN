@@ -23,6 +23,7 @@ struct flow_entry
 	flow_entry(char* buffer);
 	flow_entry reverse();
 	bool operator< (const flow_entry key2) const;
+	bool operator == (const flow_entry key2) const;
 };
 
 struct flow_action
@@ -91,6 +92,7 @@ class cRouter{
 		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort = -1, bool truelySend = true);
 
 		void printUnAckBuffer();
+		void Drop();
 };
 
 

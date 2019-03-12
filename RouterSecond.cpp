@@ -641,32 +641,7 @@ void secondRouter_s6(cRouter & Router)
 					struct in_addr dstAddr;
 					u_int8_t icmp_type;
 					int iProtoType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-					if (iProtoType == 1)
-					{
-						printf("Second Router Read a ICMP packet \n");
-						int iIcmpType = getIcmpType(buffer);
-						if (iIcmpType != 8)
-						{
-							return;
-						}
-						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
-						if (iCheck == 1)
-						{
-							icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
-						}
-						else
-						{
-							oriSrcAddr = srcAddr;
-							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
-						}
-						if (sCheck.size() != 0)
-						{
-							string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-							cout << endl << sLog << endl;
-							Router.vLog.push_back(sLog);
-						}
-					}
-					else if (iProtoType == 253)
+					if (iProtoType == 253)
 					{
 						printf("Second Router Read a Control Message packet \n");
 						octane_control octMsg;
@@ -698,6 +673,28 @@ void secondRouter_s6(cRouter & Router)
 							}
 
 						}
+					}
+					else if (sCheck.size() != 0)
+					{
+						printf("Second Router Read a ICMP packet \n");
+						int iIcmpType = getIcmpType(buffer);
+						if (iIcmpType != 8)
+						{
+							return;
+						}
+						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
+						if (iCheck == 1)
+						{
+							icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+						}
+						else
+						{
+							oriSrcAddr = srcAddr;
+							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+						}
+						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+						cout << endl << sLog << endl;
+						Router.vLog.push_back(sLog);
 					}
 					else
 					{
@@ -738,21 +735,17 @@ void secondRouter_s6(cRouter & Router)
 				uint8_t icmpType = getIcmpType(buffer2);
 
 				printf("\n rawsocket rawsocket icmp type: %x \n ", icmpType);
+				icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
+				printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
+				icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
 
-				if (icmpType == 0)
+				flow_entry entry(buffer2);
+				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+				if (sCheck.size() != 0)
 				{
-					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
-					printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
-					icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
-
-					flow_entry entry(buffer2);
-					string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-					if (sCheck.size() != 0)
-					{
-						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
-						cout << endl << sLog << endl;
-						Router.vLog.push_back(sLog);
-					}
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
+					Router.vLog.push_back(sLog);
 
 					err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
 					if (err == -1)

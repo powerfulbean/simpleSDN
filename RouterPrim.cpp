@@ -1145,14 +1145,14 @@ void stage6(cRouter &Router,
 	
 	
 
-	//if (Router.iFPID == 0) // if it is secondary router
-	//{
-	//	secondRouter_s6(Router);
-	//}
-	//else// if it is primary router
-	//{
-	//	primaryRouter_s6(Router, rou2Addr);
-	//}
+	if (Router.iFPID == 0) // if it is secondary router
+	{
+		secondRouter_s6(Router);
+	}
+	else// if it is primary router
+	{
+		primaryRouter_s6(Router, rou2Addr);
+	}
 }
 
 

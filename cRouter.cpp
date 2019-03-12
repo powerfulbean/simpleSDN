@@ -237,11 +237,12 @@ int cRouter::nextConfig()
 
 int cRouter::stageToCase(int iStage)
 {
+	printf("stageToCase: stage: %d \n", iStage);
 	if (iStage <= 3)
 	{
 		return 0;
 	}
-	else if (iStage > 3 && iStage <= 4)
+	else if (iStage > 3 && iStage <= 7)
 	{
 		return 1;
 	}

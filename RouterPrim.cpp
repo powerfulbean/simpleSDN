@@ -1112,7 +1112,7 @@ void stage6(cRouter &Router,
 	cout << "primary port: " << iRou1Port << endl;
 
 	pid_t fPid;
-	for (int i = 0; i < Router.iRouteNum - 1; i++)
+	for (int i = 0; i < Router.iRouteNum ; i++)
 	{
 		if (Router.iFPID != 0)
 		{

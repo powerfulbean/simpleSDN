@@ -1,10 +1,2 @@
-router 1, pid: 5761, port: 48049
-ICMP from port : 44014, src: 10.0.2.15, dst : 10.5.51.3, type : 8
-ICMP from port : 44014, src: 10.0.2.15, dst : 10.5.51.3, type : 8
-ICMP from port : 44014, src: 10.0.2.15, dst : 10.5.51.3, type : 8
-ICMP from port : 44014, src: 10.0.2.15, dst : 10.5.51.3, type : 8
-ICMP from port : 44014, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 44014, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 44014, src: 10.0.2.15, dst : 128.52.130.149, type : 8
-ICMP from port : 44014, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router: 1, pid: 2666, port: 51947
 router 1 closed

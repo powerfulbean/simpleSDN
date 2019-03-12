@@ -1,0 +1,3 @@
+router: 1, pid: 2752, port: 59931
+router: 1, rule installed (255.255.255.255, 65535, 255.255.255.255, 65535, 65535) action 3
+router 1 closed

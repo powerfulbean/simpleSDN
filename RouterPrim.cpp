@@ -1139,7 +1139,7 @@ void stage6(cRouter &Router,
 	{
 		for (auto i : Router.m_mChildPort)
 		{
-			cout << "pid: " << i.first << "; port" << i.second << endl;
+			cout << "pid: " << i.first << "; port: " << i.second << endl;
 		}
 	}
 	

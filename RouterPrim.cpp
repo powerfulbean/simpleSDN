@@ -1111,9 +1111,8 @@ void stage6(cRouter &Router,
 	cout << "primary address:" << pRou1Addr << endl;
 	cout << "primary port: " << iRou1Port << endl;
 
-
 	pid_t fPid;
-	for (int i = 0; i < Router.iPortNum - 1; i++)
+	for (int i = 0; i < Router.iRouteNum - 1; i++)
 	{
 		if (Router.iFPID != 0)
 		{

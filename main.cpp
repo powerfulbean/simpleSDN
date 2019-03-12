@@ -19,7 +19,7 @@ int main(int argc, char * argv[])
 	cout<<"-----------------------"<<endl;
 	cout << "***stageEngine: run stage " << Router.iStage
 		<< "; Router Number: " << Router.iRouteNum;
-		if (Router.iStage == 4)
+		if (Router.iStage >= 4)
 		{
 			cout << "; DropOut Number: " << Router.m_iDropAfter;
 		}

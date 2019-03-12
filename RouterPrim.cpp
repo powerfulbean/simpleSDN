@@ -1140,10 +1140,18 @@ void stage6(cRouter &Router,
 
 	if (Router.iFPID != 0)
 	{
+		vector<string> &vLog = Router.vLog;
+		string temp = "primary port: " + to_string(Router.iPortNum);
+		vLog.push_back(temp);
+		int cnt = 0;
 		for (auto i : Router.m_mChildPort)
 		{
 			cout << "pid: " << i.first << "; port: " << i.second << endl;
+			string temp2 = "router: " + to_string(cnt+1) + ", pid: " + to_string(i.first) + ", port: " + to_string(i.second);
+			vLog.push_back(temp2);
+			cnt++;
 		}
+		
 	}
 	
 	
@@ -1165,8 +1173,7 @@ void primaryRouter_reg(const int sockID, cRouter & Router)
 	struct sockaddr_in rou2Addr;
 	Router.iSockID = sockID;
 	vector<string> &vLog = Router.vLog;
-	string temp = "primary port: " + to_string(Router.iPortNum);
-	vLog.push_back(temp);
+	
 	char buf[1024], pRou2Addr[16];
 	memset(buf, 0, 1024);
 	recvMsg(sockID, buf, 1024, rou2Addr);
@@ -1174,6 +1181,5 @@ void primaryRouter_reg(const int sockID, cRouter & Router)
 	inet_ntop(AF_INET, &rou2Addr.sin_addr, pRou2Addr, sizeof(pRou2Addr));
 	int iRou2Port = ntohs(rou2Addr.sin_port);
 	Router.m_mChildPort[stoi(sMsgRecv)] = iRou2Port;
-	string temp2 = "router: 1, pid: " + sMsgRecv + ", port: " + to_string(iRou2Port);
-	vLog.push_back(temp2);
+	
 }

@@ -1092,13 +1092,86 @@ void stage6(cRouter &Router,
 	struct sockaddr_in & rou1Addr,
 	struct sockaddr_in & rou2Addr)
 {
-	stage1(Router, rou1Addr, rou2Addr);
-	if (Router.iFPID == 0) // if it is secondary router
+	int sockID;
+	socklen_t len;
+	struct sockaddr_in  locAddr;
+	setTempAddr("127.0.0.1", locAddr);
+	getDynmcPortSrv(locAddr, rou1Addr);
+	sockID = getUdpSocket();
+	char pRou1Addr[16];
+	unsigned int iRou1Port;
+	inet_ntop(AF_INET, &rou1Addr.sin_addr, pRou1Addr, sizeof(pRou1Addr));// translate the router 1 ip address to ascii
+	iRou1Port = ntohs(rou1Addr.sin_port);//translate the router 1 port  to ascii
+	Router.iPortNum = iRou1Port;
+	int iBind = bind(sockID, (struct sockaddr*)&rou1Addr, sizeof(rou1Addr));
+	if (iBind<0)
 	{
-		secondRouter_s5(Router);
+		perror("bind error");
 	}
-	else// if it is primary router
+	cout << "primary address:" << pRou1Addr << endl;
+	cout << "primary port: " << iRou1Port << endl;
+
+
+	pid_t fPid;
+	for (int i = 0; i < Router.iPortNum - 1; i++)
 	{
-		primaryRouter_s5(Router, rou2Addr);
+		if (Router.iFPID != 0)
+		{
+			fPid = fork();
+			if (fPid<0)
+			{
+				cout << " fork : error" << endl;
+			}
+			else if (fPid == 0)
+			{
+				secondRouter_reqReg(Router, rou1Addr, i+1);
+				Router.iFPID = fPid;
+			}
+			else
+			{
+				//cout << "child process pid: " << fPid << endl << endl;
+				Router.iFPID = fPid;
+				primaryRouter_reg(sockID, Router);
+			}
+		}
 	}
+
+	if (Router.iFPID != 0)
+	{
+		for (auto i : Router.m_mChildPort)
+		{
+			cout << "pid: " << i.first << "; port" << i.second << endl;
+		}
+	}
+	
+	
+
+	//if (Router.iFPID == 0) // if it is secondary router
+	//{
+	//	secondRouter_s6(Router);
+	//}
+	//else// if it is primary router
+	//{
+	//	primaryRouter_s6(Router, rou2Addr);
+	//}
+}
+
+
+
+void primaryRouter_reg(const int sockID, cRouter & Router)
+{
+	struct sockaddr_in rou2Addr;
+	Router.iSockID = sockID;
+	vector<string> &vLog = Router.vLog;
+	string temp = "primary port: " + to_string(Router.iPortNum);
+	vLog.push_back(temp);
+	char buf[1024], pRou2Addr[16];
+	memset(buf, 0, 1024);
+	recvMsg(sockID, buf, 1024, rou2Addr);
+	string sMsgRecv(buf);
+	inet_ntop(AF_INET, &rou2Addr.sin_addr, pRou2Addr, sizeof(pRou2Addr));
+	int iRou2Port = ntohs(rou2Addr.sin_port);
+	Router.m_mChildPort[stoi(sMsgRecv)]
+	string temp2 = "router: 1, pid: " + sMsgRecv + ", port: " + to_string(iRou2Port);
+	vLog.push_back(temp2);
 }

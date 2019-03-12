@@ -16,7 +16,7 @@ void primaryRouter_s4(cRouter & Router, struct sockaddr_in &rou2Addr);
 void secondRouter_s4(cRouter & Router);
 void primaryRouter_s5(cRouter & Router, struct sockaddr_in &rou2Addr);
 void secondRouter_s5(cRouter & Router);
-void primaryRouter_s6(cRouter & Router, struct sockaddr_in &rou2Addr);
+void primaryRouter_s6(cRouter & Router);
 void secondRouter_s6(cRouter & Router);
 void primaryRouter_reg(const int sockID, cRouter & Router);
 void secondRouter_reqReg(cRouter & Router, const sockaddr_in rou1Addr,int iRouterID);

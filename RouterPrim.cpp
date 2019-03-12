@@ -716,7 +716,7 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 	}
 }
 
-void primaryRouter_s6(cRouter & Router, sockaddr_in &rou2Addr)
+void primaryRouter_s6(cRouter & Router)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
@@ -787,6 +787,9 @@ void primaryRouter_s6(cRouter & Router, sockaddr_in &rou2Addr)
 		char buffer[2048];
 		if (FD_ISSET(tun_fd, &fdSet))
 		{
+			struct sockaddr_in rou2Addr;
+			setTempAddr("127.0.0.1", rou2Addr);
+			rou2Addr.sin_port = htons(Router.m_mChildPort.begin()->second);
 			bRefreshTimeout = true;
 			memset(buffer, 0, 2048);
 			int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
@@ -1151,7 +1154,7 @@ void stage6(cRouter &Router,
 	}
 	else// if it is primary router
 	{
-		primaryRouter_s6(Router, rou2Addr);
+		primaryRouter_s6(Router);
 	}
 }
 

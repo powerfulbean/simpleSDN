@@ -951,7 +951,7 @@ int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, 
 	}
 	else if (action.m_action == 2)
 	{
-		icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+		icmpReply_secondRouter(Router.iSockID, buffer, iSize, rou1Addr);
 		return -1;
 	}
 	else if (action.m_action == 3)

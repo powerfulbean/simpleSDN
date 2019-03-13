@@ -941,6 +941,10 @@ int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, 
 				cout << "wrong target port number!";
 				return -2;
 			}
+			else
+			{
+				cout << "action: forward, target port: "<< action.m_fwdPort;
+			}
 			sockaddr_in targetAddr;
 			targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 			targetAddr.sin_family = AF_INET;

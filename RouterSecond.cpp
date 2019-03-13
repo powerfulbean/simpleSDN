@@ -636,7 +636,6 @@ void secondRouter_s6(cRouter & Router)
 				else
 				{
 					printf("Read a packet from primary router, packet length:%d\n", nread);
-					icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
 					struct in_addr srcAddr;
 					struct in_addr dstAddr;
 					u_int8_t icmp_type;
@@ -677,11 +676,7 @@ void secondRouter_s6(cRouter & Router)
 					else if (sCheck.size() != 0)
 					{
 						printf("Second Router Read a ICMP packet \n");
-						int iIcmpType = getIcmpType(buffer);
-						if (iIcmpType != 8)
-						{
-							return;
-						}
+						icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{

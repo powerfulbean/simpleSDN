@@ -198,6 +198,7 @@ bool flow_table::contains(octane_control msg)
 	}
 	else if (it->first == defaultEntry)
 	{
+		cout <<endl<< " hit the default rule" << endl;
 		return false;
 	}
 	else

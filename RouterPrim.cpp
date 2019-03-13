@@ -605,13 +605,13 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{
-							int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
+							//int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
 							int iSeqno;
-							if (iCheck2 == 1)
-							{
+							//if (iCheck2 == 1)
+							/*{
 								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
 							}
-							else
+							else*/
 							{
 								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							}
@@ -833,13 +833,13 @@ void primaryRouter_s6(cRouter & Router)
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{
-							int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
+							//int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
 							int iSeqno;
-							if (iCheck2 == 1)
-							{
-								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
-							}
-							else
+							//if (iCheck2 == 1)
+							//{
+								//iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
+							//}
+							//else
 							{
 								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							}

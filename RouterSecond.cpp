@@ -689,7 +689,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou2ExternalAddr.sin_addr);
 						}*/
 
-						int iFlag = octaneRulesController(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+						int iFlag = octaneRulesController(entry, Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
 						if (iFlag == 0)
 						{
 							oriSrcAddr = srcAddr;

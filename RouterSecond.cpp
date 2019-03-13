@@ -744,7 +744,7 @@ void secondRouter_s6(cRouter & Router)
 					cout << endl << sLog << endl;
 					Router.vLog.push_back(sLog);
 
-					err = sendMsg(Router.iSockID, buffer2, 2048, rou1Addr);
+					err = sendMsg(Router.iSockID, buffer3, 2048, rou1Addr);
 					if (err == -1)
 					{
 						perror("icmpForward_secondRouter error: sendMsg");

@@ -9,7 +9,8 @@ void icmpReply_primRouter(int tun_fd, char* buffer, int nread);
 void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize,const struct sockaddr_in rou1Addr);
 void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	       	 const struct in_addr addrForReplace);
-
+void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr,
+	const struct in_addr addrForReplace);
 void primaryRouter_s2(cRouter & Router,struct sockaddr_in &rou2Addr);
 void secondRouter_s2(cRouter & Router);
 void primaryRouter_s4(cRouter & Router, struct sockaddr_in &rou2Addr);

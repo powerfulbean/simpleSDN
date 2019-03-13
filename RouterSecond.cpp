@@ -801,7 +801,7 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 	sendMsg(iSockID, buffer, iSize, rou1Addr);
 }
 
-void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
+void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr,
 							 const struct in_addr addrForReplace)
 {
 	struct in_addr dstAddr;
@@ -843,8 +843,50 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 		perror("icmpForward_secondRouter success: sendmsg");
 		printf(": target dst address : %s  \n", inet_ntoa(sockDstAddr.sin_addr));
 	}
+}
+
+void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
+	const struct in_addr addrForReplace)
+{
+	struct in_addr dstAddr;
+	struct in_addr srcAddr;
+	struct msghdr msg1;
+	struct iovec iov1;
+	struct icmphdr icmphdr;
+	struct sockaddr_in sockDstAddr;
+	u_int8_t icmp_type;
+	icmpUnpack(buffer, icmphdr, srcAddr, dstAddr, icmp_type);
+	sockDstAddr.sin_addr = dstAddr;
+	sockDstAddr.sin_family = AF_INET;
 
 
+	struct ip * pIpHeader;
+	struct icmp * pIcmp;
+	pIpHeader = (struct ip *) buffer;
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pIcmp = (struct icmp *)(buffer + iIpHeaderLen);
+	short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+
+	int iRawSockID = Router.iRawSockID;
+	iov1.iov_base = pIcmp;// (char*)&icmphdr;
+	iov1.iov_len = iIcmpTotLen;
+	msg1.msg_name = &sockDstAddr;
+	msg1.msg_namelen = sizeof(sockDstAddr);
+	msg1.msg_iov = &iov1;
+	msg1.msg_iovlen = 1;
+	msg1.msg_control = 0;
+	msg1.msg_controllen = 0;
+	msg1.msg_flags = 0;
+	int err = sendmsg(iRawSockID, &msg1, 0);
+	if (err == -1)
+	{
+		perror("icmpForward_secondRouter error: sendmsg");
+	}
+	else
+	{
+		perror("icmpForward_secondRouter success: sendmsg");
+		printf(": target dst address : %s  \n", inet_ntoa(sockDstAddr.sin_addr));
+	}
 }
 
 

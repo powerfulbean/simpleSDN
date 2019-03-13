@@ -685,7 +685,7 @@ void secondRouter_s6(cRouter & Router)
 						else
 						{
 							oriSrcAddr = srcAddr;
-							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou2ExternalAddr.sin_addr);
 						}
 						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
 						cout << endl << sLog << endl;
@@ -801,7 +801,7 @@ void icmpReply_secondRouter(int iSockID, char* buffer, unsigned int iSize, const
 	sendMsg(iSockID, buffer, iSize, rou1Addr);
 }
 
-void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize, const struct sockaddr_in rou1Addr,
+void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 							 const struct in_addr addrForReplace)
 {
 	struct in_addr dstAddr;

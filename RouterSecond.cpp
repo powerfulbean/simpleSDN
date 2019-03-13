@@ -572,7 +572,7 @@ void secondRouter_s5(cRouter & Router)
 
 }
 
-void secondRouter_s6(cRouter & Router)
+void secondRouter_s6(cRouter & Router) // target port of  octane_control is host endian (big endian)
 {
 	char buffer[2048];
 	bool bRefreshTimeout = true;
@@ -677,7 +677,8 @@ void secondRouter_s6(cRouter & Router)
 					{
 						printf("Second Router Read a ICMP packet \n");
 						icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou1Addr.sin_port));
-						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
+						
+						/*int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{
 							icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
@@ -686,7 +687,14 @@ void secondRouter_s6(cRouter & Router)
 						{
 							oriSrcAddr = srcAddr;
 							icmpForward_secondRouter(Router, buffer, sizeof(buffer), rou2ExternalAddr.sin_addr);
+						}*/
+
+						int iFlag = octaneRulesController(Router, buffer, sizeof(buffer), rou1Addr, rou2ExternalAddr.sin_addr);
+						if (iFlag == 0)
+						{
+							oriSrcAddr = srcAddr;
 						}
+
 						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
 						cout << endl << sLog << endl;
 						Router.vLog.push_back(sLog);
@@ -911,4 +919,51 @@ int packetDstCheck(struct in_addr &packetDstAddr, string targetDst, string mask)
 	{
 		return 0;
 	}
+}
+
+
+int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, int iSize, struct sockaddr_in rou1Addr, struct in_addr rou2Sin_addr)
+{
+	const flow_action & action = Router.m_rouFlowTable.m_mTable[entry];
+	if (action.m_action == 1)
+	{
+		// forward
+		if (action.m_fwdPort == 0)
+		{
+			// forward to rawsocket
+			icmpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
+			return 0;
+		}
+		else
+		{
+			if (action.m_fwdPort <= 0)
+			{
+				cout << "wrong target port number!";
+				return -2;
+			}
+			sockaddr_in targetAddr;
+			targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+			targetAddr.sin_family = AF_INET;
+			targetAddr.sin_port = htons(action.m_fwdPort);
+			sendMsg(Router.iSockID, buffer, iSize, targetAddr);
+			return action.m_fwdPort;
+		}
+	}
+	else if (action.m_action == 2)
+	{
+		icmpReply_secondRouter(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+		return -1;
+	}
+	else if (action.m_action == 3)
+	{
+		Router.Drop();
+		return -1;
+	}
+	else if (action.m_action == 4)
+	{
+		//remove
+		Router.m_rouFlowTable.m_mTable.erase(entry);
+		return -1;
+	}
+	return -2;
 }

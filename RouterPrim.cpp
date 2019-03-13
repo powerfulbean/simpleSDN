@@ -733,6 +733,9 @@ void primaryRouter_s6(cRouter & Router)
 	FD_SET(tun_fd, &fdSetAll);
 	FD_SET(iSockID, &fdSetAll);
 	int iMaxfdpl = (tun_fd > iSockID) ? (tun_fd + 1) : (iSockID + 1);
+
+	// install reply rules on secondary Router
+
 	while (1)
 	{
 		bool bEventTimeout = false;

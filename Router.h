@@ -22,7 +22,7 @@ void secondRouter_s6(cRouter & Router);
 void primaryRouter_reg(const int sockID, cRouter & Router);
 void secondRouter_reqReg(cRouter & Router, const sockaddr_in rou1Addr,int iRouterID);
 
-int octaneRulesController(cRouter Router, char* buffer, int iSize, struct sockaddr_in rou1Addr, struct in_addr rou2ExternalAddr.sin_addr);
+int octaneRulesController(cRouter Router, char* buffer, int iSize, struct sockaddr_in rou1Addr, struct in_addr rou2Sin_addr);
 
 void stage1(cRouter &Router,
 	struct sockaddr_in & rou1Addr,

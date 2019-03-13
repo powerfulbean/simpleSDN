@@ -730,14 +730,16 @@ void secondRouter_s6(cRouter & Router)
 				uint8_t icmpType = getIcmpType(buffer2);
 
 				printf("\n rawsocket rawsocket icmp type: %x \n ", icmpType);
-				icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
 				printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
-				icmpReply_Edit(oriSrcAddr, buffer2, FromRawSock);
+				char buffer3[2048];
+				memcpy(buffer3, buffer2, sizeof(buffer2));
+				icmpReply_Edit(oriSrcAddr, buffer3, FromRawSock);
 
-				flow_entry entry(buffer2);
+				flow_entry entry(buffer3);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
 				if (sCheck.size() != 0)
 				{
+					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
 					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
 					cout << endl << sLog << endl;
 					Router.vLog.push_back(sLog);

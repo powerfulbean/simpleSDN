@@ -297,6 +297,41 @@ void icmpReply_Edit(char* buffer)
 	
 }
 
+void tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
+{
+	// recal checksum of tcp
+	char psdBuffer[2048] = { 0 };
+	struct ip * pIpHeader;
+	struct tcphdr * pTcp, *pTcp_psd;
+	struct psdhdr* pPsd;
+	pIpHeader = (struct ip *) buffer3;
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pTcp = (struct tcphdr *)(buffer3 + iIpHeaderLen);
+	short iTcpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+	pTcp_psd = (struct tcphdr *)(psdBuffer + sizeof(struct psdhdr));
+	pPsd = (struct psdhdr *) psdBuffer;
+
+	// edit IP packet
+	pIpHeader->ip_dst = oriSrcAddr;
+	pIpHeader->ip_sum = 0;
+	pIpHeader->ip_sum = checksum((char*)pIpHeader, iIpHeaderLen);
+
+	// calculate check sum
+	pPsd->saddr = pIpHeader->ip_src.s_addr;//pIpHeader->ip_src.s_addr;
+	pPsd->daddr = oriSrcAddr.s_addr;
+	pPsd->mbz = 0;
+	pPsd->protocol = pIpHeader->ip_p;
+	pPsd->tcpl = htons(iTcpTotLen); //htons(sizeof(struct tcphdr));
+	cout << endl << "tcp len: " << iTcpTotLen << endl;
+	printf("tcp ori check sum 1: %x \n", pTcp->check);
+	pTcp->check = 0;
+	memcpy(pTcp_psd, pTcp, iTcpTotLen);
+	printf("tcp ori check sum equal: %x == %x ? \n", pTcp->check, pTcp_psd->check);
+	cout << endl << "psdhdr len: " << sizeof(struct psdhdr) << " " << sizeof(psdhdr) << endl;
+	pTcp->check = checksum(psdBuffer, iTcpTotLen + sizeof(struct psdhdr));
+	// end of recal tcp checksum
+}
+
 void ipChangeProtocol(char* buffer, int iProtocol)
 {
 	struct ip * pIpHeader;

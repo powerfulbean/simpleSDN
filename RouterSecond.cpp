@@ -582,6 +582,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	struct in_addr oriSrcAddr;
 	int iSockID = Router.iSockID;
 	int iRawSockID;
+	int iTcpRawSockID;
 	int iMaxfdpl;
 	int iCount = 0;
 	fd_set fdSetAll, fdSet;
@@ -594,8 +595,15 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	{
 		perror("get raw socket error");
 	}
+	iTcpRawSockID = getRawSocket(6);
+	if (iTcpRawSockID<0)
+	{
+		perror("get raw socket error");
+	}
 	Router.iRawSockID = iRawSockID;
+	Router.m_iTcpRawSocketID = iTcpRawSockID;
 	FD_SET(iRawSockID, &fdSetAll);
+	FD_SET(iTcpRawSockID, &fdSetAll);
 	if (Router.iRouterID == 1)
 	{
 		rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
@@ -612,7 +620,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 		perror("secondRouter_s2 error, bind error");
 	}
 	iMaxfdpl = (iRawSockID > iSockID) ? (iRawSockID + 1) : (iSockID + 1);
-
+	iMaxfdpl = (iMaxfdpl -1  > iTcpRawSockID) ? (iMaxfdpl) : (iTcpRawSockID);
 	string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.defaultInsert();
 	Router.vLog.push_back(sLog);
 
@@ -777,6 +785,66 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 					bRefreshTimeout = false;
 				}
 			}
+			if (FD_ISSET(iTcpRawSockID, &fdSet))
+			{
+				bRefreshTimeout = true;
+				char buffer2[2048];
+				struct sockaddr_in senderAddr;
+				struct iovec iov2;
+				struct msghdr msg2;
+				iov2.iov_base = buffer2;
+				iov2.iov_len = sizeof(buffer2);
+				msg2.msg_name = &senderAddr;
+				msg2.msg_namelen = sizeof(senderAddr);
+				msg2.msg_iov = &iov2;
+				msg2.msg_iovlen = 1;
+				msg2.msg_control = NULL;
+				msg2.msg_controllen = 0;
+				msg2.msg_flags = 0;
+				int err = recvmsg(iTcpRawSockID, &msg2, 0);
+				if (err == -1)
+				{
+					perror("icmpForward_secondRouter error: recvmsg");
+				}
+				else
+				{
+					perror("icmpForward_secondRouter success: recvmsg");
+					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
+				}
+
+				printf("\n rawsocket rawsocket icmp type: %x \n ", icmpType);
+				printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
+				char buffer3[2048];
+				memcpy(buffer3, buffer2, sizeof(buffer2));
+				icmpReply_Edit(oriSrcAddr, buffer3, FromRawSock);
+
+				flow_entry entry(buffer3);
+				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+				if (sCheck.size() != 0)
+				{
+					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
+					Router.vLog.push_back(sLog);
+
+					//err = sendMsg(Router.iSockID, buffer3, 2048, rou1Addr);
+					sockaddr_in tempSockAddr;
+					in_addr tempInAddr;
+					octaneRulesController(entry, Router, buffer3, 2048, tempSockAddr, tempInAddr);
+					if (err == -1)
+					{
+						perror("icmpForward_secondRouter error: sendMsg");
+					}
+					else
+					{
+						perror("icmpForward_secondRouter success: sendMsg");
+					}
+				}
+				else
+				{
+					bRefreshTimeout = false;
+				}
+			}
 			if (bRefreshTimeout == true)
 			{
 				timeout.tv_sec = 15;
@@ -907,6 +975,50 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 	}
 }
 
+void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
+	const struct in_addr addrForReplace)
+{
+	struct in_addr dstAddr;
+	struct in_addr srcAddr;
+	struct msghdr msg1;
+	struct iovec iov1;
+	struct icmphdr icmphdr;
+	struct sockaddr_in sockDstAddr;
+	u_int8_t icmp_type;
+	icmpUnpack(buffer, icmphdr, srcAddr, dstAddr, icmp_type);
+	sockDstAddr.sin_addr = dstAddr;
+	sockDstAddr.sin_family = AF_INET;
+
+
+	struct ip * pIpHeader;
+	struct tcphdr * pTcp;
+	pIpHeader = (struct ip *) buffer;
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pTcp = (struct tcphdr *)(buffer + iIpHeaderLen);
+	short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+
+	int iRawSockID = Router.iRawSockID;
+	iov1.iov_base = pIcmp;// (char*)&icmphdr;
+	iov1.iov_len = iIcmpTotLen;
+	msg1.msg_name = &sockDstAddr;
+	msg1.msg_namelen = sizeof(sockDstAddr);
+	msg1.msg_iov = &iov1;
+	msg1.msg_iovlen = 1;
+	msg1.msg_control = 0;
+	msg1.msg_controllen = 0;
+	msg1.msg_flags = 0;
+	int err = sendmsg(iRawSockID, &msg1, 0);
+	if (err == -1)
+	{
+		perror("icmpForward_secondRouter error: sendmsg");
+	}
+	else
+	{
+		perror("icmpForward_secondRouter success: sendmsg");
+		printf(": target dst address : %s  \n", inet_ntoa(sockDstAddr.sin_addr));
+	}
+}
+
 
 int packetDstCheck(struct in_addr &packetDstAddr, string targetDst, string mask)
 {
@@ -941,7 +1053,14 @@ int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, 
 		if (action.m_fwdPort == 0)
 		{
 			// forward to rawsocket
-			icmpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
+			if (entry.m_protocol == 1)
+			{
+				icmpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
+			}
+			else
+			{
+				tcpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
+			}
 			return 0;
 		}
 		else

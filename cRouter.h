@@ -69,7 +69,7 @@ class cRouter{
 		int iRawSockID;
 		int m_iDropAfter;
 
-		cRouter() { iFPID = 1;  iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 1; iSockID = -1; iRawSockID = -1; m_iDropAfter = 3; m_iSeqnoCnt = 1; }
+		cRouter() { iFPID = 1;  iStage = 0; iRouteNum = 0; iRouterID = 0; iConfigReg = 1; iSockID = -1; m_iTcpRawSocketID = -1; iRawSockID = -1; m_iDropAfter = 3; m_iSeqnoCnt = 1; }
 		void readConfigFile(char* filePath);
 		void writeLogFile();
 		int parser(const string &temp, vector<string> &output);
@@ -87,6 +87,7 @@ class cRouter{
 		map<octane_control, flow_action> m_droppedMsg; //for secondary router to store dropped msg
 		int m_iOctSockID;
 		map<int, int> m_mChildPort; // <pid number, related port number>
+		int m_iTcpRawSocketID;
 
 		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort, bool truelySend = true);
 		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort = -1, bool truelySend = true);

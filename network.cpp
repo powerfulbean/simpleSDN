@@ -303,7 +303,7 @@ void ipChangeProtocol(char* buffer, int iProtocol)
 	printf("service type after changing: %d  \n", pIpHeader->ip_p);
 }
 
-struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int iFlag)
+struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int iFlag)// actually edit the IP packet
 {
 	struct ip * pIpHeader;
 	struct icmp * pIcmp;

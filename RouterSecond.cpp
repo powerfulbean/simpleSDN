@@ -987,9 +987,14 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	struct iovec iov1;
 	struct icmphdr icmphdr;
 	struct sockaddr_in sockDstAddr;
-	u_int8_t icmp_type;
-	icmpUnpack(buffer, icmphdr, srcAddr, dstAddr, icmp_type);
-	sockDstAddr.sin_addr = dstAddr;
+	uint32_t sSrc_addr;
+	uint32_t sDst_addr;
+	uint16_t sSrc_port;
+	uint16_t sDst_port;
+	uint8_t ip_type;
+	//icmpUnpack(buffer, icmphdr, srcAddr, dstAddr, icmp_type);
+	ipUnpack(buffer, sSrc_addr, sDst_addr, sSrc_port, sDst_port, ip_type);
+	sockDstAddr.sin_addr.s_addr = dstAddr;
 	sockDstAddr.sin_family = AF_INET;
 
 

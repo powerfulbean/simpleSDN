@@ -933,8 +933,36 @@ void primaryRouter_s6(cRouter & Router)
 					}
 					else
 					{
-						;
+						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
+						//insert rules in flow_table and get the respective log
+						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+						for (int i = 0; i < tempLog.size(); i++)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+							Router.vLog.push_back(sLog);
+						}
+						int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+						int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+						char octaneIpBuffer[2048];
+						char octaneIpBufferRev[2048];
+						memset(octaneIpBuffer, 0, 2048);
+						memset(octaneIpBufferRev, 0, 2048);
+						string localAddr = "127.0.0.1";
+						buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+						buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
+						sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
+						sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
+
+																										// Add timer and register the handle number
+						cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno1);
+						cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1_re, iSeqno2);
+						handle t1 = timersManager.AddTimer(2000, octaneTimer1);
+						handle t2 = timersManager.AddTimer(2000, octaneTimer2);
+						Router.m_unAckBuffer[iSeqno1] = t1;
+						Router.m_unAckBuffer[iSeqno2] = t2;
+						Router.printUnAckBuffer();
 					}
+					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);
 				}
 				else
 				{

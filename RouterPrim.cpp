@@ -1062,22 +1062,45 @@ int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fla
 	string sDstAddr = inet_ntoa(dstAddr);
 	string sIcmp_type = to_string(icmp_type);
 
-	if (flag == FromTunnel)
+	if (a == 1)
 	{
-		string sLog = "ICMP from tunnel, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
-		vLog.push_back(sLog);
+		if (flag == FromTunnel)
+		{
+			string sLog = "ICMP from tunnel, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
+		else if (flag == FromUdp)
+		{
+			string sSrcPort = to_string(iPort);
+			string sLog = "ICMP from port : " + sSrcPort + ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
+		else if (flag == FromRawSock)
+		{
+			string sLog = "ICMP from raw sock, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
 	}
-	else if (flag == FromUdp)
+	else if(a == 6)
 	{
-		string sSrcPort = to_string(iPort);
-		string sLog = "ICMP from port : " +  sSrcPort +  ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
-		vLog.push_back(sLog);
+		if (flag == FromTunnel)
+		{
+			string sLog = "TCP from tunnel, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
+		else if (flag == FromUdp)
+		{
+			string sSrcPort = to_string(iPort);
+			string sLog = "TCP from port : " + sSrcPort + ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
+		else if (flag == FromRawSock)
+		{
+			string sLog = "TCP from raw sock, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
 	}
-	else if (flag == FromRawSock)
-	{
-		string sLog = "ICMP from raw sock, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
-		vLog.push_back(sLog);
-	}
+	
 	return 1;
 }
 

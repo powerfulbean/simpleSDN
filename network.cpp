@@ -318,7 +318,7 @@ void tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
 
 	// calculate check sum
 	pPsd->saddr = pIpHeader->ip_src.s_addr;//pIpHeader->ip_src.s_addr;
-	pPsd->daddr = pIpHeader->ip_dst.s_addr;//oriSrcAddr.s_addr;
+	pPsd->daddr = oriSrcAddr.s_addr;
 	pPsd->mbz = 0;
 	pPsd->protocol = pIpHeader->ip_p;
 	pPsd->tcpl = htons(iTcpTotLen); //htons(sizeof(struct tcphdr));

@@ -1015,6 +1015,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	pPsd->mbz = 0;
 	pPsd->protocol = pIpHeader->ip_p;
 	pPsd->tcpl = htons(iTcpTotLen);
+	cout << endl << "tcp len: " << iTcpTotLen << endl;
 	pTcp->check = 0;
 	memcpy(pTcp_psd, pTcp, iTcpTotLen);
 	pTcp->check = checksum((char*)pTcp_psd, iTcpTotLen + sizeof(psdhdr));

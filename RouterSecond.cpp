@@ -1013,12 +1013,12 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	pPsd = (struct psdhdr *) psdBuffer;
 
 	// calculate check sum
-	pPsd->saddr = inet_addr("192.168.201.2");
+	pPsd->saddr = pIpHeader->ip_src.s_addr//inet_addr("192.168.201.2");
 	pPsd->daddr = pIpHeader->ip_dst.s_addr;
 	pPsd->mbz = 0;
 	pPsd->protocol = pIpHeader->ip_p;
-	pPsd->tcpl = htons(sizeof(struct tcphdr));
-	cout << endl << "tcp len: " << sizeof(struct tcphdr) << endl;
+	pPsd->tcpl = htons(iTcpTotLen);
+	cout << endl << "tcp len: " << iTcpTotLen << endl;
 	pTcp->check = 0;
 	memcpy(pTcp_psd, pTcp, iTcpTotLen);
 	pTcp->check = checksum((char*)pTcp_psd, iTcpTotLen + sizeof(psdhdr));

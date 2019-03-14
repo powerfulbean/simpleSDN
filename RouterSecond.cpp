@@ -624,7 +624,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 		perror("secondRouter_s2 error, bind error");
 	}
 	iMaxfdpl = (iRawSockID > iSockID) ? (iRawSockID + 1) : (iSockID + 1);
-	iMaxfdpl = (iMaxfdpl -1  > iTcpRawSockID) ? (iMaxfdpl) : (iTcpRawSockID);
+	iMaxfdpl = (iMaxfdpl -1  > iTcpRawSockID) ? (iMaxfdpl) : (iTcpRawSockID + 1);
 	string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.defaultInsert();
 	Router.vLog.push_back(sLog);
 
@@ -1021,7 +1021,6 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	cout << endl << "tcp len: " << iTcpTotLen << endl;
 	printf("tcp ori check sum 1: %x \n", pTcp->check);
 	pTcp->check = 0;
-	const unsigned int iJ = 40;
 	memcpy(pTcp_psd, pTcp, iTcpTotLen);
 	printf("tcp ori check sum equal: %x == %x ? \n", pTcp->check, pTcp_psd->check);
 	cout << endl << "psdhdr len: " << sizeof(struct psdhdr)<<" "<< sizeof(psdhdr) << endl;

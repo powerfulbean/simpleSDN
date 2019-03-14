@@ -59,7 +59,7 @@ public:
 
 	cOctaneTimer(int iSockID, sockaddr_in & rou2Addr, octane_control  msg, int iSeq) : m_iSockID(iSockID), m_iOctaneMsg(msg), m_iSeq(iSeq)
 	{
-		m_rou2Addr.sin_family = rou2Addr.sin_family;
+		m_rou2Addr.sin_family = AF_INET;
 		m_rou2Addr.sin_addr.s_addr = rou2Addr.sin_addr.s_addr;
 		m_rou2Addr.sin_port = rou2Addr.sin_port;
 	}

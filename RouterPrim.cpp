@@ -810,6 +810,7 @@ void primaryRouter_s6(cRouter & Router)
 		if (FD_ISSET(tun_fd, &fdSet))
 		{
 			struct sockaddr_in rou2Addr;
+			struct sockaddr_in targetAddr;
 			setTempAddr("127.0.0.1", rou2Addr);
 			rou2Addr.sin_port = htons(Router.m_mChildPort.begin()->second);
 			bRefreshTimeout = true;
@@ -826,7 +827,7 @@ void primaryRouter_s6(cRouter & Router)
 			else
 			{
 				printf("Read a packet from tunnel, packet length:%d\n", nread);
-				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
+				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));// for FromTunnel "port" is not useful
 				if (a == 1) // it is a ICMP packet
 				{
 					printf("Prim Router Read a ICMP packet \n", nread);
@@ -843,30 +844,32 @@ void primaryRouter_s6(cRouter & Router)
 					else
 					{
 						// create a orctane message for this primary router 
-						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port), false);
-						//insert rules in flow_table and get the respective log
-						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size(); i++)
-						{
-							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
-							Router.vLog.push_back(sLog);
-						}
+						
 						int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
 						int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
 						if (iCheck == 1 || iCheck2 == 1)
 						{
-							sockaddr_in targetAddr;
 							targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 							targetAddr.sin_family = AF_INET;
 							if (iCheck == 1)
 							{
-								targetAddr.sin_port = htons(secondRouter1Port);
+								targetAddr.sin_port = secondRouter1Port;
 							}
 							else
 							{
-								targetAddr.sin_port = htons(secondRouter2Port);
+								targetAddr.sin_port = secondRouter2Port;
 							}
+
+							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
+							//insert rules in flow_table and get the respective log
+							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+							for (int i = 0; i < tempLog.size(); i++)
+							{
+								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+								Router.vLog.push_back(sLog);
+							}
+
 							int iSeqno;
 							iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							char octaneIpBuffer[2048];
@@ -875,7 +878,7 @@ void primaryRouter_s6(cRouter & Router)
 							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), targetAddr); // send control message
 							// Add timer and register the handle number
-							cOctaneTimer * octaneTimer = new cOctaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno);
+							cOctaneTimer * octaneTimer = new cOctaneTimer(Router.iSockID, targetAddr, msg1, iSeqno);
 							handle t1 = timersManager.AddTimer(2000, octaneTimer);
 							Router.m_unAckBuffer[iSeqno] = t1;
 						}

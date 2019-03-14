@@ -580,6 +580,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	struct timeval timeout;
 	struct sockaddr_in rou2ExternalAddr;
 	struct in_addr oriSrcAddr;
+	struct in_addr oriSrcAddr2;
 	int iSockID = Router.iSockID;
 	int iRawSockID;
 	int iTcpRawSockID;
@@ -809,11 +810,11 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				int err = recvmsg(iTcpRawSockID, &msg2, 0);
 				if (err == -1)
 				{
-					perror("icmpForward_secondRouter error: recvmsg");
+					perror("secondRouter_tcpRaw error: recvmsg");
 				}
 				else
 				{
-					perror("icmpForward_secondRouter success: recvmsg");
+					perror("secondRouter_tcpRaw success: recvmsg");
 					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 				}
 

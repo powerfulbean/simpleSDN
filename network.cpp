@@ -130,6 +130,11 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 
 	if (pIpHeader->ip_p != 1)
 	{
+		if (pIpHeader->ip_p == 6)
+		{
+			srcAddr = pIpHeader->ip_src;
+			dstAddr = pIpHeader->ip_dst;
+		}
 		return pIpHeader->ip_p;
 	}
 

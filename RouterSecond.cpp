@@ -1025,7 +1025,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	memcpy(pTcp_psd, pTcp,iJ);
 	printf("tcp ori check sum equal: %x == %x ? \n", pTcp->check, (pTcp_psd+ sizeof(struct psdhdr))->check);
 	cout << endl << "psdhdr len: " << sizeof(struct psdhdr)<<" "<< sizeof(psdhdr) << endl;
-	pTcp->check = checksum((char*)psdBuffer, iTcpTotLen + (short)sizeof(struct psdhdr));
+	pTcp->check = checksum(psdBuffer, iTcpTotLen + (short)sizeof(struct psdhdr));
 	printf("tcp ori check sum 2: %x \n", pTcp->check);
 	int iRawSockID = Router.m_iTcpRawSocketID;
 	iov1.iov_base = pTcp;// (char*)&icmphdr;

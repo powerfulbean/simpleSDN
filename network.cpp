@@ -312,13 +312,13 @@ void tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
 	pPsd = (struct psdhdr *) psdBuffer;
 
 	// edit IP packet
-	pIpHeader->ip_dst = oriSrcAddr;
-	pIpHeader->ip_sum = 0;
-	pIpHeader->ip_sum = checksum((char*)pIpHeader, iIpHeaderLen);
+	//pIpHeader->ip_dst = oriSrcAddr;
+	//pIpHeader->ip_sum = 0;
+	//pIpHeader->ip_sum = checksum((char*)pIpHeader, iIpHeaderLen);
 
 	// calculate check sum
 	pPsd->saddr = pIpHeader->ip_src.s_addr;//pIpHeader->ip_src.s_addr;
-	pPsd->daddr = oriSrcAddr.s_addr;
+	pPsd->daddr = pIpHeader->ip_dst.s_addr;//oriSrcAddr.s_addr;
 	pPsd->mbz = 0;
 	pPsd->protocol = pIpHeader->ip_p;
 	pPsd->tcpl = htons(iTcpTotLen); //htons(sizeof(struct tcphdr));

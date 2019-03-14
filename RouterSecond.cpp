@@ -812,7 +812,6 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 					printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 				}
 
-				printf("\n rawsocket rawsocket icmp type: %x \n ", icmpType);
 				printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 				char buffer3[2048];
 				memcpy(buffer3, buffer2, sizeof(buffer2));
@@ -995,11 +994,11 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	pIpHeader = (struct ip *) buffer;
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pTcp = (struct tcphdr *)(buffer + iIpHeaderLen);
-	short iIcmpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+	short iTcpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
 
 	int iRawSockID = Router.iRawSockID;
-	iov1.iov_base = pIcmp;// (char*)&icmphdr;
-	iov1.iov_len = iIcmpTotLen;
+	iov1.iov_base = pTcp;// (char*)&icmphdr;
+	iov1.iov_len = iTcpTotLen;
 	msg1.msg_name = &sockDstAddr;
 	msg1.msg_namelen = sizeof(sockDstAddr);
 	msg1.msg_iov = &iov1;

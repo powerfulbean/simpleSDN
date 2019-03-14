@@ -174,6 +174,22 @@ int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, s
 	return 1;
 }
 
+int tcpUnpack(char* buffer) // return dst port
+{
+	struct ip * pIpHeader;
+	struct tcphdr * pTcp;
+	pIpHeader = (struct ip *) buffer;
+
+	if (pIpHeader->ip_p != 6)
+	{
+		return 0;
+	}
+
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	pTcp = (struct tcphdr *)(buffer + iIpHeaderLen);
+
+	return ntohs(pTcp->dest);
+}
 void buildIpPacket(char* buffer, unsigned int iBufferSize,int iProtocol, string sSrcAddr, string sDstAddr, char* payload, unsigned int iPayloadSize)
 {
 

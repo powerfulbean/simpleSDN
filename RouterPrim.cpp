@@ -862,18 +862,18 @@ void primaryRouter_s6(cRouter & Router)
 					}
 					else
 					{
+						// create a orctane message for this primary router 
+						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
+						//insert rules in flow_table and get the respective log
+						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+						for (int i = 0; i < tempLog.size(); i++)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+							Router.vLog.push_back(sLog);
+						}
 						int iCheckDef = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheckDef == 1)
 						{
-							// create a orctane message for this primary router 
-							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
-							//insert rules in flow_table and get the respective log
-							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-							for (int i = 0; i < tempLog.size(); i++)
-							{
-								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
-								Router.vLog.push_back(sLog);
-							}
 							int iSeqno;
 							iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							char octaneIpBuffer[2048];
@@ -900,7 +900,7 @@ void primaryRouter_s6(cRouter & Router)
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
 							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
 
-																											// Add timer and register the handle number
+							// Add timer and register the handle number
 							cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno1);
 							cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1_re, iSeqno2);
 							handle t1 = timersManager.AddTimer(2000, octaneTimer1);
@@ -911,6 +911,30 @@ void primaryRouter_s6(cRouter & Router)
 						Router.printUnAckBuffer();
 					}
 					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);
+				}
+				else if (a == 6)
+				{
+					int iProtocolType = tcpUnpack(buffer);
+					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+					targetAddr.sin_family = AF_INET;
+					if (iProtocolType == 80)
+					{
+						targetAddr.sin_port = secondRouter1Port;
+					}
+					else
+					{
+						targetAddr.sin_port = secondRouter2Port;
+					}
+					if (sCheck.size() != 0)
+					{
+						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+						cout << endl << sLog << endl;
+						Router.vLog.push_back(sLog);
+					}
+					else
+					{
+						;
+					}
 				}
 				else
 				{
@@ -942,7 +966,7 @@ void primaryRouter_s6(cRouter & Router)
 					cout << endl << sLog << endl;
 					Router.vLog.push_back(sLog);
 				}
-				if (iIcmpProtocol == 1)// its a icmp pscket
+				if (iIcmpProtocol == 1 || iIcmpProtocol == 6)// its a icmp or TCP pscket
 				{
 					cwrite(tun_fd, buffer, nread);// send packet back to tunnel
 												  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);

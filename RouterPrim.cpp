@@ -914,6 +914,7 @@ void primaryRouter_s6(cRouter & Router)
 				}
 				else if (a == 6)
 				{
+					struct octane_control localMsg, msg1, msg1_re;
 					int iProtocolType = tcpUnpack(buffer);
 					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 					targetAddr.sin_family = AF_INET;

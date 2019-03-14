@@ -1044,6 +1044,8 @@ int cOctaneTimer::Expire()// use the code of test-app.cc provided by csci551.
 	buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), OCTANE_PROTOCOL_NUM, localAddr, localAddr, (char *)&m_iOctaneMsg, sizeof(m_iOctaneMsg));
 	sendMsg(m_iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), m_rou2Addr);// send control message
 
+	cout << endl << "family: " << m_rou2Addr.sin_family << " port: " << ntohs(m_rou2Addr.sin_port) << endl;
+
 	return TimerCallback::RESCHEDULE_SAME;
 }
 

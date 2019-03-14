@@ -1091,7 +1091,7 @@ int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, 
 			}
 			else if(entry.m_protocol == 6)
 			{
-				//cout << endl<<"tcp out" << endl;
+				cout << endl<<"tcp out" << endl;
 				tcpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
 			}
 			return 0;

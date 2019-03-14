@@ -835,7 +835,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				pPsd = (struct psdhdr *) psdBuffer;
 
 				// calculate check sum
-				pPsd->saddr = rou2ExternalAddr.s_addr;//pIpHeader->ip_src.s_addr;
+				pPsd->saddr = rou2ExternalAddr.sin_addr.s_addr;//pIpHeader->ip_src.s_addr;
 				pPsd->daddr = pIpHeader->ip_dst.s_addr;
 				pPsd->mbz = 0;
 				pPsd->protocol = pIpHeader->ip_p;

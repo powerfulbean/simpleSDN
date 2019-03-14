@@ -1054,7 +1054,10 @@ int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fla
 	struct in_addr dstAddr;
 	u_int8_t icmp_type;
 	int a = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-	
+	if(a!=1)
+	{
+		return a;
+	}
 	string sSrcAddr = inet_ntoa(srcAddr);
 	string sDstAddr = inet_ntoa(dstAddr);
 	string sIcmp_type = to_string(icmp_type);
@@ -1096,10 +1099,6 @@ int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fla
 			string sLog = "TCP from raw sock, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
 			vLog.push_back(sLog);
 		}
-	}
-	else
-	{
-		return a;
 	}
 	
 	return 1;

@@ -1022,7 +1022,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	printf("tcp ori check sum 1: %x \n", pTcp->check);
 	//pTcp->check = 0;
 	const unsigned int iJ = 40;
-	memcpy(pTcp_psd, pTcp,iJ);
+	memcpy(pTcp_psd, pTcp, iTcpTotLen);
 	printf("tcp ori check sum equal: %x == %x ? \n", pTcp->check, pTcp_psd->check);
 	cout << endl << "psdhdr len: " << sizeof(struct psdhdr)<<" "<< sizeof(psdhdr) << endl;
 	pTcp->check = checksum(psdBuffer, iTcpTotLen + short(12));

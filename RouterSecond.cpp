@@ -1058,6 +1058,7 @@ int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, 
 			}
 			else 
 			{
+				cout << endl<<"tcp out" << endl;
 				tcpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
 			}
 			return 0;

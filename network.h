@@ -48,7 +48,14 @@ struct octane_control {
 	bool operator< (const octane_control key2) const;
 };
 
-
+// use code from "https://www.linuxidc.com/Linux/2011-10/46275.htm"
+struct psdhdr {
+	uint32_t saddr;
+	uint32_t daddr;
+	uint8_t mbz;
+	uint8_t protocol;
+	uint16_t tcpl;
+};
 int getUdpSocket();
 int getIcmpRawSocket();
 int getRawSocket(int protocol);

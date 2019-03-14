@@ -322,7 +322,7 @@ void tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
 	pPsd->mbz = 0;
 	pPsd->protocol = pIpHeader->ip_p;
 	pPsd->tcpl = htons(iTcpTotLen); //htons(sizeof(struct tcphdr));
-	cout << endl << "tcp len: " << iTcpTotLen << endl;
+	cout << endl <<"ip len: "<<ntohs(pIpHeader->ip_len)<< " tcp len: " << iTcpTotLen << endl;
 	printf("tcpEdit ori check sum 1: %x \n", pTcp->check);
 	pTcp->check = 0;
 	memcpy(pTcp_psd, pTcp, iTcpTotLen);

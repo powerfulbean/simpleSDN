@@ -222,7 +222,9 @@ void buildIpPacket(char* buffer, unsigned int iBufferSize,int iProtocol, string 
 int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint16_t &sSrc_port, uint16_t &sDst_port, u_int8_t &ip_type)
 {
 	struct ip * pIpHeader;
+	struct tcphdr * pTcp;
 	pIpHeader = (struct ip *) buffer;
+	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 
 	ip_type = pIpHeader->ip_p;
 	sSrc_addr = pIpHeader->ip_src.s_addr;
@@ -233,6 +235,12 @@ int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint1
 		sSrc_port = htons(0xFFFF);
 		sDst_port = htons(0xFFFF);
 		cout << "network.cpp: ipUnpack: it is a ICMP packet: port: " << to_string(sDst_port);
+	}
+	else
+	{
+		pTcp = (struct tcphdr *)(buffer + iIpHeaderLen);
+		sSrc_port = pTcp->source;
+		sDst_port = pTcp->dest;
 	}
 	return 1;
 }

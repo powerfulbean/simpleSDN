@@ -874,6 +874,17 @@ void primaryRouter_s6(cRouter & Router)
 						int iCheckDef = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheckDef == 1)
 						{
+						if (iCheck == 1 || iCheck2 == 1)
+						{
+						// create a orctane message for this primary router 						
+							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
+							//insert rules in flow_table and get the respective log
+							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+							for (int i = 0; i < tempLog.size(); i++)
+							{
+								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+								Router.vLog.push_back(sLog);
+							}
 							int iSeqno;
 							iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							char octaneIpBuffer[2048];
@@ -881,7 +892,7 @@ void primaryRouter_s6(cRouter & Router)
 							string localAddr = "127.0.0.1";
 							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
 							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), targetAddr); // send control message
-																										 // Add timer and register the handle number
+							// Add timer and register the handle number
 							cOctaneTimer * octaneTimer = new cOctaneTimer(Router.iSockID, targetAddr, msg1, iSeqno);
 							handle t1 = timersManager.AddTimer(2000, octaneTimer);
 							Router.m_unAckBuffer[iSeqno] = t1;

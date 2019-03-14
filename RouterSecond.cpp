@@ -822,6 +822,32 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				memcpy(buffer3, buffer2, sizeof(buffer2));
 				icmpReply_Edit(oriSrcAddr, buffer3, FromRawSock);
 
+				// recal checksum of tcp
+				char psdBuffer[2048] = { 0 };
+				struct ip * pIpHeader;
+				struct tcphdr * pTcp, *pTcp_psd;
+				struct psdhdr* pPsd;
+				pIpHeader = (struct ip *) buffer3;
+				unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+				pTcp = (struct tcphdr *)(buffer3 + iIpHeaderLen);
+				short iTcpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+				pTcp_psd = (struct tcphdr *)(psdBuffer + sizeof(struct psdhdr));
+				pPsd = (struct psdhdr *) psdBuffer;
+
+				// calculate check sum
+				pPsd->saddr = rou2ExternalAddr.s_addr;//pIpHeader->ip_src.s_addr;
+				pPsd->daddr = pIpHeader->ip_dst.s_addr;
+				pPsd->mbz = 0;
+				pPsd->protocol = pIpHeader->ip_p;
+				pPsd->tcpl = htons(iTcpTotLen); //htons(sizeof(struct tcphdr));
+				cout << endl << "tcp len: " << iTcpTotLen << endl;
+				printf("tcp ori check sum 1: %x \n", pTcp->check);
+				pTcp->check = 0;
+				memcpy(pTcp_psd, pTcp, iTcpTotLen);
+				printf("tcp ori check sum equal: %x == %x ? \n", pTcp->check, pTcp_psd->check);
+				cout << endl << "psdhdr len: " << sizeof(struct psdhdr) << " " << sizeof(psdhdr) << endl;
+				pTcp->check = checksum(psdBuffer, iTcpTotLen+sizeof(struct psdhdr));
+				// end of recal tcp checksum
 
 
 				flow_entry entry(buffer3);
@@ -1024,7 +1050,9 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	memcpy(pTcp_psd, pTcp, iTcpTotLen);
 	printf("tcp ori check sum equal: %x == %x ? \n", pTcp->check, pTcp_psd->check);
 	cout << endl << "psdhdr len: " << sizeof(struct psdhdr)<<" "<< sizeof(psdhdr) << endl;
-	pTcp->check = checksum(psdBuffer, 52);
+	pTcp->check = checksum(psdBuffer, iTcpTotLen + sizeof(struct psdhdr));
+
+
 	printf("tcp ori check sum 2: %x \n", pTcp->check);
 	int iRawSockID = Router.m_iTcpRawSocketID;
 	iov1.iov_base = pTcp;// (char*)&icmphdr;

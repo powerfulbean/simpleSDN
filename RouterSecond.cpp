@@ -1019,7 +1019,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	pPsd->protocol = pIpHeader->ip_p;
 	pPsd->tcpl = htons(iTcpTotLen); //htons(sizeof(struct tcphdr));
 	cout << endl << "tcp len: " << iTcpTotLen << endl;
-	printf("tcp ori check sum: %0x \n", pTcp->check);
+	printf("tcp ori check sum: %x \n", pTcp->check);
 	pTcp->check = 0;
 	memcpy(pTcp_psd, pTcp, iTcpTotLen);
 	cout << endl << "psdhdr len: " << sizeof(struct psdhdr)<<" "<< sizeof(psdhdr) << endl;

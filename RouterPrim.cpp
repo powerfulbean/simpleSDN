@@ -834,7 +834,22 @@ void primaryRouter_s6(cRouter & Router)
 					struct octane_control localMsg, msg1, msg1_re;
 					struct in_addr srcAddr, dstAddr;
 					u_int8_t icmp_type;
-
+					int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+					int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
+					int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
+					if (iCheck == 1 || iCheck2 == 1)
+					{
+						targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+						targetAddr.sin_family = AF_INET;
+						if (iCheck == 1)
+						{
+							targetAddr.sin_port = secondRouter1Port;
+						}
+						else
+						{
+							targetAddr.sin_port = secondRouter2Port;
+						}
+					}
 					if (sCheck.size() != 0)
 					{
 						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
@@ -843,24 +858,9 @@ void primaryRouter_s6(cRouter & Router)
 					}
 					else
 					{
-						// create a orctane message for this primary router 
-						
-						int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-						int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
-						int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
 						if (iCheck == 1 || iCheck2 == 1)
 						{
-							targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-							targetAddr.sin_family = AF_INET;
-							if (iCheck == 1)
-							{
-								targetAddr.sin_port = secondRouter1Port;
-							}
-							else
-							{
-								targetAddr.sin_port = secondRouter2Port;
-							}
-
+						// create a orctane message for this primary router 						
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log
 							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
@@ -906,7 +906,7 @@ void primaryRouter_s6(cRouter & Router)
 						}
 						Router.printUnAckBuffer();
 					}
-					sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);
 				}
 				else
 				{

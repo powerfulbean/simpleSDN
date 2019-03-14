@@ -982,7 +982,7 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 }
 
 void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
-	const struct in_addr addrForReplace)
+	const struct in_addr rou2ExternalAddr)
 {
 	struct in_addr dstAddr;
 	struct in_addr srcAddr;
@@ -1013,7 +1013,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	pPsd = (struct psdhdr *) psdBuffer;
 
 	// calculate check sum
-	pPsd->saddr = inet_addr("192.168.201.2");//pIpHeader->ip_src.s_addr;
+	pPsd->saddr = rou2ExternalAddr.s_addr;//pIpHeader->ip_src.s_addr;
 	pPsd->daddr = pIpHeader->ip_dst.s_addr;
 	pPsd->mbz = 0;
 	pPsd->protocol = pIpHeader->ip_p;
@@ -1087,7 +1087,7 @@ int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, 
 			{
 				icmpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
 			}
-			else 
+			else if(entry.m_protocol == 6)
 			{
 				//cout << endl<<"tcp out" << endl;
 				tcpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);

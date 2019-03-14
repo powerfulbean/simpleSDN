@@ -596,7 +596,14 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	}
 	Router.iRawSockID = iRawSockID;
 	FD_SET(iRawSockID, &fdSetAll);
-	rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
+	if (Router.iRouterID == 1)
+	{
+		rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
+	}
+	else if (Router.iRouterID == 2)
+	{
+		rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.202.2");
+	}
 	rou2ExternalAddr.sin_family = AF_INET;
 	rou2ExternalAddr.sin_port = htons(0);
 	socklen_t len = sizeof(rou2ExternalAddr);

@@ -735,6 +735,25 @@ void primaryRouter_s6(cRouter & Router)
 	int iMaxfdpl = (tun_fd > iSockID) ? (tun_fd + 1) : (iSockID + 1);
 
 	// install reply rules on secondary Router
+	//uint32_t src_ip = inet_addr("127.0.0.1");
+	//uint32_t dst_ip = inet_addr("127.0.0.1");
+	//uint16_t src_port = htons(0xFFFF);
+	//uint16_t dst_port1 = htons(0xFFFF);
+	//uint16_t dst_port2 = htons(0xFFFF);
+	//uint16_t secondRouter1Port = htons(Router.m_mChildPort.begin()->second);
+	//map<int, int>::iterator it;
+	//it = Router.m_mChildPort.begin();
+	//it++;
+	//uint16_t secondRouter2Port = htons(it->second);
+	//octane_control second1RouterMsg1(2, 0, Router.m_iSeqnoCnt++, src_ip, dst_ip, src_port, dst_port1, OCTANE_PROTOCOL_NUM, secondRouter1Port);
+	//octane_control second1RouterMsg2(2, 0, Router.m_iSeqnoCnt++, src_ip, dst_ip, src_port, dst_port2, OCTANE_PROTOCOL_NUM, secondRouter2Port);
+	//octane_control second1RouterMsg1Local(1, 0, 0, src_ip, dst_ip, src_port, dst_port1, OCTANE_PROTOCOL_NUM, 0);
+	//octane_control second1RouterMsg2Local(1, 0, 0, src_ip, dst_ip, src_port, dst_port2, OCTANE_PROTOCOL_NUM, 0);
+	uint16_t secondRouter1Port = htons(Router.m_mChildPort.begin()->second);
+	map<int, int>::iterator it;
+	it = Router.m_mChildPort.begin();
+	it++;
+	uint16_t secondRouter2Port = htons(it->second);
 
 	while (1)
 	{
@@ -833,26 +852,29 @@ void primaryRouter_s6(cRouter & Router)
 							Router.vLog.push_back(sLog);
 						}
 						int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
-						if (iCheck == 1)
+						int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
+						int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
+						if (iCheck == 1 || iCheck2 == 1)
 						{
-							//int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
-							int iSeqno;
-							//if (iCheck2 == 1)
-							//{
-								//iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
-							//}
-							//else
+							sockaddr_in targetAddr;
+							targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+							targetAddr.sin_family = AF_INET;
+							if (iCheck == 1)
 							{
-								iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
+								targetAddr.sin_port = htons(secondRouter1Port);
 							}
+							else
+							{
+								targetAddr.sin_port = htons(secondRouter2Port);
+							}
+							int iSeqno;
+							iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 							char octaneIpBuffer[2048];
 							memset(octaneIpBuffer, 0, 2048);
 							string localAddr = "127.0.0.1";
 							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
-							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr); // send control message
-
-																									   // Add timer and register the handle number																		   // Add timer and register the handle number
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), targetAddr); // send control message
+							// Add timer and register the handle number
 							cOctaneTimer * octaneTimer = new cOctaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno);
 							handle t1 = timersManager.AddTimer(2000, octaneTimer);
 							Router.m_unAckBuffer[iSeqno] = t1;

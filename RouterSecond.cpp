@@ -994,7 +994,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	uint8_t ip_type;
 	//icmpUnpack(buffer, icmphdr, srcAddr, dstAddr, icmp_type);
 	ipUnpack(buffer, sSrc_addr, sDst_addr, sSrc_port, sDst_port, ip_type);
-	sockDstAddr.sin_addr.s_addr = dstAddr;
+	sockDstAddr.sin_addr.s_addr = sDst_addr;
 	sockDstAddr.sin_family = AF_INET;
 
 

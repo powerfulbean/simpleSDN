@@ -619,6 +619,10 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	{
 		perror("secondRouter_s2 error, bind error");
 	}
+	if (-1 == bind(iTcpRawSockID, (struct sockaddr*) &rou2ExternalAddr, len))
+	{
+		perror("secondRouter_s2 error, bind error");
+	}
 	iMaxfdpl = (iRawSockID > iSockID) ? (iRawSockID + 1) : (iSockID + 1);
 	iMaxfdpl = (iMaxfdpl -1  > iTcpRawSockID) ? (iMaxfdpl) : (iTcpRawSockID);
 	string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.defaultInsert();
@@ -1058,7 +1062,7 @@ int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, 
 			}
 			else 
 			{
-				cout << endl<<"tcp out" << endl;
+				//cout << endl<<"tcp out" << endl;
 				tcpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
 			}
 			return 0;

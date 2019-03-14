@@ -234,6 +234,14 @@ int ipUnpack(const char* buffer, uint32_t &sSrc_addr, uint32_t &sDst_addr, uint1
 		sDst_port = htons(0xFFFF);
 		cout << "network.cpp: ipUnpack: it is a ICMP packet: port: " << to_string(sDst_port);
 	}
+	else if (ip_type == 6)
+	{
+		struct tcphdr * pTcp;
+		unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+		pTcp = (struct tcphdr *)(buffer + iIpHeaderLen);
+		sSrc_port = pTcp->source;
+		sDst_port = pTcp->dest;
+	}
 	return 1;
 }
 /* About the function:

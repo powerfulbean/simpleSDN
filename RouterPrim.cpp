@@ -850,6 +850,10 @@ void primaryRouter_s6(cRouter & Router)
 							targetAddr.sin_port = secondRouter2Port;
 						}
 					}
+					else
+					{
+						targetAddr.sin_port = secondRouter1Port;
+					}
 					if (sCheck.size() != 0)
 					{
 						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;

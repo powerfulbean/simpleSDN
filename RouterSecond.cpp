@@ -1010,7 +1010,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	pPsd = (struct psdhdr *) psdBuffer;
 
 	// calculate check sum
-	pPsd->saddr = pIpHeader->ip_src.s_addr;
+	pPsd->saddr = inet_addr("192.168.201.2");
 	pPsd->daddr = pIpHeader->ip_dst.s_addr;
 	pPsd->mbz = 0;
 	pPsd->protocol = pIpHeader->ip_p;

@@ -996,7 +996,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	pTcp = (struct tcphdr *)(buffer + iIpHeaderLen);
 	short iTcpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
 
-	int iRawSockID = Router.iRawSockID;
+	int iRawSockID = Router.m_iTcpRawSocketID;
 	iov1.iov_base = pTcp;// (char*)&icmphdr;
 	iov1.iov_len = iTcpTotLen;
 	msg1.msg_name = &sockDstAddr;
@@ -1056,7 +1056,7 @@ int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, 
 			{
 				icmpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
 			}
-			else
+			else 
 			{
 				tcpForward_secondRouter(Router, buffer, iSize, rou2Sin_addr);
 			}

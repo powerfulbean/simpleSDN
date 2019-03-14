@@ -12,6 +12,10 @@ int getIcmpRawSocket()
 
 int getRawSocket(int protocol)
 {
+	if (protocol == 6)
+	{
+		return socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
+	}
 	return socket(AF_INET, SOCK_RAW, protocol);
 }
 

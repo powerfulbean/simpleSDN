@@ -791,6 +791,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 			}
 			if (FD_ISSET(iTcpRawSockID, &fdSet))
 			{
+				cout << endl << "iTCPrawsocket get packet" << endl;
 				bRefreshTimeout = true;
 				char buffer2[2048];
 				struct sockaddr_in senderAddr;
@@ -820,6 +821,8 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				char buffer3[2048];
 				memcpy(buffer3, buffer2, sizeof(buffer2));
 				icmpReply_Edit(oriSrcAddr, buffer3, FromRawSock);
+
+
 
 				flow_entry entry(buffer3);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);

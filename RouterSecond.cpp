@@ -992,18 +992,32 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	uint16_t sSrc_port;
 	uint16_t sDst_port;
 	uint8_t ip_type;
+	char * psdBuffer[2048] = { 0 };
 	//icmpUnpack(buffer, icmphdr, srcAddr, dstAddr, icmp_type);
 	ipUnpack(buffer, sSrc_addr, sDst_addr, sSrc_port, sDst_port, ip_type);
 	sockDstAddr.sin_addr.s_addr = sDst_addr;
 	sockDstAddr.sin_family = AF_INET;
-
+	
 
 	struct ip * pIpHeader;
-	struct tcphdr * pTcp;
+	struct tcphdr * pTcp, *pTcp_psd;
+	struct psdhdr* pPsd;
 	pIpHeader = (struct ip *) buffer;
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pTcp = (struct tcphdr *)(buffer + iIpHeaderLen);
 	short iTcpTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen;
+	pTcp_psd = (struct tcphdr *)(psdBuffer + sizeof(struct psdhdr));
+	pPsd = (struct psdhdr *) psdBuffer;
+
+	// calculate check sum
+	pPsd->saddr = pIpHeader->ip_src.s_addr;
+	pPsd->daddr = pIpHeader->ip_dst.s_addr;
+	pPsd->mbz = 0;
+	pPsd->protocol = pIpHeader->ip_p;
+	pPsd->tcpl = iTcpTotLen;
+	pTcp->check = 0;
+	memcpy(pTcp_psd, pTcp, iTcpTotLen);
+	pTcp->check = checksum(pTcp_psd, iTcpTotLen + sizeof(psdhdr));
 
 	int iRawSockID = Router.m_iTcpRawSocketID;
 	iov1.iov_base = pTcp;// (char*)&icmphdr;

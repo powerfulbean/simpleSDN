@@ -59,3 +59,12 @@ public:
 
 	cOctaneTimer(int iSockID, sockaddr_in rou2Addr, octane_control  msg, int iSeq) : m_iSockID(iSockID), m_iOctaneMsg(msg), m_iSeq(iSeq), m_rou2Addr(rou2Addr){};
 };
+
+// use code from "https://www.linuxidc.com/Linux/2011-10/46275.htm"
+struct psdhdr {
+	uint32_t saddr; 
+	uint32_t daddr; 
+	uint8_t mbz; 
+	uint8_t protocol; 
+	uint16_t tcpl; 
+};

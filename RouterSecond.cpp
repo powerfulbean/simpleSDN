@@ -1021,7 +1021,7 @@ void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	cout << endl << "tcp len: " << iTcpTotLen << endl;
 	pTcp->check = 0;
 	memcpy(pTcp_psd, pTcp, iTcpTotLen);
-	pTcp->check = checksum((char*)psdBuffer, iTcpTotLen + sizeof(psdhdr));
+	pTcp->check = checksum((char*)psdBuffer, iTcpTotLen + sizeof(struct psdhdr));
 
 	int iRawSockID = Router.m_iTcpRawSocketID;
 	iov1.iov_base = pTcp;// (char*)&icmphdr;

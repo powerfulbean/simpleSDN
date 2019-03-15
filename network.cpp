@@ -297,7 +297,7 @@ void icmpReply_Edit(char* buffer)
 	
 }
 
-void tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
+int tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
 {
 	// recal checksum of tcp
 	char psdBuffer[2048] = { 0 };
@@ -331,6 +331,8 @@ void tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
 	pTcp->check = checksum(psdBuffer, iTcpTotLen + sizeof(struct psdhdr));
 	printf("tcpEdit ori check sum 2: %x \n", pTcp->check);
 	// end of recal tcp checksum
+
+	return ntohs(pIpHeader->ip_len);
 }
 
 void ipChangeProtocol(char* buffer, int iProtocol)

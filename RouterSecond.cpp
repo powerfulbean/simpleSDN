@@ -827,7 +827,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
 				char buffer3[2048];
 				memcpy(buffer3, buffer2, sizeof(buffer2));
-				tcpReply_Edit(oriSrcAddr, buffer3);
+				int iMsgLen = tcpReply_Edit(oriSrcAddr, buffer3);
 
 				flow_entry entry(buffer3);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
@@ -841,7 +841,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 					//err = sendMsg(Router.iSockID, buffer3, 2048, rou1Addr);
 					sockaddr_in tempSockAddr;
 					in_addr tempInAddr;
-					octaneRulesController(entry, Router, buffer3, 2048, tempSockAddr, tempInAddr);
+					octaneRulesController(entry, Router, buffer3, iMsgLen, tempSockAddr, tempInAddr);
 					if (err == -1)
 					{
 						perror("icmpForward_secondRouter error: sendMsg");

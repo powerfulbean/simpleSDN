@@ -830,10 +830,10 @@ void primaryRouter_s6(cRouter & Router)
 					int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 					int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
 					int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
+					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+					targetAddr.sin_family = AF_INET;
 					if (iCheck == 1 || iCheck2 == 1)
 					{
-						targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-						targetAddr.sin_family = AF_INET;
 						if (iCheck == 1)
 						{
 							targetAddr.sin_port = secondRouter1Port;
@@ -845,8 +845,6 @@ void primaryRouter_s6(cRouter & Router)
 					}
 					else
 					{
-						targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-						targetAddr.sin_family = AF_INET;
 						targetAddr.sin_port = secondRouter1Port;
 					}
 					if (sCheck.size() != 0)

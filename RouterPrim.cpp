@@ -984,7 +984,7 @@ void primaryRouter_s6(cRouter & Router)
 			bRefreshTimeout = true;
 			memset(buffer, 0, 2048);
 			struct sockaddr_in senderAddr;
-			//int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+			int nread //= recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 			struct iovec iov2;
 			struct msghdr msg2;
 			iov2.iov_base = buffer;

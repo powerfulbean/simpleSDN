@@ -980,6 +980,7 @@ void primaryRouter_s6(cRouter & Router)
 		}
 		if (FD_ISSET(iSockID, &fdSet))
 		{
+			char buffer[2048];
 			bRefreshTimeout = true;
 			memset(buffer, 0, 2048);
 			struct sockaddr_in rou2Addr;

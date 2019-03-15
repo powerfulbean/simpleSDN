@@ -983,8 +983,20 @@ void primaryRouter_s6(cRouter & Router)
 			char buffer[2048];
 			bRefreshTimeout = true;
 			memset(buffer, 0, 2048);
-			struct sockaddr_in rou2Addr;
-			int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+			struct sockaddr_in senderAddr;
+			//int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+			struct iovec iov2;
+			struct msghdr msg2;
+			iov2.iov_base = buffer;
+			iov2.iov_len = sizeof(buffer);
+			msg2.msg_name = &senderAddr;
+			msg2.msg_namelen = sizeof(senderAddr);
+			msg2.msg_iov = &iov2;
+			msg2.msg_iovlen = 1;
+			msg2.msg_control = NULL;
+			msg2.msg_controllen = 0;
+			msg2.msg_flags = 0;
+			int err = recvmsg(Router.iSockID, &msg2, 0);
 
 			flow_entry entry(buffer);
 			string sCheck = Router.m_rouFlowTable.flowCheck(entry);

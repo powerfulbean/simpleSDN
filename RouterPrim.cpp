@@ -935,7 +935,7 @@ void primaryRouter_s6(cRouter & Router)
 					else
 					{
 						struct in_addr dstAddr;
-						uint32_t srcAddrin, dstAdrin;
+						uint32_t srcAddrin, dstAddrin;
 						u_int8_t icmp_type;
 						dstAddr.s_addr = dstAddrin;
 						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, icmp_type);

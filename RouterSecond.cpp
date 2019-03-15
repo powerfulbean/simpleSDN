@@ -800,7 +800,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 			{
 				cout << endl << "iTCPrawsocket get packet" << endl;
 				bRefreshTimeout = true;
-				char buffer2[2048];
+				char buffer2[4096] = { 0 };
 				struct sockaddr_in senderAddr;
 				struct iovec iov2;
 				struct msghdr msg2;
@@ -825,7 +825,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				}
 
 				printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
-				char buffer3[2048];
+				char buffer3[4096] = { 0 };
 				memcpy(buffer3, buffer2, sizeof(buffer2));
 				int iMsgLen = tcpReply_Edit(oriSrcAddr, buffer3);
 
@@ -833,7 +833,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
 				if (sCheck.size() != 0)
 				{
-					icmpForward_log(Router, buffer2, 2048, FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
+					icmpForward_log(Router, buffer2, sizeof(buffer2), FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement
 					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
 					cout << endl << sLog << endl;
 					Router.vLog.push_back(sLog);

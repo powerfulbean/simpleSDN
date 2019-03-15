@@ -1004,7 +1004,7 @@ void primaryRouter_s6(cRouter & Router)
 			else
 			{
 				perror("primRouter_tcpRaw success: recvmsg");
-				printf(": src address : %s  \n", inet_ntoa(rou2Addr.sin_addr));
+				printf(": msglen : %d  \n", err);
 			}
 			flow_entry entry(buffer);
 			string sCheck = Router.m_rouFlowTable.flowCheck(entry);

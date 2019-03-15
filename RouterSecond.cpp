@@ -603,9 +603,9 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	Router.m_iTcpRawSocketID = iTcpRawSockID;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
+	FD_ZERO(&fdSetAll);
 	FD_SET(iRawSockID, &fdSetAll);
 	FD_SET(iTcpRawSockID, &fdSetAll);
-	FD_ZERO(&fdSetAll);
 	FD_SET(iSockID, &fdSetAll);
 	iMaxfdpl = (iRawSockID > iSockID) ? (iRawSockID + 1) : (iSockID + 1);
 	iMaxfdpl = (iMaxfdpl -1  > iTcpRawSockID) ? (iMaxfdpl) : (iTcpRawSockID + 1);

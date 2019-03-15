@@ -577,20 +577,18 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	char buffer[2048];
 	bool bRefreshTimeout = true;
 	struct sockaddr_in rou1Addr;
-	struct timeval timeout;
 	struct sockaddr_in rou2ExternalAddr;
 	struct in_addr oriSrcAddr;
-	struct in_addr oriSrcAddr2;
+
+	// socket and select
 	int iSockID = Router.iSockID;
 	int iRawSockID;
 	int iTcpRawSockID;
 	int iMaxfdpl;
-	int iCount = 0;
+	struct timeval timeout; // select: time out
 	fd_set fdSetAll, fdSet;
-	timeout.tv_sec = 15;
-	timeout.tv_usec = 0;
-	FD_ZERO(&fdSetAll);
-	FD_SET(iSockID, &fdSetAll);
+	int iCount = 0;// used for testing retransmit octane_control 
+	
 	iRawSockID = getIcmpRawSocket();
 	if (iRawSockID<0)
 	{
@@ -603,8 +601,16 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	}
 	Router.iRawSockID = iRawSockID;
 	Router.m_iTcpRawSocketID = iTcpRawSockID;
+	timeout.tv_sec = 15;
+	timeout.tv_usec = 0;
 	FD_SET(iRawSockID, &fdSetAll);
 	FD_SET(iTcpRawSockID, &fdSetAll);
+	FD_ZERO(&fdSetAll);
+	FD_SET(iSockID, &fdSetAll);
+	iMaxfdpl = (iRawSockID > iSockID) ? (iRawSockID + 1) : (iSockID + 1);
+	iMaxfdpl = (iMaxfdpl -1  > iTcpRawSockID) ? (iMaxfdpl) : (iTcpRawSockID + 1);
+
+	// bind related external address
 	if (Router.iRouterID == 1)
 	{
 		rou2ExternalAddr.sin_addr.s_addr = inet_addr("192.168.201.2");
@@ -624,8 +630,8 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	{
 		perror("secondRouter_s2 error, bind error");
 	}
-	iMaxfdpl = (iRawSockID > iSockID) ? (iRawSockID + 1) : (iSockID + 1);
-	iMaxfdpl = (iMaxfdpl -1  > iTcpRawSockID) ? (iMaxfdpl) : (iTcpRawSockID + 1);
+	
+	// install default rule
 	string sLog = "router: " + to_string(Router.iRouterID) + Router.m_rouFlowTable.defaultInsert();
 	Router.vLog.push_back(sLog);
 
@@ -822,8 +828,6 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				char buffer3[2048];
 				memcpy(buffer3, buffer2, sizeof(buffer2));
 				tcpReply_Edit(oriSrcAddr, buffer3);
-				
-
 
 				flow_entry entry(buffer3);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);

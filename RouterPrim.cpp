@@ -648,6 +648,13 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 							Router.m_unAckBuffer[iSeqno1] = t1;
 							Router.m_unAckBuffer[iSeqno2] = t2;
 						}
+						string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
+						if (sCheck2.size() != 0)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+							cout << endl << sLog << endl;
+							Router.vLog.push_back(sLog);
+						}
 						Router.printUnAckBuffer();
 					}
 					sendMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
@@ -734,21 +741,6 @@ void primaryRouter_s6(cRouter & Router)
 	FD_SET(iSockID, &fdSetAll);
 	int iMaxfdpl = (tun_fd > iSockID) ? (tun_fd + 1) : (iSockID + 1);
 
-	// install reply rules on secondary Router
-	//uint32_t src_ip = inet_addr("127.0.0.1");
-	//uint32_t dst_ip = inet_addr("127.0.0.1");
-	//uint16_t src_port = htons(0xFFFF);
-	//uint16_t dst_port1 = htons(0xFFFF);
-	//uint16_t dst_port2 = htons(0xFFFF);
-	//uint16_t secondRouter1Port = htons(Router.m_mChildPort.begin()->second);
-	//map<int, int>::iterator it;
-	//it = Router.m_mChildPort.begin();
-	//it++;
-	//uint16_t secondRouter2Port = htons(it->second);
-	//octane_control second1RouterMsg1(2, 0, Router.m_iSeqnoCnt++, src_ip, dst_ip, src_port, dst_port1, OCTANE_PROTOCOL_NUM, secondRouter1Port);
-	//octane_control second1RouterMsg2(2, 0, Router.m_iSeqnoCnt++, src_ip, dst_ip, src_port, dst_port2, OCTANE_PROTOCOL_NUM, secondRouter2Port);
-	//octane_control second1RouterMsg1Local(1, 0, 0, src_ip, dst_ip, src_port, dst_port1, OCTANE_PROTOCOL_NUM, 0);
-	//octane_control second1RouterMsg2Local(1, 0, 0, src_ip, dst_ip, src_port, dst_port2, OCTANE_PROTOCOL_NUM, 0);
 	uint16_t secondRouter1Port = htons(Router.m_mChildPort.begin()->second);
 	map<int, int>::iterator it;
 	it = Router.m_mChildPort.begin();
@@ -809,6 +801,7 @@ void primaryRouter_s6(cRouter & Router)
 		char buffer[2048];
 		if (FD_ISSET(tun_fd, &fdSet))
 		{
+
 			struct sockaddr_in rou2Addr;
 			struct sockaddr_in targetAddr;
 			setTempAddr("127.0.0.1", rou2Addr);

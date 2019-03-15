@@ -850,7 +850,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 					}
 					else
 					{
-						perror("icmpForward_secondRouter success: sendMsg");
+						perror("icmpForward_secondRouter success: sendMsg: SendMsgLength is %d", err);
 					}
 				}
 				else

@@ -936,9 +936,11 @@ void primaryRouter_s6(cRouter & Router)
 					{
 						struct in_addr dstAddr;
 						uint32_t srcAddrin, dstAddrin;
+						uint16_t port1, port2;
+						u_int8_t iptp;
 						u_int8_t icmp_type;
 						dstAddr.s_addr = dstAddrin;
-						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, icmp_type);
+						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1,port2,iptp);
 						int iCheck = packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
 						int iCheck2 = packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
 						if (iCheck == 1 || iCheck2 == 1)

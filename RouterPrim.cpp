@@ -651,7 +651,7 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 						string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
 						if (sCheck2.size() != 0)
 						{
-							string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+							string sLog = "router: " + to_string(Router.iRouterID) + sCheck2;
 							cout << endl << sLog << endl;
 							Router.vLog.push_back(sLog);
 						}

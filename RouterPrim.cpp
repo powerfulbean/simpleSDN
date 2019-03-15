@@ -997,7 +997,15 @@ void primaryRouter_s6(cRouter & Router)
 			msg2.msg_controllen = 0;
 			msg2.msg_flags = 0;
 			int err = recvmsg(Router.iSockID, &msg2, 0);
-
+			if (err == -1)
+			{
+				perror("primRouter_tcpRaw error: recvmsg");
+			}
+			else
+			{
+				perror("primRouter_tcpRaw success: recvmsg");
+				printf(": src address : %s  \n", inet_ntoa(rou2Addr.sin_addr));
+			}
 			flow_entry entry(buffer);
 			string sCheck = Router.m_rouFlowTable.flowCheck(entry);
 			
@@ -1017,7 +1025,7 @@ void primaryRouter_s6(cRouter & Router)
 				}
 				if (iIcmpProtocol == 1 || iIcmpProtocol == 6)// its a icmp or TCP pscket
 				{
-					cwrite(tun_fd, buffer, nread);// send packet back to tunnel
+					cwrite(tun_fd, buffer, 2048);// send packet back to tunnel
 												  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 												  //icmpReply_primRouter(tun_fd, buffer, nread);
 				}

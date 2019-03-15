@@ -934,41 +934,51 @@ void primaryRouter_s6(cRouter & Router)
 					}
 					else
 					{
-						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
-						//insert rules in flow_table and get the respective log
-						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size(); i++)
+						struct in_addr dstAddr;
+						uint32_t srcAddrin, dstAdrin;
+						u_int8_t icmp_type;
+						dstAddr.s_addr = dstAddrin;
+						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, icmp_type);
+						int iCheck = packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
+						int iCheck2 = packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
+						if (iCheck == 1 || iCheck2 == 1)
 						{
-							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
-							Router.vLog.push_back(sLog);
-						}
-						int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
-						int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
-						char octaneIpBuffer[2048];
-						char octaneIpBufferRev[2048];
-						memset(octaneIpBuffer, 0, 2048);
-						memset(octaneIpBufferRev, 0, 2048);
-						string localAddr = "127.0.0.1";
-						buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
-						buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
-						sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), targetAddr);// send control message
-						sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), targetAddr);// send control message
+							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
+							//insert rules in flow_table and get the respective log
+							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+							for (int i = 0; i < tempLog.size(); i++)
+							{
+								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+								Router.vLog.push_back(sLog);
+							}
+							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+							int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+							char octaneIpBuffer[2048];
+							char octaneIpBufferRev[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							memset(octaneIpBufferRev, 0, 2048);
+							string localAddr = "127.0.0.1";
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), targetAddr);// send control message
+							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), targetAddr);// send control message
 
-																										// Add timer and register the handle number
-						cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, targetAddr, msg1, iSeqno1);
-						cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, targetAddr, msg1_re, iSeqno2);
-						handle t1 = timersManager.AddTimer(2000, octaneTimer1);
-						handle t2 = timersManager.AddTimer(2000, octaneTimer2);
-						Router.m_unAckBuffer[iSeqno1] = t1;
-						Router.m_unAckBuffer[iSeqno2] = t2;
-						string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
-						if (sCheck2.size() != 0)
-						{
-							string sLog = "router: " + to_string(Router.iRouterID) + sCheck2;
-							cout << endl << sLog << endl;
-							Router.vLog.push_back(sLog);
+																											  // Add timer and register the handle number
+							cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, targetAddr, msg1, iSeqno1);
+							cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, targetAddr, msg1_re, iSeqno2);
+							handle t1 = timersManager.AddTimer(2000, octaneTimer1);
+							handle t2 = timersManager.AddTimer(2000, octaneTimer2);
+							Router.m_unAckBuffer[iSeqno1] = t1;
+							Router.m_unAckBuffer[iSeqno2] = t2;
+							string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
+							if (sCheck2.size() != 0)
+							{
+								string sLog = "router: " + to_string(Router.iRouterID) + sCheck2;
+								cout << endl << sLog << endl;
+								Router.vLog.push_back(sLog);
+							}
+							Router.printUnAckBuffer();
 						}
-						Router.printUnAckBuffer();
 					}
 					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);
 				}
@@ -1084,31 +1094,64 @@ int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fla
 	struct in_addr dstAddr;
 	u_int8_t icmp_type;
 	int a = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
-	if(a!=1)
+	if(a==1)
+	{
+		string sSrcAddr = inet_ntoa(srcAddr);
+		string sDstAddr = inet_ntoa(dstAddr);
+		string sIcmp_type = to_string(icmp_type);
+
+		if (flag == FromTunnel)
+		{
+			string sLog = "ICMP from tunnel, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
+		else if (flag == FromUdp)
+		{
+			string sSrcPort = to_string(iPort);
+			string sLog = "ICMP from port : " + sSrcPort + ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
+		else if (flag == FromRawSock)
+		{
+			string sLog = "ICMP from raw sock, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
+			vLog.push_back(sLog);
+		}
+		return 1;
+	}
+	else if (a == 6)
+	{
+		flow_entry entry(buffer);
+		if (flag == FromTunnel)
+		{
+			string sLog = "TCP from tunnel, (" +
+				string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
+				string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +
+				")";
+			vLog.push_back(sLog);
+		}
+		else if (flag == FromUdp)
+		{
+			string sSrcPort = to_string(iPort);
+			string sLog = "TCP from port : (" +
+				string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
+				string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +
+				")";
+			vLog.push_back(sLog);
+		}
+		else if (flag == FromRawSock)
+		{
+			string sLog = "TCP from raw sock, (" +
+				string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
+				string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +
+				")";
+			vLog.push_back(sLog);
+		}
+		return 6;
+	}
+	else
 	{
 		return a;
 	}
-	string sSrcAddr = inet_ntoa(srcAddr);
-	string sDstAddr = inet_ntoa(dstAddr);
-	string sIcmp_type = to_string(icmp_type);
-
-	if (flag == FromTunnel)
-	{
-		string sLog = "ICMP from tunnel, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
-		vLog.push_back(sLog);
-	}
-	else if (flag == FromUdp)
-	{
-		string sSrcPort = to_string(iPort);
-		string sLog = "ICMP from port : " +  sSrcPort +  ", src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
-		vLog.push_back(sLog);
-	}
-	else if (flag == FromRawSock)
-	{
-		string sLog = "ICMP from raw sock, src: " + sSrcAddr + ", dst : " + sDstAddr + ", type : " + sIcmp_type;
-		vLog.push_back(sLog);
-	}
-	return 1;
 }
 
 void icmpReply_primRouter(int tun_fd, char* buffer, int nread)

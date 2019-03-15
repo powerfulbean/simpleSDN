@@ -926,6 +926,10 @@ void primaryRouter_s6(cRouter & Router)
 					{
 						targetAddr.sin_port = secondRouter2Port;
 					}
+					else
+					{
+						bRefreshTimeout = false;
+					}
 					if (sCheck.size() != 0)
 					{
 						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
@@ -980,6 +984,10 @@ void primaryRouter_s6(cRouter & Router)
 								Router.vLog.push_back(sLog);
 							}
 							Router.printUnAckBuffer();
+						}
+						else
+						{
+							bRefreshTimeout = false;
 						}
 					}
 					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);

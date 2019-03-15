@@ -331,7 +331,7 @@ int tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
 	pTcp->check = checksum(psdBuffer, iTcpTotLen + sizeof(struct psdhdr));
 	printf("tcpEdit ori check sum 2: %x \n", pTcp->check);
 	// end of recal tcp checksum
-
+	cout << endl << "tcpEdit: msgLen is: " << ntohs(pIpHeader->ip_len) << endl;
 	return ntohs(pIpHeader->ip_len);
 }
 

@@ -841,10 +841,10 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 					//err = sendMsg(Router.iSockID, buffer3, 2048, rou1Addr);
 					sockaddr_in tempSockAddr;
 					in_addr tempInAddr;
-					//octaneRulesController(entry, Router, buffer3, iMsgLen, tempSockAddr, tempInAddr);
+					octaneRulesController(entry, Router, buffer3, iMsgLen, tempSockAddr, tempInAddr);
 					cout <<endl<< "iMsgLen: " << iMsgLen << endl;
-					int err = sendMsg(Router.iSockID, buffer3, (unsigned int)1500, rou1Addr);
-					if (err == -1)
+					//int err = sendMsg(Router.iSockID, buffer3, (unsigned int)1500, rou1Addr);
+					/*if (err == -1)
 					{
 						perror("icmpForward_secondRouter error: sendMsg");
 					}
@@ -852,7 +852,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 					{
 						
 						printf("icmpForward_secondRouter success: sendMsg: SendMsgLength is %d \n", err);
-					}
+					}*/
 				}
 				else
 				{

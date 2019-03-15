@@ -1121,11 +1121,9 @@ int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fla
 	else if (a == 6)
 	{
 		flow_entry entry(buffer);
-		struct in_addr src1, src2, dst1, dst2;
+		struct in_addr src1,dst1;
 		src1.s_addr = entry.m_srcIp;
-		src2.s_addr = entryRev.m_srcIp;
 		dst1.s_addr = entry.m_dstIp;
-		dst2.s_addr = entryRev.m_dstIp;
 		if (flag == FromTunnel)
 		{
 			string sLog = "TCP from tunnel, (" +

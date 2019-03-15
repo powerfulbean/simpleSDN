@@ -845,6 +845,8 @@ void primaryRouter_s6(cRouter & Router)
 					}
 					else
 					{
+						targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+						targetAddr.sin_family = AF_INET;
 						targetAddr.sin_port = secondRouter1Port;
 					}
 					if (sCheck.size() != 0)
@@ -901,6 +903,13 @@ void primaryRouter_s6(cRouter & Router)
 							Router.m_unAckBuffer[iSeqno1] = t1;
 							Router.m_unAckBuffer[iSeqno2] = t2;
 						}
+						string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
+						if (sCheck2.size() != 0)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + sCheck2;
+							cout << endl << sLog << endl;
+							Router.vLog.push_back(sLog);
+						}
 						Router.printUnAckBuffer();
 					}
 					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);
@@ -954,6 +963,13 @@ void primaryRouter_s6(cRouter & Router)
 						handle t2 = timersManager.AddTimer(2000, octaneTimer2);
 						Router.m_unAckBuffer[iSeqno1] = t1;
 						Router.m_unAckBuffer[iSeqno2] = t2;
+						string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
+						if (sCheck2.size() != 0)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + sCheck2;
+							cout << endl << sLog << endl;
+							Router.vLog.push_back(sLog);
+						}
 						Router.printUnAckBuffer();
 					}
 					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);

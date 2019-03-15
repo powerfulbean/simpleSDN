@@ -1082,6 +1082,8 @@ int packetDstCheck(struct in_addr &packetDstAddr, string targetDst, string mask)
 
 int octaneRulesController(const flow_entry entry, cRouter Router, char* buffer, int iSize, struct sockaddr_in rou1Addr, struct in_addr rou2Sin_addr)
 {
+
+	cout << endl << "octaneRulesController: msgLen is: " << iSize << endl;
 	const flow_action & action = Router.m_rouFlowTable.m_mTable[entry];
 	if (action.m_action == 1)
 	{

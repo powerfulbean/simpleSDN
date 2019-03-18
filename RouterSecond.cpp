@@ -41,6 +41,7 @@ void secondRouter_s2(cRouter & Router)
 	timeout.tv_usec = 0;
 	FD_ZERO(&fdSetAll);
 	FD_SET(iSockID, &fdSetAll);
+	bool bRefreshTimeout = true;
 	if (Router.iStage == 3)
 	{
 		iRawSockID = getIcmpRawSocket();
@@ -67,6 +68,7 @@ void secondRouter_s2(cRouter & Router)
 	while (1)
 	{
 		fdSet = fdSetAll;
+		bRefreshTimeout = true
 		int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, &timeout);
 		if (iSelect == 0)
 		{
@@ -139,7 +141,7 @@ void secondRouter_s2(cRouter & Router)
 						printf(": src address : %s  \n", inet_ntoa(senderAddr.sin_addr));
 					}
 
-					u_int8_t icmpType = getIcmpType(buffer);
+					u_int8_t icmpType = getIcmpType(buffer2);
 					cout<<"Raw socket second router icmpType: " << icmpType<<endl;
 					if (icmpType == 0)
 					{
@@ -156,10 +158,17 @@ void secondRouter_s2(cRouter & Router)
 							perror("icmpForward_secondRouter success: sendMsg");
 						}
 					}
+					else
+					{
+						bRefreshTimeout = false;
+					}
 				}
 			}
-			timeout.tv_sec = 15;
-			timeout.tv_usec = 0;
+			if (bRefreshTimeout == true)
+			{
+				timeout.tv_sec = 15;
+				timeout.tv_usec = 0;
+			}
 		}
 	}
 	

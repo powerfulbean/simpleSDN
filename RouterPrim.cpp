@@ -1128,7 +1128,7 @@ int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fla
 		}
 		return 1;
 	}
-	else if (a == 6)
+	else if (a == 6 && Router.iStage >= 6)
 	{
 		flow_entry entry(buffer);
 		struct in_addr src1,dst1;

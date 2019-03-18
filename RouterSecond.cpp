@@ -68,7 +68,7 @@ void secondRouter_s2(cRouter & Router)
 	while (1)
 	{
 		fdSet = fdSetAll;
-		bRefreshTimeout = true
+		bRefreshTimeout = true;
 		int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, &timeout);
 		if (iSelect == 0)
 		{

@@ -322,14 +322,14 @@ int tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
 	pPsd->mbz = 0;
 	pPsd->protocol = pIpHeader->ip_p;
 	pPsd->tcpl = htons(iTcpTotLen); //htons(sizeof(struct tcphdr));
-	cout << endl <<"ip len: "<<ntohs(pIpHeader->ip_len)<< " tcp len: " << iTcpTotLen << endl;
-	printf("tcpEdit ori check sum 1: %x \n", pTcp->check);
+	//cout << endl <<"ip len: "<<ntohs(pIpHeader->ip_len)<< " tcp len: " << iTcpTotLen << endl;
+	//printf("tcpEdit ori check sum 1: %x \n", pTcp->check);
 	pTcp->check = 0;
 	memcpy(pTcp_psd, pTcp, iTcpTotLen);
-	printf("tcpEdit ori check sum equal: %x == %x ? \n", pTcp->check, pTcp_psd->check);
-	cout << endl << "psdhdr len: " << sizeof(struct psdhdr) << " " << sizeof(psdhdr) << endl;
+	//printf("tcpEdit ori check sum equal: %x == %x ? \n", pTcp->check, pTcp_psd->check);
+	//cout << endl << "psdhdr len: " << sizeof(struct psdhdr) << " " << sizeof(psdhdr) << endl;
 	pTcp->check = checksum(psdBuffer, iTcpTotLen + sizeof(struct psdhdr));
-	printf("tcpEdit ori check sum 2: %x \n", pTcp->check);
+	//printf("tcpEdit ori check sum 2: %x \n", pTcp->check);
 	// end of recal tcp checksum
 	cout << endl << "tcpEdit: msgLen is: " << ntohs(pIpHeader->ip_len) << endl;
 	return ntohs(pIpHeader->ip_len);

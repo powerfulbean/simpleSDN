@@ -1043,7 +1043,7 @@ void primaryRouter_s6(cRouter & Router)
 					cout << endl << sLog << endl;
 					Router.vLog.push_back(sLog);
 				}
-				if (iIcmpProtocol == 1 || iIcmpProtocol == 6)// its a icmp or TCP pscket
+				if (iIcmpProtocol == 1 || iIcmpProtocol == 6)// its a icmp or TCP packet
 				{
 					cwrite(tun_fd, buffer, 2048);// send packet back to tunnel
 												  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);

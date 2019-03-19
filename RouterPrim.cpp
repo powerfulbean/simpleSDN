@@ -946,8 +946,8 @@ void primaryRouter_s6(cRouter & Router)
 						u_int8_t icmp_type;
 						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1,port2,iptp);
 						dstAddr.s_addr = dstAddrin;
-						int iCheck = packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
-						int iCheck2 = packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
+						int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
+						int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
 						if (iCheck == 1 || iCheck2 == 1)
 						{
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);

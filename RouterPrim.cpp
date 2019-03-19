@@ -1001,9 +1001,9 @@ void primaryRouter_s6(cRouter & Router)
 		}
 		if (FD_ISSET(iSockID, &fdSet))
 		{
-			char buffer[2048];
+			char buffer[65535];
 			bRefreshTimeout = true;
-			memset(buffer, 0, 2048);
+			memset(buffer, 0, 65535);
 			struct sockaddr_in rou2Addr;
 			int nread = 1;//= recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
 			struct iovec iov2;
@@ -1046,7 +1046,7 @@ void primaryRouter_s6(cRouter & Router)
 				}
 				if (iIcmpProtocol == 1 || iIcmpProtocol == 6)// its a icmp or TCP packet
 				{
-					cwrite(tun_fd, buffer, 2048);// send packet back to tunnel
+					cwrite(tun_fd, buffer, err);// send packet back to tunnel
 												  //sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 												  //icmpReply_primRouter(tun_fd, buffer, nread);
 				}

@@ -52,10 +52,10 @@ int sendMsg(int sockID2,const char* buf,unsigned int iSize,
         unsigned int iRou1Port;
         inet_ntop(AF_INET,&rou1Addr.sin_addr,pRou1Addr,sizeof(pRou1Addr));// translate the router 1 ip address to ascii
         iRou1Port = ntohs(rou1Addr.sin_port);//translate the router 1 port  to ascii
-		cout << endl;
-		cout<<"sendMsg: receiver  address:"<<pRou1Addr<<endl;
-        cout<<"sendMsg: receiver port: "<<iRou1Port<<endl;
-	cout<<"sendMsg: end"<<endl<<endl;
+	//	cout << endl;
+	//	cout<<"sendMsg: receiver  address:"<<pRou1Addr<<endl;
+    //    cout<<"sendMsg: receiver port: "<<iRou1Port<<endl;
+	//cout<<"sendMsg: end"<<endl<<endl;
 	return err;
 }
 	
@@ -75,11 +75,11 @@ int  recvMsg(int sockID, char *buf, unsigned int iSize,
         }
 	int iRou2Port = ntohs(rou2Addr.sin_port);
 	inet_ntop(AF_INET,&rou2Addr.sin_addr,pRou2Addr,sizeof(pRou2Addr));
-	cout << endl;
-	cout<<"recvMsg: sender address:"<<pRou2Addr<<endl;
-        cout<<"recvMsg: sender port: "<<iRou2Port<<endl;
-        cout<<"recvMsg: end"<<endl;
-	cout<<endl;
+	//cout << endl;
+	//cout<<"recvMsg: sender address:"<<pRou2Addr<<endl;
+    //    cout<<"recvMsg: sender port: "<<iRou2Port<<endl;
+    //    cout<<"recvMsg: end"<<endl;
+	//cout<<endl;
 	return count;
 }
 
@@ -300,7 +300,7 @@ void icmpReply_Edit(char* buffer)
 int tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3)
 {
 	// recal checksum of tcp
-	char psdBuffer[2048] = { 0 };
+	char psdBuffer[65535] = { 0 };
 	struct ip * pIpHeader;
 	struct tcphdr * pTcp, *pTcp_psd;
 	struct psdhdr* pPsd;

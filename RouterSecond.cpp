@@ -809,7 +809,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 			{
 				cout << endl << "iTCPrawsocket get packet" << endl;
 				bRefreshTimeout = true;
-				char buffer2[4096] = { 0 };
+				char buffer2[65535] = { 0 };
 				struct sockaddr_in senderAddr;
 				struct iovec iov2;
 				struct msghdr msg2;
@@ -834,7 +834,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				}
 
 				printf("orignal src address: %s  \n", inet_ntoa(oriSrcAddr));
-				char buffer3[4096] = { 0 };
+				char buffer3[65535] = { 0 };
 				memcpy(buffer3, buffer2, sizeof(buffer2));
 				int iMsgLen = tcpReply_Edit(oriSrcAddr, buffer3);
 

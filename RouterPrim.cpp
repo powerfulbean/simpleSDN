@@ -948,7 +948,7 @@ void primaryRouter_s6(cRouter & Router)
 						dstAddr.s_addr = dstAddrin;
 						int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
 						int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
-						if (iCheck == 1 || iCheck2 == 1)
+						if (iPortNum == 80 || iPortNum == 443)
 						{
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log
@@ -1269,7 +1269,7 @@ void primaryRouter_s7(cRouter & Router)
 				}
 				else if (a == 6)
 				{
-					struct octane_control localMsg, msg1, msg1_re;
+					struct octane_control localMsg, msg1, msg1_re, msg2, msg2_re;
 					int iPortNum = tcpUnpack(buffer);
 					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 					targetAddr.sin_family = AF_INET;
@@ -1279,7 +1279,7 @@ void primaryRouter_s7(cRouter & Router)
 					}
 					else if (iPortNum == 443)
 					{
-						targetAddr.sin_port = secondRouter2Port;
+						targetAddr.sin_port = secondRouter1Port;
 					}
 					else
 					{
@@ -1301,9 +1301,9 @@ void primaryRouter_s7(cRouter & Router)
 						u_int8_t icmp_type;
 						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1, port2, iptp);
 						dstAddr.s_addr = dstAddrin;
-						int iCheck = packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
-						int iCheck2 = packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
-						if (iCheck == 1 || iCheck2 == 1)
+						int iCheck = 1;// packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
+						int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
+						if (iPortNum == 80)
 						{
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log
@@ -1332,6 +1332,63 @@ void primaryRouter_s7(cRouter & Router)
 							handle t2 = timersManager.AddTimer(2000, octaneTimer2);
 							Router.m_unAckBuffer[iSeqno1] = t1;
 							Router.m_unAckBuffer[iSeqno2] = t2;
+							string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
+							if (sCheck2.size() != 0)
+							{
+								string sLog = "router: " + to_string(Router.iRouterID) + sCheck2;
+								cout << endl << sLog << endl;
+								Router.vLog.push_back(sLog);
+							}
+							Router.printUnAckBuffer();
+						}
+						else if (iPortNum == 443)
+						{
+							struct sockaddr_in targetAddr2;
+							targetAddr2.sin_addr.s_addr = inet_addr("127.0.0.1");
+							targetAddr2.sin_family = AF_INET;
+							targetAddr2.sin_port = secondRouter2Port;
+							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
+							//insert rules in flow_table and get the respective log
+							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+							for (int i = 0; i < tempLog.size(); i++)
+							{
+								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+								Router.vLog.push_back(sLog);
+							}
+							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, secondRouter2Port);
+							int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+							int iSeqno3 = Router.createOctaneMsg(msg2, buffer, sizeof(buffer), 1, 0);
+							int iSeqno4 = Router.createReverseOctaneMsg(msg2_re, msg2, secondRouter1Port);
+							char octaneIpBuffer[2048];
+							char octaneIpBufferRev[2048];
+							char octaneIpBuffer2[2048];
+							char octaneIpBufferRev2[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							memset(octaneIpBufferRev, 0, 2048);
+							memset(octaneIpBuffer2, 0, 2048);
+							memset(octaneIpBufferRev2, 0, 2048);
+							string localAddr = "127.0.0.1";
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
+							buildIpPacket(octaneIpBuffer2, sizeof(octaneIpBuffer2), 253, localAddr, localAddr, (char *)&msg2, sizeof(msg2));
+							buildIpPacket(octaneIpBufferRev2, sizeof(octaneIpBufferRev2), 253, localAddr, localAddr, (char *)&msg2_re, sizeof(msg2_re));
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), targetAddr);// send control message
+							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), targetAddr);// send control message
+							sendMsg(Router.iSockID, octaneIpBuffer2, sizeof(octaneIpBuffer2), targetAddr2);// send control message
+							sendMsg(Router.iSockID, octaneIpBufferRev2, sizeof(octaneIpBufferRev2), targetAddr2);// send control message
+																											  // Add timer and register the handle number
+							cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, targetAddr, msg1, iSeqno1);
+							cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, targetAddr, msg1_re, iSeqno2);
+							cOctaneTimer *octaneTimer3 = new cOctaneTimer(Router.iSockID, targetAddr2, msg2, iSeqno3);
+							cOctaneTimer *octaneTimer4 = new cOctaneTimer(Router.iSockID, targetAddr2, msg2_re, iSeqno4);
+							handle t1 = timersManager.AddTimer(2000, octaneTimer1);
+							handle t2 = timersManager.AddTimer(2000, octaneTimer2);
+							handle t3 = timersManager.AddTimer(2000, octaneTimer3);
+							handle t4 = timersManager.AddTimer(2000, octaneTimer4);
+							Router.m_unAckBuffer[iSeqno1] = t1;
+							Router.m_unAckBuffer[iSeqno2] = t2;
+							Router.m_unAckBuffer[iSeqno3] = t3;
+							Router.m_unAckBuffer[iSeqno4] = t4;
 							string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
 							if (sCheck2.size() != 0)
 							{

@@ -5,7 +5,8 @@ SOURCE = main.cpp \
 	sample_tunnel.c  sample_tunnel.h \
 	cRouter.cpp cRouter.h \
 	network.cpp network.h \
-	RouterPrim.cpp RouterSecond.cpp Router.h
+	RouterPrim.cpp RouterSecond.cpp Router.h \
+	./timers
 	
 SUPPORT = README.stage1.txt README.stage2.txt makefile 
 

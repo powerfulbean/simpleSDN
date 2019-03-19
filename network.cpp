@@ -122,6 +122,7 @@ int  recvMsgSafe(int sockID, char *buffer, unsigned int iSize,
 		perror("primRouter_tcpRaw success: recvmsg");
 		printf(": msglen : %d  \n", err);
 	}
+	return err;
 }
 
 void octaneReply_Edit(char* buffer)

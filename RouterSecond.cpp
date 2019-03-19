@@ -658,8 +658,8 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 			if (FD_ISSET(iSockID, &fdSet))
 			{
 				bRefreshTimeout = true;
-				char buffer[65500];
-				int nread = recvMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+				char buffer[65500] = {0};
+				int nread = recvMsgSafe(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
 
 				flow_entry entry(buffer);
 				string sCheck = Router.m_rouFlowTable.flowCheck(entry);

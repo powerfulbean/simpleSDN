@@ -98,6 +98,32 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 	return pOctane->octane_seqno;
 }
 
+int  recvMsgSafe(int sockID, char *buf, unsigned int iSize,
+	struct sockaddr_in & rou2Addr)
+{
+	struct iovec iov2;
+	struct msghdr msg2;
+	iov2.iov_base = buffer;
+	iov2.iov_len = iSize;
+	msg2.msg_name = &rou2Addr;
+	msg2.msg_namelen = sizeof(rou2Addr);
+	msg2.msg_iov = &iov2;
+	msg2.msg_iovlen = 1;
+	msg2.msg_control = NULL;
+	msg2.msg_controllen = 0;
+	msg2.msg_flags = 0;
+	int err = recvmsg(sockID, &msg2, 0);
+	if (err == -1)
+	{
+		perror("primRouter_tcpRaw error: recvmsg");
+	}
+	else
+	{
+		perror("primRouter_tcpRaw success: recvmsg");
+		printf(": msglen : %d  \n", err);
+	}
+}
+
 void octaneReply_Edit(char* buffer)
 {
 	struct ip * pIpHeader;

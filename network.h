@@ -67,6 +67,8 @@ int sendMsg(int sockID2,const char* buf, unsigned int iSize,
 		const struct sockaddr_in rou1Addr);
 int recvMsg(int sockID2, char *buf, unsigned int iSize,
 struct sockaddr_in & rou2Addr);
+int  recvMsgSafe(int sockID, char *buf, unsigned int iSize,
+	struct sockaddr_in & rou2Addr);
 
 void icmpReply_Edit(char* buffer);
 void ipChangeProtocol(char* buffer,int iProtocol);

@@ -1355,10 +1355,10 @@ void primaryRouter_s7(cRouter & Router)
 								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 								Router.vLog.push_back(sLog);
 							}
-							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, secondRouter2Port);
+							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, ntohs(secondRouter2Port));
 							int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
 							int iSeqno3 = Router.createOctaneMsg(msg2, buffer, sizeof(buffer), 1, 0);
-							int iSeqno4 = Router.createReverseOctaneMsg(msg2_re, msg2, secondRouter1Port);
+							int iSeqno4 = Router.createReverseOctaneMsg(msg2_re, msg2, ntohs(secondRouter1Port));
 							char octaneIpBuffer[2048];
 							char octaneIpBufferRev[2048];
 							char octaneIpBuffer2[2048];

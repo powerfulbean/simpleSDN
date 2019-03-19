@@ -98,7 +98,7 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 	return pOctane->octane_seqno;
 }
 
-int  recvMsgSafe(int sockID, char *buf, unsigned int iSize,
+int  recvMsgSafe(int sockID, char *buffer, unsigned int iSize,
 	struct sockaddr_in & rou2Addr)
 {
 	struct iovec iov2;

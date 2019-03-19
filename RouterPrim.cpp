@@ -1078,6 +1078,361 @@ void primaryRouter_s6(cRouter & Router)
 	}
 }
 
+void primaryRouter_s7(cRouter & Router)
+{
+	int tun_fd = set_tunnel_reader();
+	int iSockID = Router.iSockID;
+	struct timeval idelTimeout;
+	idelTimeout.tv_sec = 15;
+	idelTimeout.tv_usec = 0;
+	struct timeval timeout;
+	timeout.tv_sec = 15;
+	timeout.tv_usec = 0;
+	bool bRefreshTimeout = true;
+	Timers timersManager;
+	fd_set fdSetAll, fdSet;
+	FD_ZERO(&fdSetAll);
+	FD_SET(tun_fd, &fdSetAll);
+	FD_SET(iSockID, &fdSetAll);
+	int iMaxfdpl = (tun_fd > iSockID) ? (tun_fd + 1) : (iSockID + 1);
+
+	uint16_t secondRouter1Port = htons(Router.m_mChildPort.begin()->second);
+	map<int, int>::iterator it;
+	it = Router.m_mChildPort.begin();
+	it++;
+	uint16_t secondRouter2Port = htons(it->second);
+
+	while (1)
+	{
+		bool bEventTimeout = false;
+		fdSet = fdSetAll;
+		struct timeval temp;
+		temp.tv_sec = timeout.tv_sec;
+		temp.tv_usec = timeout.tv_usec;
+		timersManager.NextTimerTime(&timeout);
+		if (timeout.tv_sec == 0 && timeout.tv_usec == 0) {
+			cout << endl << " The timer at the head on the queue has expired " << endl;
+			timersManager.ExecuteNextTimer();
+			bEventTimeout = true;
+		}
+		if (timeout.tv_sec == MAXVALUE && timeout.tv_usec == 0) {
+			cout << endl << "There are no timers in the event queue" << endl;
+			timeout.tv_sec = temp.tv_sec;
+			timeout.tv_usec = temp.tv_usec;
+			bEventTimeout = false;
+		}
+		else
+		{
+			bEventTimeout = true;
+		}
+		int iSelect = select(iMaxfdpl, &fdSet, NULL, NULL, &timeout);
+		if (iSelect == 0)
+		{
+			if (bEventTimeout == true)
+			{
+				cout << endl << "event time out!" << endl;
+				// start of using the code of test-app.cc provided by csci551.
+				// Timer expired, Hence process it 
+				timersManager.ExecuteNextTimer();
+				// Execute all timers that have expired.
+				timersManager.NextTimerTime(&timeout);
+				while (timeout.tv_sec == 0 && timeout.tv_usec == 0)
+				{
+					// Timer at the head of the queue has expired 
+					timersManager.ExecuteNextTimer();
+					timersManager.NextTimerTime(&timeout);
+				}
+				// end of using the code of test-app.cc provided by csci551.
+				timeout.tv_sec = 15;
+				timeout.tv_usec = 0;
+			}
+			else
+			{
+				cout << "timeout!" << endl;
+				return;
+			}
+
+		}
+		char buffer[2048];
+		if (FD_ISSET(tun_fd, &fdSet))
+		{
+
+			struct sockaddr_in rou2Addr;
+			struct sockaddr_in targetAddr;
+			setTempAddr("127.0.0.1", rou2Addr);
+			rou2Addr.sin_port = htons(Router.m_mChildPort.begin()->second);
+			bRefreshTimeout = true;
+			memset(buffer, 0, 2048);
+			int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
+
+			flow_entry entry(buffer);
+			string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+
+			if (nread < 0)
+			{
+				exit(1);
+			}
+			else
+			{
+				printf("Read a packet from tunnel, packet length:%d\n", nread);
+				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));// for FromTunnel "port" is not useful
+				if (a == 1) // it is a ICMP packet
+				{
+					printf("Prim Router Read a ICMP packet \n", nread);
+					struct octane_control localMsg, msg1, msg1_re;
+					struct in_addr srcAddr, dstAddr;
+					u_int8_t icmp_type;
+					int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+					int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
+					int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
+					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+					targetAddr.sin_family = AF_INET;
+					if (iCheck == 1 || iCheck2 == 1)
+					{
+						if (iCheck == 1)
+						{
+							targetAddr.sin_port = secondRouter1Port;
+						}
+						else
+						{
+							targetAddr.sin_port = secondRouter2Port;
+						}
+					}
+					else
+					{
+						targetAddr.sin_port = secondRouter1Port;
+					}
+					if (sCheck.size() != 0)
+					{
+						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+						cout << endl << sLog << endl;
+						Router.vLog.push_back(sLog);
+					}
+					else
+					{
+						// create a orctane message for this primary router 
+						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
+						//insert rules in flow_table and get the respective log
+						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+						for (int i = 0; i < tempLog.size(); i++)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+							Router.vLog.push_back(sLog);
+						}
+						int iCheckDef = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
+						if (iCheckDef == 1)
+						{
+							int iSeqno;
+							iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
+							char octaneIpBuffer[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							string localAddr = "127.0.0.1";
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), targetAddr); // send control message
+																										 // Add timer and register the handle number
+							cOctaneTimer * octaneTimer = new cOctaneTimer(Router.iSockID, targetAddr, msg1, iSeqno);
+							handle t1 = timersManager.AddTimer(2000, octaneTimer);
+							Router.m_unAckBuffer[iSeqno] = t1;
+						}
+						else
+						{
+							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+							int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+							char octaneIpBuffer[2048];
+							char octaneIpBufferRev[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							memset(octaneIpBufferRev, 0, 2048);
+							string localAddr = "127.0.0.1";
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
+							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
+
+																											// Add timer and register the handle number
+							cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1, iSeqno1);
+							cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1_re, iSeqno2);
+							handle t1 = timersManager.AddTimer(2000, octaneTimer1);
+							handle t2 = timersManager.AddTimer(2000, octaneTimer2);
+							Router.m_unAckBuffer[iSeqno1] = t1;
+							Router.m_unAckBuffer[iSeqno2] = t2;
+						}
+						string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
+						if (sCheck2.size() != 0)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + sCheck2;
+							cout << endl << sLog << endl;
+							Router.vLog.push_back(sLog);
+						}
+						Router.printUnAckBuffer();
+					}
+					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);
+				}
+				else if (a == 6)
+				{
+					struct octane_control localMsg, msg1, msg1_re;
+					int iPortNum = tcpUnpack(buffer);
+					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+					targetAddr.sin_family = AF_INET;
+					if (iPortNum == 80)
+					{
+						targetAddr.sin_port = secondRouter1Port;
+					}
+					else if (iPortNum == 443)
+					{
+						targetAddr.sin_port = secondRouter2Port;
+					}
+					else
+					{
+						cout << endl << "!!!!!! prim: iPortNum is not 443 or 80: " << iPortNum << endl;
+						bRefreshTimeout = false;
+					}
+					if (sCheck.size() != 0)
+					{
+						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+						cout << endl << sLog << endl;
+						Router.vLog.push_back(sLog);
+					}
+					else
+					{
+						struct in_addr dstAddr;
+						uint32_t srcAddrin, dstAddrin;
+						uint16_t port1, port2;
+						u_int8_t iptp;
+						u_int8_t icmp_type;
+						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1, port2, iptp);
+						dstAddr.s_addr = dstAddrin;
+						int iCheck = packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
+						int iCheck2 = packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
+						if (iCheck == 1 || iCheck2 == 1)
+						{
+							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
+							//insert rules in flow_table and get the respective log
+							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
+							for (int i = 0; i < tempLog.size(); i++)
+							{
+								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+								Router.vLog.push_back(sLog);
+							}
+							int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+							int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+							char octaneIpBuffer[2048];
+							char octaneIpBufferRev[2048];
+							memset(octaneIpBuffer, 0, 2048);
+							memset(octaneIpBufferRev, 0, 2048);
+							string localAddr = "127.0.0.1";
+							buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&msg1, sizeof(msg1));
+							buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&msg1_re, sizeof(msg1_re));
+							sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), targetAddr);// send control message
+							sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), targetAddr);// send control message
+
+																											  // Add timer and register the handle number
+							cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, targetAddr, msg1, iSeqno1);
+							cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, targetAddr, msg1_re, iSeqno2);
+							handle t1 = timersManager.AddTimer(2000, octaneTimer1);
+							handle t2 = timersManager.AddTimer(2000, octaneTimer2);
+							Router.m_unAckBuffer[iSeqno1] = t1;
+							Router.m_unAckBuffer[iSeqno2] = t2;
+							string sCheck2 = Router.m_rouFlowTable.flowCheck(entry);
+							if (sCheck2.size() != 0)
+							{
+								string sLog = "router: " + to_string(Router.iRouterID) + sCheck2;
+								cout << endl << sLog << endl;
+								Router.vLog.push_back(sLog);
+							}
+							Router.printUnAckBuffer();
+						}
+						else
+						{
+							bRefreshTimeout = false;
+						}
+					}
+					sendMsg(Router.iSockID, buffer, sizeof(buffer), targetAddr);
+				}
+				else
+				{
+					bRefreshTimeout = false;
+				}
+			}
+		}
+		if (FD_ISSET(iSockID, &fdSet))
+		{
+			char buffer[65535];
+			bRefreshTimeout = true;
+			memset(buffer, 0, 65535);
+			struct sockaddr_in rou2Addr;
+			int nread = 1;//= recvMsg(Router.iSockID, buffer, sizeof(buffer), rou2Addr);
+			struct iovec iov2;
+			struct msghdr msg2;
+			iov2.iov_base = buffer;
+			iov2.iov_len = sizeof(buffer);
+			msg2.msg_name = &rou2Addr;
+			msg2.msg_namelen = sizeof(rou2Addr);
+			msg2.msg_iov = &iov2;
+			msg2.msg_iovlen = 1;
+			msg2.msg_control = NULL;
+			msg2.msg_controllen = 0;
+			msg2.msg_flags = 0;
+			int err = recvmsg(Router.iSockID, &msg2, 0);
+			if (err == -1)
+			{
+				perror("primRouter_tcpRaw error: recvmsg");
+			}
+			else
+			{
+				perror("primRouter_tcpRaw success: recvmsg");
+				printf(": msglen : %d  \n", err);
+			}
+			flow_entry entry(buffer);
+			string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+
+			if (nread < 0)
+			{
+				exit(1);
+			}
+			else
+			{
+				printf("Read a packet from secondary router, packet length:%d\n", err);
+				int iIcmpProtocol = icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
+				if (sCheck.size() != 0)
+				{
+					string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
+					cout << endl << sLog << endl;
+					Router.vLog.push_back(sLog);
+				}
+				if (iIcmpProtocol == 1 || iIcmpProtocol == 6)// its a icmp or TCP packet
+				{
+					cwrite(tun_fd, buffer, err);// send packet back to tunnel
+												//sendMsg(Router.iSockID, buffer, sizeof(buffer), rou1Addr);
+												//icmpReply_primRouter(tun_fd, buffer, nread);
+				}
+				else if (iIcmpProtocol == OCTANE_PROTOCOL_NUM)
+				{
+					// check seqno and remove related record from the unack_buffer
+					octane_control octMsg;
+					int iSeqno = octaneUnpack(buffer, &octMsg);
+					if (octMsg.octane_flags == 1)
+					{
+						// place for code to remove the related timer
+						int iRmvHandle = Router.m_unAckBuffer[iSeqno];
+						timersManager.RemoveTimer(iRmvHandle);
+						Router.m_unAckBuffer.erase(iSeqno);
+						Router.printUnAckBuffer();
+					}
+				}
+				else
+				{
+					bRefreshTimeout = false;
+				}
+			}
+		}
+		if (bRefreshTimeout == true)
+		{
+			timeout.tv_sec = 15;
+			timeout.tv_usec = 0;
+		}
+	}
+}
+
 int cOctaneTimer::Expire()// use the code of test-app.cc provided by csci551.
 {
 	struct timeval tv; 
@@ -1338,6 +1693,80 @@ void stage6(cRouter &Router,
 	}
 }
 
+void stage7(cRouter &Router,
+	struct sockaddr_in & rou1Addr,
+	struct sockaddr_in & rou2Addr)
+{
+	int sockID;
+	socklen_t len;
+	struct sockaddr_in  locAddr;
+	setTempAddr("127.0.0.1", locAddr);
+	getDynmcPortSrv(locAddr, rou1Addr);
+	sockID = getUdpSocket();
+	char pRou1Addr[16];
+	unsigned int iRou1Port;
+	inet_ntop(AF_INET, &rou1Addr.sin_addr, pRou1Addr, sizeof(pRou1Addr));// translate the router 1 ip address to ascii
+	iRou1Port = ntohs(rou1Addr.sin_port);//translate the router 1 port  to ascii
+	Router.iPortNum = iRou1Port;
+	int iBind = bind(sockID, (struct sockaddr*)&rou1Addr, sizeof(rou1Addr));
+	if (iBind<0)
+	{
+		perror("bind error");
+	}
+	cout << "primary address:" << pRou1Addr << endl;
+	cout << "primary port: " << iRou1Port << endl;
+
+	pid_t fPid;
+	for (int i = 0; i < Router.iRouteNum; i++)
+	{
+		if (Router.iFPID != 0)
+		{
+			fPid = fork();
+			if (fPid<0)
+			{
+				cout << " fork : error" << endl;
+			}
+			else if (fPid == 0)
+			{
+				secondRouter_reqReg(Router, rou1Addr, i + 1);
+				Router.iFPID = fPid;
+			}
+			else
+			{
+				//cout << "child process pid: " << fPid << endl << endl;
+				Router.iFPID = fPid;
+				primaryRouter_reg(sockID, Router);
+			}
+		}
+	}
+
+	if (Router.iFPID != 0)
+	{
+		vector<string> &vLog = Router.vLog;
+		string temp = "primary port: " + to_string(Router.iPortNum);
+		vLog.push_back(temp);
+		int cnt = 0;
+		for (auto i : Router.m_mChildPort)
+		{
+			cout << "pid: " << i.first << "; port: " << i.second << endl;
+			string temp2 = "router: " + to_string(cnt + 1) + ", pid: " + to_string(i.first) + ", port: " + to_string(i.second);
+			vLog.push_back(temp2);
+			cnt++;
+		}
+
+	}
+
+
+
+	if (Router.iFPID == 0) // if it is secondary router
+	{
+		secondRouter_s6(Router);
+	}
+	else// if it is primary router
+	{
+		primaryRouter_s7(Router);
+	}
+}
 
 
 void primaryRouter_reg(const int sockID, cRouter & Router)

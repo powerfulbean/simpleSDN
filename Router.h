@@ -21,6 +21,7 @@ void primaryRouter_s5(cRouter & Router, struct sockaddr_in &rou2Addr);
 void secondRouter_s5(cRouter & Router);
 void primaryRouter_s6(cRouter & Router);
 void secondRouter_s6(cRouter & Router);
+void primaryRouter_s7(cRouter & Router);
 void primaryRouter_reg(const int sockID, cRouter & Router);
 void secondRouter_reqReg(cRouter & Router, const sockaddr_in rou1Addr,int iRouterID);
 
@@ -43,6 +44,10 @@ void stage5(cRouter &Router,
 	struct sockaddr_in & rou2Addr);
 
 void stage6(cRouter &Router,
+	struct sockaddr_in & rou1Addr,
+	struct sockaddr_in & rou2Addr);
+
+void stage7(cRouter &Router,
 	struct sockaddr_in & rou1Addr,
 	struct sockaddr_in & rou2Addr);
 

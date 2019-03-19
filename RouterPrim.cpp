@@ -928,6 +928,7 @@ void primaryRouter_s6(cRouter & Router)
 					}
 					else
 					{
+						cout <<endl<< "!!!!!! prim: iPortNum is not 443 or 80: " << iPortNum << endl;
 						bRefreshTimeout = false;
 					}
 					if (sCheck.size() != 0)
@@ -943,8 +944,8 @@ void primaryRouter_s6(cRouter & Router)
 						uint16_t port1, port2;
 						u_int8_t iptp;
 						u_int8_t icmp_type;
-						dstAddr.s_addr = dstAddrin;
 						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1,port2,iptp);
+						dstAddr.s_addr = dstAddrin;
 						int iCheck = packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
 						int iCheck2 = packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
 						if (iCheck == 1 || iCheck2 == 1)
@@ -1035,7 +1036,7 @@ void primaryRouter_s6(cRouter & Router)
 			}
 			else
 			{
-				printf("Read a packet from secondary router, packet length:%d\n", nread);
+				printf("Read a packet from secondary router, packet length:%d\n", err);
 				int iIcmpProtocol = icmpForward_log(Router, buffer, sizeof(buffer), FromUdp, ntohs(rou2Addr.sin_port));
 				if (sCheck.size() != 0)
 				{

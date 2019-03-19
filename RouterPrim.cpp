@@ -1558,7 +1558,7 @@ int icmpForward_log(cRouter & Router, char * buffer, unsigned int iSize, int fla
 		else if (flag == FromUdp)
 		{
 			string sSrcPort = to_string(iPort);
-			string sLog = "TCP from port : (" +
+			string sLog = "TCP from port : " + sSrcPort + ",(" +
 				string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
 				string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +
 				")";

@@ -13,7 +13,7 @@ SUPPORT = *.txt makefile
 SUB_DIR = ./timers
 
 proja:ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o $(SUB_DIR)/timers.o $(SUB_DIR)/tools.o
-	g++ ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o $(SUB_DIR)/timers.o $(SUB_DIR)/tools.o -o proja
+	g++ ProjectA_main.o cRouter.o networkLib.o sample_tunnel.o RouterPrim.o RouterSecond.o checkSum.o $(SUB_DIR)/timers.o $(SUB_DIR)/tools.o -o projb
 ProjectA_main.o:main.cpp
 	g++ -c main.cpp -o ProjectA_main.o
 cRouter.o:cRouter.cpp
@@ -34,4 +34,4 @@ checkSum.o: icmp_checksum.c
 clean:
 	rm -f proja *.o
 tar:
-	tar czvf proja.tar.gz $(SOURCE) $(SUPPORT)
+	tar czvf projb.tar.gz $(SOURCE) $(SUPPORT)

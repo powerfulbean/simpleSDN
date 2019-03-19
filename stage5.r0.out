@@ -1,3 +1,21 @@
-primary port: 42734
-router: 1, pid: 2752, port: 59931
+primary port: 34621
+router: 1, pid: 3201, port: 39874
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router: 0, rule installed (10.0.2.15, 65535, 128.52.130.149, 65535, 1) action 1
+router: 0, rule installed (128.52.130.149, 65535, 10.0.2.15, 65535, 1) action 1
+router: 0, rule hit (10.0.2.15, 65535, 128.52.130.149, 65535, 1)
+ICMP from port : 39874, src: 128.52.130.149, dst : 10.0.2.15, type : 0
+router: 0, rule hit (128.52.130.149, 65535, 10.0.2.15, 65535, 1)
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router: 0, rule hit (10.0.2.15, 65535, 128.52.130.149, 65535, 1)
+ICMP from port : 39874, src: 128.52.130.149, dst : 10.0.2.15, type : 0
+router: 0, rule hit (128.52.130.149, 65535, 10.0.2.15, 65535, 1)
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router: 0, rule hit (10.0.2.15, 65535, 128.52.130.149, 65535, 1)
+ICMP from port : 39874, src: 128.52.130.149, dst : 10.0.2.15, type : 0
+router: 0, rule hit (128.52.130.149, 65535, 10.0.2.15, 65535, 1)
+ICMP from tunnel, src: 10.0.2.15, dst : 128.52.130.149, type : 8
+router: 0, rule hit (10.0.2.15, 65535, 128.52.130.149, 65535, 1)
+ICMP from port : 39874, src: 128.52.130.149, dst : 10.0.2.15, type : 0
+router: 0, rule hit (128.52.130.149, 65535, 10.0.2.15, 65535, 1)
 router 0 closed

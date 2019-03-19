@@ -8,7 +8,7 @@ SOURCE = main.cpp \
 	RouterPrim.cpp RouterSecond.cpp Router.h \
 	./timers
 	
-SUPPORT = README.stage1.txt README.stage2.txt makefile 
+SUPPORT = *.txt makefile 
 
 SUB_DIR = ./timers
 

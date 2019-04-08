@@ -81,6 +81,12 @@ int main(int argc, char * argv[])
 			  cout << "***Stage 7 end, pid: " << getpid();
 			  cout << "\n-----------------------" << endl << endl;
 			  break;
+		  case 8:
+			  stage6(Router, rou1Addr, rou2Addr);
+			  Router.close();
+			  cout << "***Stage 8 end, pid: " << getpid();
+			  cout << "\n-----------------------" << endl << endl;
+			  break;
 		  default:
 			  break;
 		}

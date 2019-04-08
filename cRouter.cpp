@@ -267,7 +267,7 @@ int cRouter::stageToCase(int iStage)
 	{
 		return 0;
 	}
-	else if (iStage > 3 && iStage <= 7)
+	else if (iStage > 3 && iStage <= 10)
 	{
 		return 1;
 	}

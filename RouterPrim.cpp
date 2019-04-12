@@ -1492,6 +1492,7 @@ void primaryRouter_s7(cRouter & Router)
 
 void primaryRouter_s9(cRouter & Router)
 {
+	bool isAuthenticated = false;
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
 	struct timeval idelTimeout;

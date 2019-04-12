@@ -1885,6 +1885,7 @@ void stage9(cRouter &Router,
 		}
 
 	}
+	primaryRouter_savePort(Router);
 
 	if (Router.iFPID == 0) // if it is secondary router
 	{

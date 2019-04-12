@@ -1813,8 +1813,6 @@ void stage7(cRouter &Router,
 
 	}
 
-
-
 	if (Router.iFPID == 0) // if it is secondary router
 	{
 		secondRouter_s6(Router);
@@ -1822,6 +1820,79 @@ void stage7(cRouter &Router,
 	else// if it is primary router
 	{
 		primaryRouter_s7(Router);
+	}
+}
+
+void stage9(cRouter &Router,
+	struct sockaddr_in & rou1Addr,
+	struct sockaddr_in & rou2Addr)
+{
+	int sockID;
+	socklen_t len;
+	struct sockaddr_in  locAddr;
+	setTempAddr("127.0.0.1", locAddr);
+	getDynmcPortSrv(locAddr, rou1Addr);
+	sockID = getUdpSocket();
+	char pRou1Addr[16];
+	unsigned int iRou1Port;
+	inet_ntop(AF_INET, &rou1Addr.sin_addr, pRou1Addr, sizeof(pRou1Addr));// translate the router 1 ip address to ascii
+	iRou1Port = ntohs(rou1Addr.sin_port);//translate the router 1 port  to ascii
+	Router.iPortNum = iRou1Port;
+	int iBind = bind(sockID, (struct sockaddr*)&rou1Addr, sizeof(rou1Addr));
+	if (iBind<0)
+	{
+		perror("bind error");
+	}
+	cout << "primary address:" << pRou1Addr << endl;
+	cout << "primary port: " << iRou1Port << endl;
+
+	pid_t fPid;
+	for (int i = 0; i < Router.iRouteNum; i++)
+	{
+		if (Router.iFPID != 0)
+		{
+			fPid = fork();
+			if (fPid<0)
+			{
+				cout << " fork : error" << endl;
+			}
+			else if (fPid == 0)
+			{
+				secondRouter_reqReg(Router, rou1Addr, i + 1);
+				Router.iFPID = fPid;
+			}
+			else
+			{
+				//cout << "child process pid: " << fPid << endl << endl;
+				Router.iFPID = fPid;
+				primaryRouter_reg(sockID, Router);
+			}
+		}
+	}
+
+	if (Router.iFPID != 0)
+	{
+		vector<string> &vLog = Router.vLog;
+		string temp = "primary port: " + to_string(Router.iPortNum);
+		vLog.push_back(temp);
+		int cnt = 0;
+		for (auto i : Router.m_mChildPort)
+		{
+			cout << "pid: " << i.first << "; port: " << i.second << endl;
+			string temp2 = "router: " + to_string(cnt + 1) + ", pid: " + to_string(i.first) + ", port: " + to_string(i.second);
+			vLog.push_back(temp2);
+			cnt++;
+		}
+
+	}
+
+	if (Router.iFPID == 0) // if it is secondary router
+	{
+		//secondRouter_s6(Router);
+	}
+	else// if it is primary router
+	{
+		//primaryRouter_s9(Router);
 	}
 }
 
@@ -1840,4 +1911,45 @@ void primaryRouter_reg(const int sockID, cRouter & Router)
 	int iRou2Port = ntohs(rou2Addr.sin_port);
 	Router.m_mChildPort[stoi(sMsgRecv)] = iRou2Port;
 	
+}
+
+void primaryRouter_savePort(cRouter & Router)
+{
+	if (Router.iFPID == 0)
+	{
+		cout << "Error: savePort: not a prim router" << endl;
+		return;
+	}
+	vector<string> content;
+	string sPrimRouter = "R0:" + to_string(Router.iPortNum);
+	content.push_back(sPrimRouter);
+	int cnt = 1;
+	for (auto i : Router.m_mChildPort)
+	{
+		//if (cnt < Router.m_mChildPort.size()+1)
+		{
+			string temp = "R" + to_string(cnt) + ":" + to_string(i.second);
+			content.push_back(temp);
+			cnt++;
+		}
+	}
+
+}
+
+void writeFile(string sFilePath, const vector<string> & vContent)
+{
+	ofstream outFile(sFilePath);
+	if (outFile.is_open())
+	{
+		for (int i = 0; i<vContent.size(); i++)
+		{
+			outFile << vContent[i] << "\n";
+		}
+	}
+	else
+	{
+		cout << "writeLogFile error: cannot open the file!" << endl;
+
+	}
+	outFile.close();
 }

@@ -25,6 +25,10 @@ void primaryRouter_s7(cRouter & Router);
 void primaryRouter_reg(const int sockID, cRouter & Router);
 void secondRouter_reqReg(cRouter & Router, const sockaddr_in rou1Addr,int iRouterID);
 
+//write Router Port to /tmp/captive.conf
+void primaryRouter_savePort(cRouter & Router);
+void writeFile(string sFileName, const vector<string> & content);
+
 int octaneRulesController(const flow_entry entry,cRouter Router, char* buffer, int iSize, struct sockaddr_in rou1Addr, struct in_addr rou2Sin_addr);
 
 void stage1(cRouter &Router,
@@ -48,6 +52,10 @@ void stage6(cRouter &Router,
 	struct sockaddr_in & rou2Addr);
 
 void stage7(cRouter &Router,
+	struct sockaddr_in & rou1Addr,
+	struct sockaddr_in & rou2Addr);
+
+void stage9(cRouter &Router,
 	struct sockaddr_in & rou1Addr,
 	struct sockaddr_in & rou2Addr);
 

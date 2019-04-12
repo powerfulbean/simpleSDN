@@ -24,6 +24,7 @@ void secondRouter_s6(cRouter & Router);
 void primaryRouter_s7(cRouter & Router);
 void primaryRouter_reg(const int sockID, cRouter & Router);
 void secondRouter_reqReg(cRouter & Router, const sockaddr_in rou1Addr,int iRouterID);
+void primaryRouter_s9(cRouter & Router);
 
 //write Router Port to /tmp/captive.conf
 void primaryRouter_savePort(cRouter & Router);

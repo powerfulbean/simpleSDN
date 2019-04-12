@@ -1933,6 +1933,8 @@ void primaryRouter_savePort(cRouter & Router)
 			cnt++;
 		}
 	}
+	string filePath = "//tmp//captive.conf";
+	writeFile(filePath, content);
 
 }
 

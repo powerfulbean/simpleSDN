@@ -1941,10 +1941,12 @@ void primaryRouter_savePort(cRouter & Router)
 void writeFile(string sFilePath, const vector<string> & vContent)
 {
 	ofstream outFile(sFilePath);
+	cout << "write to File:"<< sFilePath << endl;
 	if (outFile.is_open())
 	{
 		for (int i = 0; i<vContent.size(); i++)
 		{
+			cout<< vContent[i] << "\n";
 			outFile << vContent[i] << "\n";
 		}
 	}

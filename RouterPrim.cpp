@@ -1883,9 +1883,8 @@ void stage9(cRouter &Router,
 			vLog.push_back(temp2);
 			cnt++;
 		}
-
+		primaryRouter_savePort(Router);
 	}
-	primaryRouter_savePort(Router);
 
 	if (Router.iFPID == 0) // if it is secondary router
 	{

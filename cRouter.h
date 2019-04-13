@@ -24,6 +24,7 @@ struct flow_entry
 	flow_entry reverse();
 	bool operator< (const flow_entry key2) const;
 	bool operator == (const flow_entry key2) const;
+	void print();
 };
 
 struct flow_action
@@ -89,6 +90,7 @@ class cRouter{
 		map<int, int> m_mChildPort; // <pid number, related port number>
 		int m_iTcpRawSocketID;
 
+		// keep the original web big endian
 		int createOctaneMsg(octane_control &msg, const char *buffer, const unsigned int iSize, uint8_t octane_action, uint16_t sTargetPort, bool truelySend = true);
 		int createReverseOctaneMsg(octane_control &msg, const octane_control oriMsg, uint16_t sTargetPort = -1, bool truelySend = true);
 

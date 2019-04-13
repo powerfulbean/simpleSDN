@@ -38,6 +38,17 @@ flow_entry flow_entry::reverse()
 	return reverseEntry;
 }
 
+void flow_entry::print()
+{
+	struct in_addr src1, dst1;
+	src1.s_addr = m_srcIp;
+	dst1.s_addr = m_dstIp;
+	cout << "Octane: sourceIp: " << inet_ntoa(src1) << endl;
+	cout << "Octane: sourcePort: " << ntohs(m_srcPort) << endl;
+	cout << "Octane: dstIp: " << inet_ntoa(dst1) << endl;
+	cout << "Octane: dstPort: " << ntohs(m_dstPort) << endl;
+}
+
 bool flow_entry::operator< (const flow_entry key2) const
 {
 	if (m_srcIp != key2.m_srcIp)
@@ -182,8 +193,17 @@ string flow_table::find(octane_control msg)
 
 string flow_table::remove(octane_control msg)
 {
-	string temp;
-	return temp;
+	flow_entry entry(msg);
+	flow_action action(msg);
+	m_mTable.erase(entry);
+	struct in_addr src1, dst1;
+	src1.s_addr = entry.m_srcIp;
+	dst1.s_addr = entry.m_dstIp;
+	string output1 = ", rule erased (" +
+		string(inet_ntoa(src1)) + ", " + to_string(ntohs(entry.m_srcPort)) + ", " +
+		string(inet_ntoa(dst1)) + ", " + to_string(ntohs(entry.m_dstPort)) + ", " + to_string(entry.m_protocol) +
+		") action " + to_string(action.m_action);
+	return output1;
 }
 
 bool flow_table::contains(octane_control msg)

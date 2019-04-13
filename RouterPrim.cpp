@@ -1514,6 +1514,8 @@ void primaryRouter_s9(cRouter & Router)
 	it = Router.m_mChildPort.begin();
 	it++;
 	uint16_t secondRouter2Port = htons(it->second);
+	it++;
+	int16_t secondRouter3Port = htons(it->second);
 
 	while (1)
 	{
@@ -1688,7 +1690,15 @@ void primaryRouter_s9(cRouter & Router)
 					targetAddr.sin_family = AF_INET;
 					if (iPortNum == 80)
 					{
-						targetAddr.sin_port = secondRouter1Port;
+						if (isAuthenticated)
+						{
+							targetAddr.sin_port = secondRouter1Port;
+						}
+						else
+						{
+							targetAddr.sin_port = secondRouter3Port;
+						}
+						
 					}
 					else if (iPortNum == 443)
 					{
@@ -1699,6 +1709,8 @@ void primaryRouter_s9(cRouter & Router)
 						cout << endl << "!!!!!! prim: iPortNum is not 443 or 80: " << iPortNum << endl;
 						bRefreshTimeout = false;
 					}
+
+					// check if the flow has been installed
 					if (sCheck.size() != 0)
 					{
 						string sLog = "router: " + to_string(Router.iRouterID) + sCheck;
@@ -1811,6 +1823,13 @@ void primaryRouter_s9(cRouter & Router)
 						timersManager.RemoveTimer(iRmvHandle);
 						Router.m_unAckBuffer.erase(iSeqno);
 						Router.printUnAckBuffer();
+					}
+					if (octMsg.octane_action == 5)
+					{
+						flow_entry entry(octMsg);
+						entry.print();
+						Router.m_rouFlowTable.remove(octMsg);
+						isAuthenticated = true;
 					}
 				}
 				else

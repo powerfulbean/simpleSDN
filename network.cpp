@@ -104,7 +104,7 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 		{
 			cout << " ";
 		}
-		printf("%02x", unsigned int (pA[i]));
+		printf("%02x", (unsigned int)pA[i]);
 	}
 	cout << endl;
 

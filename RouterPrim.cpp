@@ -1814,7 +1814,7 @@ void primaryRouter_s9(cRouter & Router)
 				else if (iIcmpProtocol == OCTANE_PROTOCOL_NUM)
 				{
 					// check seqno and remove related record from the unack_buffer
-					octane_control octMsg;
+					struct octane_control octMsg;
 					int iSeqno = octaneUnpack(buffer, &octMsg);
 					//cout << "prim gets octane message: flags: " << int(octMsg.octane_flags) << " action: " << int(octMsg.octane_action) << endl;
 					printf("prim gets octane message: %x \n", octMsg);

@@ -88,12 +88,25 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 {
 	struct ip * pIpHeader;
 	struct octane_control * pOctane;
+	char *pA;
 	pIpHeader = (struct ip *) buffer;
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
 	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
 	short iOctaneTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen; // this part is learnt from 
 	memcpy(pOutOctane, pOctane, iOctaneTotLen);
+
+	cout << "prim gets octane message: ";
+	pA = buffer + iIpHeaderLen;
+	for (int i = 0; i < 20; i++)
+	{
+		printf("%x", pA[i]);
+		if (i % 2 == 0)
+		{
+			cout << " ";
+		}
+	}
+	cout << endl;
 
 	return pOctane->octane_seqno;
 }

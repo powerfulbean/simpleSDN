@@ -100,11 +100,11 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 	pA = buffer + iIpHeaderLen;
 	for (int i = 0; i < 20; i++)
 	{
-		printf("%x", pA[i]);
 		if (i % 2 == 0)
 		{
 			cout << " ";
 		}
+		printf("%x", pA[i]);
 	}
 	cout << endl;
 

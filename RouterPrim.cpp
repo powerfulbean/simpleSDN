@@ -1845,7 +1845,7 @@ void primaryRouter_s9(cRouter & Router)
 						Router.m_rouFlowTable.remove(authOctMsg);
 						Router.m_rouFlowTable.remove(authOctMsgRev);
 						isAuthenticated = true;
-						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(octMsg);
+						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(octMsg,0);
 						for (int i = 0; i < tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];

@@ -65,7 +65,7 @@ bool flow_entry::operator< (const flow_entry key2) const
 		src1.s_addr = key2.m_srcIp;
 		dst1.s_addr = key2.m_dstIp;
 		cout << "hit some FFFF rules!!!!!!!!!!!!";
-		printf("%s %d %s %d\n", inet_ntoa(src1), ntohs(key2.m_srcPort), inet_ntoa(dst1), ntohs(key2.m_dstPort));
+		printf("Key2: %s %d %s %d\n", inet_ntoa(src1), ntohs(key2.m_srcPort), inet_ntoa(dst1), ntohs(key2.m_dstPort));
 	}
 	if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) )
 	{

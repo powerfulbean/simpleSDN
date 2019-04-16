@@ -1851,6 +1851,13 @@ void primaryRouter_s9(cRouter & Router)
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
 						}
+						flow_entry entryTemp = flow_entry(octMsg);
+						string sCheckTemp = Router.m_rouFlowTable.flowCheck(entryTemp);
+						if (sCheckTemp.size() != 0)
+						{
+							cout << "new octane installed!!!!!!!!!!!!!!!!!" << endl;
+						}
+
 					}
 				}
 				else

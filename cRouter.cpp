@@ -51,9 +51,9 @@ void flow_entry::print()
 
 bool flow_entry::operator< (const flow_entry key2) const
 {
+	
 	if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) )
 	{
-		cout << "m_srcIp: " << ntohl(m_srcIp) << "key2: " << ntohl(key2.m_srcIp) << endl;
 		return m_srcIp < key2.m_srcIp;
 	}
 	else 

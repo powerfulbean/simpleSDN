@@ -56,16 +56,16 @@ bool flow_entry::operator< (const flow_entry key2) const
 		struct in_addr src1, dst1;
 		src1.s_addr = m_srcIp;
 		dst1.s_addr = m_dstIp;
-		cout << "hit some FFFF rules!!!!!!!!!!!!";
-		printf("%s %d %s %d\n", inet_ntoa(src1), ntohs(m_srcPort), inet_ntoa(dst1), ntohs(m_dstPort));
+		cout << "hit some FFFF rules!!!!!!!!!!!! "<<m_protocol;
+		printf(" %s %d %s %d\n", inet_ntoa(src1), ntohs(m_srcPort), inet_ntoa(dst1), ntohs(m_dstPort));
 	}
 	if (m_srcIp == htonl(0xFFFFFFFF) || m_srcPort == htons(0xFFFF) || m_dstIp == htonl(0xFFFFFFFF) || m_dstPort == htons(0xFFFF))
 	{
 		struct in_addr src1, dst1;
 		src1.s_addr = key2.m_srcIp;
 		dst1.s_addr = key2.m_dstIp;
-		cout << "hit some FFFF rules!!!!!!!!!!!!";
-		printf("Key2: %s %d %s %d\n", inet_ntoa(src1), ntohs(key2.m_srcPort), inet_ntoa(dst1), ntohs(key2.m_dstPort));
+		cout << "hit some FFFF rules!!!!!!!!!!!! "<<key2.m_protocol;
+		printf(" Key2: %s %d %s %d\n", inet_ntoa(src1), ntohs(key2.m_srcPort), inet_ntoa(dst1), ntohs(key2.m_dstPort));
 	}
 	if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) )
 	{

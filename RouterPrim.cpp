@@ -1800,6 +1800,7 @@ void primaryRouter_s9(cRouter & Router)
 
 			flow_entry entry(buffer);
 			flow_entry filterEntry;
+			entry.print();
 			string sCheck = Router.m_rouFlowTable.flowCheck(entry, filterEntry);
 
 			if (nread < 0)
@@ -1843,7 +1844,7 @@ void primaryRouter_s9(cRouter & Router)
 						octMsg.octane_source_ip = htonl(octMsg.octane_source_ip);
 						octMsg.octane_action = 1;
 						flow_entry entry(octMsg);
-						entry.print();
+						//entry.print();
 						Router.m_rouFlowTable.remove(authOctMsg);
 						Router.m_rouFlowTable.remove(authOctMsgRev);
 						isAuthenticated = true;

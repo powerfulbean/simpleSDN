@@ -81,19 +81,19 @@ bool flow_entry::operator< (const flow_entry key2) const
 	}
 	else 
 	{
-		if (m_srcPort != key2.m_srcPort && m_srcPort != htons(0xFFFF) && key2.m_srcIp != htonl(0xFFFFFFFF))
+		if (m_srcPort != key2.m_srcPort && m_srcPort != htons(0xFFFF) && key2.m_srcPort != htons(0xFFFF))
 		{
 			return m_srcPort < key2.m_srcPort;
 		}
 		else
 		{
-			if (m_dstIp != key2.m_dstIp && m_dstIp != htonl(0xFFFFFFFF) && key2.m_srcIp != htonl(0xFFFFFFFF))
+			if (m_dstIp != key2.m_dstIp && m_dstIp != htonl(0xFFFFFFFF) && key2.m_dstIp != htonl(0xFFFFFFFF))
 			{
 				return m_dstIp < key2.m_dstIp;
 			}
 			else
 			{
-				if (m_dstPort != key2.m_dstPort && m_dstPort != htons(0xFFFF) && key2.m_srcIp != htonl(0xFFFFFFFF))
+				if (m_dstPort != key2.m_dstPort && m_dstPort != htons(0xFFFF) && key2.m_dstPort != htons(0xFFFF))
 				{
 					return m_dstPort < key2.m_dstPort;
 				}

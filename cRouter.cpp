@@ -51,7 +51,10 @@ void flow_entry::print()
 
 bool flow_entry::operator< (const flow_entry key2) const
 {
-	
+	if (m_srcIp == htonl(0xFFFFFFFF) || m_srcPort == htons(0xFFFF) || m_dstIp == htonl(0xFFFFFFFF) || m_dstPort == htons(0xFFFF))
+	{
+		cout << "hit some FFFF rules!!!!!!!!!!!!" << endl;
+	}
 	if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) )
 	{
 		return m_srcIp < key2.m_srcIp;

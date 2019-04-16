@@ -1852,6 +1852,7 @@ void primaryRouter_s9(cRouter & Router)
 							Router.vLog.push_back(sLog);
 						}
 						flow_entry entryTemp = flow_entry(octMsg);
+						entry.print();
 						string sCheckTemp = Router.m_rouFlowTable.flowCheck(entryTemp);
 						if (sCheckTemp.size() != 0)
 						{

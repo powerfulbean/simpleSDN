@@ -75,6 +75,7 @@ bool flow_entry::operator< (const flow_entry key2) const
 				}
 				else
 				{
+					cout << "m_protocol: " << m_protocol << "key2: " << key2.m_protocol << endl;
 					return m_protocol < key2.m_protocol;
 				}
 			}

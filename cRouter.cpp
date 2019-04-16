@@ -53,6 +53,7 @@ bool flow_entry::operator< (const flow_entry key2) const
 {
 	if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) )
 	{
+		cout << "m_srcIp: " << ntohl(m_srcIp) << "key2: " << ntohl(key2.m_srcIp) << endl;
 		return m_srcIp < key2.m_srcIp;
 	}
 	else 
@@ -71,7 +72,6 @@ bool flow_entry::operator< (const flow_entry key2) const
 			{
 				if (m_dstPort != key2.m_dstPort && m_dstPort != htons(0xFFFF))
 				{
-					cout << "m_dstPort: " << ntohs(m_dstPort) << "key2: " << ntohs(key2.m_dstPort)<< endl;
 					return m_dstPort < key2.m_dstPort;
 				}
 				else

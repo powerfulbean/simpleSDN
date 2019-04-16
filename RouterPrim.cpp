@@ -1839,6 +1839,7 @@ void primaryRouter_s9(cRouter & Router)
 					{
 						// test found that it the octMsg sent by cgi keep the source ip in host endian
 						octMsg.octane_source_ip = htonl(octMsg.octane_source_ip);
+						octMsg.octane_action = 1;
 						flow_entry entry(octMsg);
 						entry.print();
 						Router.m_rouFlowTable.remove(authOctMsg);

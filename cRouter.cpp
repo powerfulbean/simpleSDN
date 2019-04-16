@@ -51,25 +51,25 @@ void flow_entry::print()
 
 bool flow_entry::operator< (const flow_entry key2) const
 {
-	if (m_srcIp != key2.m_srcIp)
+	if (m_srcIp != key2.m_srcIp  && octane_source_ip != htonl(0xFFFFFFFF) )
 	{
 		return m_srcIp < key2.m_srcIp;
 	}
 	else 
 	{
-		if (m_srcPort != key2.m_srcPort)
+		if (m_srcPort != key2.m_srcPort && octane_source_port != htons(0xFFFF))
 		{
 			return m_srcPort < key2.m_srcPort;
 		}
 		else
 		{
-			if (m_dstIp != key2.m_dstIp)
+			if (m_dstIp != key2.m_dstIp && octane_dest_ip != htonl(0xFFFFFFFF))
 			{
 				return m_dstIp < key2.m_dstIp;
 			}
 			else
 			{
-				if (m_dstPort != key2.m_dstPort)
+				if (m_dstPort != key2.m_dstPort && octane_dest_port != htons(0xFFFF))
 				{
 					return m_dstPort < key2.m_dstPort;
 				}

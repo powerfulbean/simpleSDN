@@ -1847,8 +1847,6 @@ void primaryRouter_s9(cRouter & Router)
 						octMsg.octane_source_ip = htonl(octMsg.octane_source_ip);
 						octMsg.octane_action = 1;
 						flow_entry entry(octMsg);
-						octane_control octMsgRev;
-						Router.createReverseOctaneMsg(octMsgRev, octMsg, Router.iPortNum, false);
 						//entry.print();
 						Router.m_rouFlowTable.remove(authOctMsg);
 						Router.m_rouFlowTable.remove(authOctMsgRev);
@@ -1859,6 +1857,10 @@ void primaryRouter_s9(cRouter & Router)
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
 						}
+
+						octMsg.octane_port = 0;
+						octane_control octMsgRev;
+						Router.createReverseOctaneMsg(octMsgRev, octMsg, Router.iPortNum, false);
 						char octaneIpBuffer[2048];
 						char octaneIpBufferRev[2048];
 						memset(octaneIpBuffer, 0, 2048);

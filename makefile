@@ -32,6 +32,6 @@ checkSum.o: icmp_checksum.c
 	
 	
 clean:
-	rm -f projb *.o
+	rm -f projc *.o
 tar:
-	tar czvf projb.tar.gz $(SOURCE) $(SUPPORT)
+	tar czvf projc.tar.gz $(SOURCE) $(SUPPORT)

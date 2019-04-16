@@ -92,6 +92,14 @@ int main(int argc, char * argv[])
 			  Router.close();
 			  cout << "***Stage 8 end, pid: " << getpid();
 			  cout << "\n-----------------------" << endl << endl;
+			  if (Router.iFPID != 0)
+			  {
+				  for (auto i : Router.m_rouFlowTable.m_mTable)
+				  {
+					  flow_entry temp = i.first;
+					  temp.print();
+				  }
+			  }
 			  break;
 		  default:
 			  break;

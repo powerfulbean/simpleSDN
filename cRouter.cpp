@@ -43,38 +43,39 @@ void flow_entry::print()
 	struct in_addr src1, dst1;
 	src1.s_addr = m_srcIp;
 	dst1.s_addr = m_dstIp;
-	cout << "Octane: sourceIp: " << inet_ntoa(src1) << endl;
-	cout << "Octane: sourcePort: " << ntohs(m_srcPort) << endl;
-	cout << "Octane: dstIp: " << inet_ntoa(dst1) << endl;
-	cout << "Octane: dstPort: " << ntohs(m_dstPort) << endl;
+	string output = "entry (" +
+		string(inet_ntoa(src1)) + ", " + to_string(ntohs(m_srcPort)) + ", " +
+		string(inet_ntoa(dst1)) + ", " + to_string(ntohs(m_dstPort)) + ", " + to_string(m_protocol) +
+		")";
+	cout << output << endl;
 }
 
 bool flow_entry::operator< (const flow_entry key2) const
 {
-	if (m_srcIp == htonl(0xFFFFFFFF) || m_srcPort == htons(0xFFFF) || m_dstIp == htonl(0xFFFFFFFF) || m_dstPort == htons(0xFFFF))
-	{
-		struct in_addr src1, dst1;
-		src1.s_addr = m_srcIp;
-		dst1.s_addr = m_dstIp;
-		cout << "hit some FFFF rules!!!!!!!!!!!! "<<m_protocol<<endl;
-		//printf(" %s %d %s %d\n", inet_ntoa(src1), ntohs(m_srcPort), inet_ntoa(dst1), ntohs(m_dstPort));
-		cout << "Octane: sourceIp: " << inet_ntoa(src1) << endl;
-		cout << "Octane: sourcePort: " << ntohs(m_srcPort) << endl;
-		cout << "Octane: dstIp: " << inet_ntoa(dst1) << endl;
-		cout << "Octane: dstPort: " << ntohs(m_dstPort) << endl;
-	}
-	if (m_srcIp == htonl(0xFFFFFFFF) || m_srcPort == htons(0xFFFF) || m_dstIp == htonl(0xFFFFFFFF) || m_dstPort == htons(0xFFFF))
-	{
-		struct in_addr src1, dst1;
-		src1.s_addr = key2.m_srcIp;
-		dst1.s_addr = key2.m_dstIp;
-		cout << "key2 hit some FFFF rules!!!!!!!!!!!! " << key2.m_protocol<<endl;
-		//printf(" %s %d %s %d\n", inet_ntoa(src1), ntohs(m_srcPort), inet_ntoa(dst1), ntohs(m_dstPort));
-		cout << "Octane: sourceIp: " << inet_ntoa(src1) << endl;
-		cout << "Octane: sourcePort: " << ntohs(key2.m_srcPort) << endl;
-		cout << "Octane: dstIp: " << inet_ntoa(dst1) << endl;
-		cout << "Octane: dstPort: " << ntohs(key2.m_dstPort) << endl;
-	}
+	//if (m_srcIp == htonl(0xFFFFFFFF) || m_srcPort == htons(0xFFFF) || m_dstIp == htonl(0xFFFFFFFF) || m_dstPort == htons(0xFFFF))
+	//{
+	//	struct in_addr src1, dst1;
+	//	src1.s_addr = m_srcIp;
+	//	dst1.s_addr = m_dstIp;
+	//	cout << "hit some FFFF rules!!!!!!!!!!!! "<<m_protocol<<endl;
+	//	//printf(" %s %d %s %d\n", inet_ntoa(src1), ntohs(m_srcPort), inet_ntoa(dst1), ntohs(m_dstPort));
+	//	cout << "Octane: sourceIp: " << inet_ntoa(src1) << endl;
+	//	cout << "Octane: sourcePort: " << ntohs(m_srcPort) << endl;
+	//	cout << "Octane: dstIp: " << inet_ntoa(dst1) << endl;
+	//	cout << "Octane: dstPort: " << ntohs(m_dstPort) << endl;
+	//}
+	//if (m_srcIp == htonl(0xFFFFFFFF) || m_srcPort == htons(0xFFFF) || m_dstIp == htonl(0xFFFFFFFF) || m_dstPort == htons(0xFFFF))
+	//{
+	//	struct in_addr src1, dst1;
+	//	src1.s_addr = key2.m_srcIp;
+	//	dst1.s_addr = key2.m_dstIp;
+	//	cout << "key2 hit some FFFF rules!!!!!!!!!!!! " << key2.m_protocol<<endl;
+	//	//printf(" %s %d %s %d\n", inet_ntoa(src1), ntohs(m_srcPort), inet_ntoa(dst1), ntohs(m_dstPort));
+	//	cout << "Octane: sourceIp: " << inet_ntoa(src1) << endl;
+	//	cout << "Octane: sourcePort: " << ntohs(key2.m_srcPort) << endl;
+	//	cout << "Octane: dstIp: " << inet_ntoa(dst1) << endl;
+	//	cout << "Octane: dstPort: " << ntohs(key2.m_dstPort) << endl;
+	//}
 	if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) && key2.m_srcIp != htonl(0xFFFFFFFF))
 	{
 		return m_srcIp < key2.m_srcIp;

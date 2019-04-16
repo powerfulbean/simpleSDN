@@ -849,7 +849,8 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 				int iMsgLen = tcpReply_Edit(oriSrcAddr, buffer3);
 
 				flow_entry entry(buffer3);
-				string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+				flow_entry output;
+				string sCheck = Router.m_rouFlowTable.flowCheck(entry,output);
 				if (sCheck.size() != 0)
 				{
 					icmpForward_log(Router, buffer2, sizeof(buffer2), FromRawSock, ntohs(senderAddr.sin_port)); // last var has no sense in this statement

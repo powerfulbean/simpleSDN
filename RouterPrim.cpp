@@ -1800,9 +1800,8 @@ void primaryRouter_s9(cRouter & Router)
 
 			flow_entry entry(buffer);
 			flow_entry filterEntry;
-			entry.print();
 			string sCheck = Router.m_rouFlowTable.flowCheck(entry, filterEntry);
-
+			filterEntry.print();
 			if (nread < 0)
 			{
 				exit(1);

@@ -56,8 +56,12 @@ bool flow_entry::operator< (const flow_entry key2) const
 		struct in_addr src1, dst1;
 		src1.s_addr = m_srcIp;
 		dst1.s_addr = m_dstIp;
-		cout << "hit some FFFF rules!!!!!!!!!!!! "<<m_protocol;
-		printf(" %s %d %s %d\n", inet_ntoa(src1), ntohs(m_srcPort), inet_ntoa(dst1), ntohs(m_dstPort));
+		cout << "hit some FFFF rules!!!!!!!!!!!! "<<m_protocol<<endl;
+		//printf(" %s %d %s %d\n", inet_ntoa(src1), ntohs(m_srcPort), inet_ntoa(dst1), ntohs(m_dstPort));
+		cout << "Octane: sourceIp: " << inet_ntoa(src1) << endl;
+		cout << "Octane: sourcePort: " << ntohs(m_srcPort) << endl;
+		cout << "Octane: dstIp: " << inet_ntoa(dst1) << endl;
+		cout << "Octane: dstPort: " << ntohs(m_dstPort) << endl;
 	}
 	if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) )
 	{

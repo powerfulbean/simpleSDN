@@ -2097,6 +2097,7 @@ void primaryRouter_s10(cRouter & Router)
 					targetAddr.sin_family = AF_INET;
 					if (iDstPortNum == 80 || iDstPortNum == 443)
 					{
+						cout << "!!!!! src port is:" << iSrcPortNum;
 						if (iSrcPortNum & 1 == 0)
 						{
 							targetAddr.sin_port = secondRouter2Port;

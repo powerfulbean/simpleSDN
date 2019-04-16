@@ -1875,12 +1875,12 @@ void primaryRouter_s9(cRouter & Router)
 						sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
 
 																										// Add timer and register the handle number
-						cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, rou2Addr, octMsg, iAuthSeq);
-						cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, rou2Addr, octMsgRev, iAuthSeqRev);
-						handle t1 = timersManager.AddTimer(2000, octaneTimer1);
-						handle t2 = timersManager.AddTimer(2000, octaneTimer2);
-						Router.m_unAckBuffer[iAuthSeq] = t1;
-						Router.m_unAckBuffer[iAuthSeqRev] = t2;
+						//cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, rou2Addr, octMsg, iAuthSeq);
+						//cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, rou2Addr, octMsgRev, iAuthSeqRev);
+						//handle t1 = timersManager.AddTimer(2000, octaneTimer1);
+						//handle t2 = timersManager.AddTimer(2000, octaneTimer2);
+						//Router.m_unAckBuffer[iAuthSeq] = t1;
+						//Router.m_unAckBuffer[iAuthSeqRev] = t2;
 
 
 					}

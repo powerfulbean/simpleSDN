@@ -13,3 +13,5 @@ sudo iptables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
 
 sudo ifconfig eth1 192.168.201.2/24 up
 sudo ifconfig eth2 192.168.202.2/24 up
+sudo ifconfig eth3 192.168.203.2/24 up
+sudo ifconfig eth4 192.168.204.2/24 up

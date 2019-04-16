@@ -1,0 +1,3 @@
+router: 2, pid: 8099, port: 59679
+router: 2, rule installed (255.255.255.255, 65535, 255.255.255.255, 65535, 65535) action 3
+router 2 closed

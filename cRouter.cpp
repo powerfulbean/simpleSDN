@@ -71,11 +71,11 @@ bool flow_entry::operator< (const flow_entry key2) const
 			{
 				if (m_dstPort != key2.m_dstPort && m_dstPort != htons(0xFFFF))
 				{
+					cout << "m_dstPort: " << ntohs(m_dstPort) << "key2: " << ntohs(key2.m_dstPort)<< endl;
 					return m_dstPort < key2.m_dstPort;
 				}
 				else
 				{
-					cout << "m_protocol: " << m_protocol << "key2: " << key2.m_protocol << endl;
 					return m_protocol < key2.m_protocol;
 				}
 			}

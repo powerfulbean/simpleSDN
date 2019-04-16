@@ -1773,8 +1773,6 @@ void primaryRouter_s9(cRouter & Router)
 							if (iPortNum == 80 && isAuthenticated == false)
 							{
 								authOctMsg = localMsg;
-								iAuthSeq = iSeqno1;
-								iAuthSeqRev = iSeqno2;
 								Router.createReverseOctaneMsg(authOctMsgRev, authOctMsg, Router.iPortNum,false);
 							}
 						}

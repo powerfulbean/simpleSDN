@@ -1816,7 +1816,7 @@ void primaryRouter_s9(cRouter & Router)
 					// check seqno and remove related record from the unack_buffer
 					struct octane_control octMsg;
 					int iSeqno = octaneUnpack(buffer, &octMsg);
-					//cout << "prim gets octane message: flags: " << int(octMsg.octane_flags) << " action: " << int(octMsg.octane_action) << endl;
+					cout << "prim gets octane message: flags: " << int(octMsg.octane_flags) << " action: " << int(octMsg.octane_action) << endl;
 					//printf("prim gets octane message: %x \n", octMsg.octane_action);
 					if (octMsg.octane_flags == 1)
 					{

@@ -92,7 +92,6 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 	pIpHeader = (struct ip *) buffer;
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
-	cout << "ipheaderlen: " << iIpHeaderLen << endl;
 	if (iIpHeaderLen == 0)
 	{
 		iIpHeaderLen = 20;

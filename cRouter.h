@@ -53,7 +53,7 @@ public:
 	bool contains(flow_entry entry);
 	bool contains(flow_entry entry, flow_entry & output);
 	string flowCheck(const flow_entry & msg);
-	string flowCheck(const flow_entry & entry, flow_entry & output) // return a string longer than 0 if it exists
+	string flowCheck(const flow_entry & entry, flow_entry & output); // return a string longer than 0 if it exists
 };
 
 

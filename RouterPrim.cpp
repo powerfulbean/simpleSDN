@@ -1584,8 +1584,9 @@ void primaryRouter_s9(cRouter & Router)
 			int nread = read_tunnel(tun_fd, buffer, sizeof(buffer));
 
 			flow_entry entry(buffer);
-			string sCheck = Router.m_rouFlowTable.flowCheck(entry);
-
+			//string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+			flow_entry filterEntry;
+			string sCheck = Router.m_rouFlowTable.flowCheck(entry, filterEntry);
 			if (nread < 0)
 			{
 				exit(1);

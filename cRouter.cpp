@@ -109,7 +109,7 @@ bool flow_entry::operator< (const flow_entry key2) const
 
 //bool flow_entry::operator == (const flow_entry key2) const
 //{
-//	if (m_srcIp == key2.m_srcIp 
+//	if (m_srcIp == key2.m_srcIp || 
 //		&& m_dstIp == key2.m_dstIp 
 //		&& m_srcPort == key2.m_srcPort 
 //		&& m_dstPort == key2.m_dstPort 
@@ -245,11 +245,11 @@ bool flow_table::contains(octane_control msg)
 	{
 		return false;
 	}
-	else if (it->first == defaultEntry)
+	/*else if (it->first == defaultEntry)
 	{
 		cout <<endl<< " hit the default rule" << endl;
 		return false;
-	}
+	}*/
 	else
 	{
 		return true;

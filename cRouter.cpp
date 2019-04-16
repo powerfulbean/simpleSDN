@@ -76,36 +76,74 @@ bool flow_entry::operator< (const flow_entry key2) const
 	//	cout << "Octane: dstIp: " << inet_ntoa(dst1) << endl;
 	//	cout << "Octane: dstPort: " << ntohs(key2.m_dstPort) << endl;
 	//}
-	if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) && key2.m_srcIp != htonl(0xFFFFFFFF))
+	if ((m_srcIp == htonl(0xFFFFFFFF) || m_srcPort == htons(0xFFFF) || m_dstIp == htonl(0xFFFFFFFF) || m_dstPort == htons(0xFFFF))
+		&& (m_srcIp == htonl(0xFFFFFFFF) || m_srcPort == htons(0xFFFF) || m_dstIp == htonl(0xFFFFFFFF) || m_dstPort == htons(0xFFFF)))
 	{
-		return m_srcIp < key2.m_srcIp;
-	}
-	else 
-	{
-		if (m_srcPort != key2.m_srcPort && m_srcPort != htons(0xFFFF) && key2.m_srcPort != htons(0xFFFF))
+		if (m_srcIp != key2.m_srcIp )
 		{
-			return m_srcPort < key2.m_srcPort;
+			return m_srcIp < key2.m_srcIp;
 		}
 		else
 		{
-			if (m_dstIp != key2.m_dstIp && m_dstIp != htonl(0xFFFFFFFF) && key2.m_dstIp != htonl(0xFFFFFFFF))
+			if (m_srcPort != key2.m_srcPort )
 			{
-				return m_dstIp < key2.m_dstIp;
+				return m_srcPort < key2.m_srcPort;
 			}
 			else
 			{
-				if (m_dstPort != key2.m_dstPort && m_dstPort != htons(0xFFFF) && key2.m_dstPort != htons(0xFFFF))
+				if (m_dstIp != key2.m_dstIp )
 				{
-					return m_dstPort < key2.m_dstPort;
+					return m_dstIp < key2.m_dstIp;
 				}
 				else
 				{
-					//cout << "m_protocol" << m_protocol << "key2.m_protocol" << key2.m_protocol;
-					return m_protocol < key2.m_protocol;
+					if (m_dstPort != key2.m_dstPort)
+					{
+						return m_dstPort < key2.m_dstPort;
+					}
+					else
+					{
+						//cout << "m_protocol" << m_protocol << "key2.m_protocol" << key2.m_protocol;
+						return m_protocol < key2.m_protocol;
+					}
 				}
 			}
 		}
 	}
+	else
+	{
+		if (m_srcIp != key2.m_srcIp  && m_srcIp != htonl(0xFFFFFFFF) && key2.m_srcIp != htonl(0xFFFFFFFF))
+		{
+			return m_srcIp < key2.m_srcIp;
+		}
+		else
+		{
+			if (m_srcPort != key2.m_srcPort && m_srcPort != htons(0xFFFF) && key2.m_srcPort != htons(0xFFFF))
+			{
+				return m_srcPort < key2.m_srcPort;
+			}
+			else
+			{
+				if (m_dstIp != key2.m_dstIp && m_dstIp != htonl(0xFFFFFFFF) && key2.m_dstIp != htonl(0xFFFFFFFF))
+				{
+					return m_dstIp < key2.m_dstIp;
+				}
+				else
+				{
+					if (m_dstPort != key2.m_dstPort && m_dstPort != htons(0xFFFF) && key2.m_dstPort != htons(0xFFFF))
+					{
+						return m_dstPort < key2.m_dstPort;
+					}
+					else
+					{
+						//cout << "m_protocol" << m_protocol << "key2.m_protocol" << key2.m_protocol;
+						return m_protocol < key2.m_protocol;
+					}
+				}
+			}
+		}
+	}
+	
 }
 
 bool flow_entry::operator == (const flow_entry key2) const

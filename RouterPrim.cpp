@@ -1519,6 +1519,8 @@ void primaryRouter_s9(cRouter & Router)
 
 	struct octane_control authOctMsg;
 	struct octane_control authOctMsgRev;
+	int iAuthSeq;
+	int iAuthSeqRev;
 
 	while (1)
 	{
@@ -1773,6 +1775,8 @@ void primaryRouter_s9(cRouter & Router)
 							if (iPortNum == 80 && isAuthenticated == false)
 							{
 								authOctMsg = localMsg;
+								iAuthSeq = iSeqno1;
+								iAuthSeqRev = iSeqno2;
 								Router.createReverseOctaneMsg(authOctMsgRev, authOctMsg, Router.iPortNum,false);
 							}
 						}
@@ -1854,12 +1858,9 @@ void primaryRouter_s9(cRouter & Router)
 							Router.vLog.push_back(sLog);
 						}
 
-						int iAuthSeq;
-						int iAuthSeqRev;
 						octMsg.octane_port = 0;
 						octane_control octMsgRev;
-						iAuthSeqRev = Router.createReverseOctaneMsg(octMsgRev, octMsg, Router.iPortNum);
-						iAuthSeq = Router.createReverseOctaneMsg(octMsg, authOctMsgRev, 0);
+						Router.createReverseOctaneMsg(octMsgRev, octMsg, Router.iPortNum, false);
 						char octaneIpBuffer[2048];
 						char octaneIpBufferRev[2048];
 						memset(octaneIpBuffer, 0, 2048);

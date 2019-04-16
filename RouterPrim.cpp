@@ -1828,6 +1828,7 @@ void primaryRouter_s9(cRouter & Router)
 					}
 					if (octMsg.octane_action == 5)
 					{
+						octMsg.octane_source_ip = htonl(octMsg.octane_source_ip);
 						flow_entry entry(octMsg);
 						entry.print();
 						Router.m_rouFlowTable.remove(octMsg);

@@ -145,6 +145,24 @@ string flow_table::flowCheck(const flow_entry & entry) // return a string longer
 	return output;
 }
 
+string flow_table::flowCheck(const flow_entry & entry, flow_entry & output) // return a string longer than 0 if it exists
+{
+	string output;
+	flow_entry filterEntry;
+	if (contains(entry,filterEntry))
+	{
+		struct in_addr src1, dst1;
+		src1.s_addr = filterEntry.m_srcIp;
+		dst1.s_addr = filterEntry.m_dstIp;
+		output = ", rule hit (" +
+			string(inet_ntoa(src1)) + ", " + to_string(ntohs(filterEntry.m_srcPort)) + ", " +
+			string(inet_ntoa(dst1)) + ", " + to_string(ntohs(filterEntry.m_dstPort)) + ", " + to_string(filterEntry.m_protocol) +
+			")";
+	}
+	output = filterEntry;
+	return output;
+}
+
 
 string flow_table::defaultInsert()
 {
@@ -266,6 +284,21 @@ bool flow_table::contains(flow_entry entry)
 	}
 	else
 	{
+		return true;
+	}
+}
+
+bool flow_table::contains(flow_entry entry, flow_entry & output)
+{
+	map<flow_entry, flow_action>::iterator it;
+	it = m_mTable.find(entry);
+	if (it == m_mTable.end())
+	{
+		return false;
+	}
+	else
+	{
+		output = it->first;
 		return true;
 	}
 }

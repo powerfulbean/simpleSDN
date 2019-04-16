@@ -1798,7 +1798,8 @@ void primaryRouter_s9(cRouter & Router)
 			int err = recvMsgSafe(iSockID, buffer, sizeof(buffer), rou2Addr);
 
 			flow_entry entry(buffer);
-			string sCheck = Router.m_rouFlowTable.flowCheck(entry);
+			flow_entry filterEntry;
+			string sCheck = Router.m_rouFlowTable.flowCheck(entry, filterEntry);
 
 			if (nread < 0)
 			{

@@ -155,7 +155,7 @@ string flow_table::flowCheck(const flow_entry & entry) // return a string longer
 	return output;
 }
 
-string flow_table::flowCheck(const flow_entry & entry, flow_entry & output) // return a string longer than 0 if it exists
+string flow_table::flowCheck(const flow_entry & entry, flow_entry & filterEntryOut) // return a string longer than 0 if it exists
 {
 	string output;
 	flow_entry filterEntry;
@@ -169,7 +169,7 @@ string flow_table::flowCheck(const flow_entry & entry, flow_entry & output) // r
 			string(inet_ntoa(dst1)) + ", " + to_string(ntohs(filterEntry.m_dstPort)) + ", " + to_string(filterEntry.m_protocol) +
 			")";
 	}
-	output = filterEntry;
+	filterEntryOut = filterEntry;
 	return output;
 }
 

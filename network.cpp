@@ -92,15 +92,22 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 	pIpHeader = (struct ip *) buffer;
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
+	short iOctaneTotLen;
 	if (iIpHeaderLen == 0)
 	{
 		iIpHeaderLen = 20;
 	}
-	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
-	short iOctaneTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen; // this part is learnt from 
-	memcpy(pOutOctane, pOctane, iOctaneTotLen);
-	
 
+	pOctane = (struct octane_control *)(buffer + iIpHeaderLen);
+	if (pIpHeader->ip_len == 0)
+	{
+		iOctaneTotLen = 20;
+	}
+	else
+	{
+		iOctaneTotLen = ntohs(pIpHeader->ip_len) - iIpHeaderLen; // this part is learnt from
+	} 
+	memcpy(pOutOctane, pOctane, iOctaneTotLen);
 	return pOctane->octane_seqno;
 }
 

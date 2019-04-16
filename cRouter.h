@@ -24,6 +24,7 @@ struct flow_entry
 	flow_entry reverse();
 	bool operator< (const flow_entry key2) const;
 	bool operator == (const flow_entry key2) const;
+	void operator = (const flow_entry key2);
 	void print();
 };
 

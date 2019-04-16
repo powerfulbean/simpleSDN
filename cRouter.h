@@ -23,7 +23,7 @@ struct flow_entry
 	flow_entry(char* buffer);
 	flow_entry reverse();
 	bool operator< (const flow_entry key2) const;
-	bool operator == (const flow_entry key2) const;
+	//bool operator == (const flow_entry key2) const;
 	void print();
 };
 

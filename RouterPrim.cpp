@@ -1519,6 +1519,8 @@ void primaryRouter_s9(cRouter & Router)
 
 	struct octane_control authOctMsg;
 	struct octane_control authOctMsgRev;
+	int iAuthSeq;
+	int iAuthSeqRev;
 
 	while (1)
 	{
@@ -1773,6 +1775,8 @@ void primaryRouter_s9(cRouter & Router)
 							if (iPortNum == 80 && isAuthenticated == false)
 							{
 								authOctMsg = localMsg;
+								iAuthSeq = iSeqno1;
+								iAuthSeqRev = iSeqno2;
 								Router.createReverseOctaneMsg(authOctMsgRev, authOctMsg, Router.iPortNum,false);
 							}
 						}
@@ -1801,7 +1805,7 @@ void primaryRouter_s9(cRouter & Router)
 			flow_entry entry(buffer);
 			flow_entry filterEntry;
 			string sCheck = Router.m_rouFlowTable.flowCheck(entry, filterEntry);
-			filterEntry.print();
+			//filterEntry.print();
 			if (nread < 0)
 			{
 				exit(1);
@@ -1843,6 +1847,8 @@ void primaryRouter_s9(cRouter & Router)
 						octMsg.octane_source_ip = htonl(octMsg.octane_source_ip);
 						octMsg.octane_action = 1;
 						flow_entry entry(octMsg);
+						octane_control octMsgRev;
+						Router.createReverseOctaneMsg(octMsgRev, octMsg, Router.iPortNum, false);
 						//entry.print();
 						Router.m_rouFlowTable.remove(authOctMsg);
 						Router.m_rouFlowTable.remove(authOctMsgRev);
@@ -1853,13 +1859,27 @@ void primaryRouter_s9(cRouter & Router)
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
 						}
-						flow_entry entryTemp = flow_entry(octMsg);
-						entry.print();
-						string sCheckTemp = Router.m_rouFlowTable.flowCheck(entryTemp);
-						if (sCheckTemp.size() != 0)
-						{
-							cout << "new octane installed!!!!!!!!!!!!!!!!!" << endl;
-						}
+						char octaneIpBuffer[2048];
+						char octaneIpBufferRev[2048];
+						memset(octaneIpBuffer, 0, 2048);
+						memset(octaneIpBufferRev, 0, 2048);
+						string localAddr = "127.0.0.1";
+						struct sockaddr_in rou2Addr;
+						setTempAddr("127.0.0.1", rou2Addr);
+						rou2Addr.sin_port = htons(Router.m_mChildPort.begin()->second);
+						buildIpPacket(octaneIpBuffer, sizeof(octaneIpBuffer), 253, localAddr, localAddr, (char *)&octMsg, sizeof(octMsg));
+						buildIpPacket(octaneIpBufferRev, sizeof(octaneIpBufferRev), 253, localAddr, localAddr, (char *)&octMsgRev, sizeof(octMsgRev));
+						sendMsg(Router.iSockID, octaneIpBuffer, sizeof(octaneIpBuffer), rou2Addr);// send control message
+						sendMsg(Router.iSockID, octaneIpBufferRev, sizeof(octaneIpBufferRev), rou2Addr);// send control message
+
+																										// Add timer and register the handle number
+						cOctaneTimer *octaneTimer1 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1, iAuthSeq);
+						cOctaneTimer *octaneTimer2 = new cOctaneTimer(Router.iSockID, rou2Addr, msg1_re, iAuthSeqRev);
+						handle t1 = timersManager.AddTimer(2000, octaneTimer1);
+						handle t2 = timersManager.AddTimer(2000, octaneTimer2);
+						Router.m_unAckBuffer[iSeqno1] = t1;
+						Router.m_unAckBuffer[iSeqno2] = t2;
+
 
 					}
 				}

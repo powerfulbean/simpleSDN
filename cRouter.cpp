@@ -125,11 +125,11 @@ bool flow_entry::operator == (const flow_entry key2) const
 
 void flow_entry::operator = (const flow_entry key2)
 {
-	m_srcIp == key2.m_srcIp;
-	m_dstIp == key2.m_dstIp;
-	m_srcPort == key2.m_srcPort;
-	m_dstPort == key2.m_dstPort;
-	m_protocol == key2.m_protocol;
+	m_srcIp = key2.m_srcIp;
+	m_dstIp = key2.m_dstIp;
+	m_srcPort = key2.m_srcPort;
+	m_dstPort = key2.m_dstPort;
+	m_protocol = key2.m_protocol;
 
 }
 

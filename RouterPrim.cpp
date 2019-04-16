@@ -1517,6 +1517,9 @@ void primaryRouter_s9(cRouter & Router)
 	it++;
 	int16_t secondRouter3Port = htons(it->second);
 
+	struct octane_control authOctMsg;
+	struct octane_control authOctMsgRev;
+
 	while (1)
 	{
 		bool bEventTimeout = false;
@@ -1765,6 +1768,12 @@ void primaryRouter_s9(cRouter & Router)
 								Router.vLog.push_back(sLog);
 							}
 							Router.printUnAckBuffer();
+
+							if (iPortNum == 80 && isAuthenticated == false)
+							{
+								authOctMsg = localMsg;
+								Router.createReverseOctaneMsg(authOctMsgRev, authOctMsg, Router.iPortNum,false);
+							}
 						}
 						else
 						{
@@ -1828,11 +1837,19 @@ void primaryRouter_s9(cRouter & Router)
 					}
 					if (octMsg.octane_action == 5)
 					{
+						// test found that it the octMsg sent by cgi keep the source ip in host endian
 						octMsg.octane_source_ip = htonl(octMsg.octane_source_ip);
 						flow_entry entry(octMsg);
 						entry.print();
-						Router.m_rouFlowTable.remove(octMsg);
+						Router.m_rouFlowTable.remove(authOctMsg);
+						Router.m_rouFlowTable.remove(authOctMsgRev);
 						isAuthenticated = true;
+						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(octMsg);
+						for (int i = 0; i < tempLog.size(); i++)
+						{
+							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
+							Router.vLog.push_back(sLog);
+						}
 					}
 				}
 				else

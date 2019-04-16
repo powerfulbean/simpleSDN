@@ -90,7 +90,7 @@ int main(int argc, char * argv[])
 		  case 9:
 			  stage9(Router, rou1Addr, rou2Addr);
 			  Router.close();
-			  cout << "***Stage 8 end, pid: " << getpid();
+			  cout << "***Stage 9 end, pid: " << getpid();
 			  cout << "\n-----------------------" << endl << endl;
 			  /*if (Router.iFPID != 0)
 			  {
@@ -99,6 +99,20 @@ int main(int argc, char * argv[])
 					  flow_entry temp = i.first;
 					  temp.print();
 				  }
+			  }*/
+			  break;
+		  case 10:
+			  stage10(Router, rou1Addr, rou2Addr);
+			  Router.close();
+			  cout << "***Stage 10 end, pid: " << getpid();
+			  cout << "\n-----------------------" << endl << endl;
+			  /*if (Router.iFPID != 0)
+			  {
+			  for (auto i : Router.m_rouFlowTable.m_mTable)
+			  {
+			  flow_entry temp = i.first;
+			  temp.print();
+			  }
 			  }*/
 			  break;
 		  default:

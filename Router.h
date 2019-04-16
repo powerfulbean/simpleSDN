@@ -25,6 +25,7 @@ void primaryRouter_s7(cRouter & Router);
 void primaryRouter_reg(const int sockID, cRouter & Router);
 void secondRouter_reqReg(cRouter & Router, const sockaddr_in rou1Addr,int iRouterID);
 void primaryRouter_s9(cRouter & Router);
+void primaryRouter_s10(cRouter & Router);
 
 //write Router Port to /tmp/captive.conf
 void primaryRouter_savePort(cRouter & Router);
@@ -57,6 +58,10 @@ void stage7(cRouter &Router,
 	struct sockaddr_in & rou2Addr);
 
 void stage9(cRouter &Router,
+	struct sockaddr_in & rou1Addr,
+	struct sockaddr_in & rou2Addr);
+
+void stage10(cRouter &Router,
 	struct sockaddr_in & rou1Addr,
 	struct sockaddr_in & rou2Addr);
 

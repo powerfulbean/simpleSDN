@@ -77,6 +77,7 @@ int icmpUnpack(char* buffer, struct in_addr &srcAddr, struct in_addr &dstAddr, u
 int icmpUnpack(char* buffer, struct icmphdr &icmphdr, struct in_addr &srcAddr, struct in_addr &dstAddr, u_int8_t &icmp_type);
 int octaneUnpack(char* buffer, struct octane_control *pOctane);
 int tcpUnpack(char* buffer); // return dst port
+int tcpUnpackSrc(char* buffer); // return src port
 int tcpReply_Edit(struct in_addr oriSrcAddr, char* buffer3);
 
 // the output endian of ipUnpack is network endian

@@ -2108,7 +2108,7 @@ void primaryRouter_s10(cRouter & Router)
 					}
 					else
 					{
-						cout << endl << "!!!!!! prim: iPortNum is not 443 or 80: " << iPortNum << endl;
+						cout << endl << "!!!!!! prim: iPortNum is not 443 or 80: " << iDstPortNum << endl;
 						bRefreshTimeout = false;
 					}
 					
@@ -2129,7 +2129,7 @@ void primaryRouter_s10(cRouter & Router)
 						dstAddr.s_addr = dstAddrin;
 						int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
 						int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
-						if (iPortNum == 80 || iPortNum == 443)
+						if (iDstPortNum == 80 || iDstPortNum == 443)
 						{
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log

@@ -178,7 +178,7 @@ string flow_table::defaultInsert()
 {
 	flow_entry entry(0xFFFFFFFF, 0xFFFF, 0xFFFFFFFF, 0xFFFF, 0xFFFF);
 	flow_action action(0xFFFF, 3);
-	m_mTable[entry] = action;
+	//m_mTable[entry] = action;
 	struct in_addr src1, dst1;
 	src1.s_addr = entry.m_srcIp;
 	dst1.s_addr = entry.m_dstIp;

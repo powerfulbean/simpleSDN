@@ -138,7 +138,7 @@ void primaryRouter_s4_old(cRouter & Router, sockaddr_in &rou2Addr)
 					int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
 					if (a == 1) // it is a ICMP packet
 					{
-						printf("Prim Router Read a ICMP packet \n", nread);
+						//printf("Prim Router Read a ICMP packet \n", nread);
 						struct octane_control localMsg, msg1,msg1_re;
 						struct in_addr srcAddr, dstAddr;
 						u_int8_t icmp_type;
@@ -154,24 +154,24 @@ void primaryRouter_s4_old(cRouter & Router, sockaddr_in &rou2Addr)
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port), false);
 							//insert rules in flow_table and get the respective log
 							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-							for (int i = 0; i < tempLog.size(); i++)
+							for (int i = 0; i < (int)tempLog.size(); i++)
 							{
 								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 								Router.vLog.push_back(sLog);
 							}
-							int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+							//int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 							int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 							if (iCheck == 1)
 							{
 								int iCheck2 = packetDstCheck(dstAddr, "10.5.51.4", "255.255.255.255");
-								int iSeqno;
+								//int iSeqno;
 								if (iCheck2 == 1)
 								{
-									iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
+									//iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 3, -1);
 								}
 								else
 								{
-									iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
+									//iSeqno = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 2, -1);
 								}
 								char octaneIpBuffer[2048];
 								memset(octaneIpBuffer, 0, 2048);
@@ -182,8 +182,8 @@ void primaryRouter_s4_old(cRouter & Router, sockaddr_in &rou2Addr)
 							}
 							else
 							{
-								int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
-								int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
+								//int iSeqno1 = Router.createOctaneMsg(msg1, buffer, sizeof(buffer), 1, 0);
+								//int iSeqno2 = Router.createReverseOctaneMsg(msg1_re, msg1, Router.iPortNum);
 								char octaneIpBuffer[2048];
 								char octaneIpBufferRev[2048];
 								memset(octaneIpBuffer, 0, 2048);
@@ -273,7 +273,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	struct timeval idelTimeout;
+	//struct timeval idelTimeout;
 	idelTimeout.tv_sec = 15;
 	idelTimeout.tv_usec = 0;
 	struct timeval timeout;
@@ -357,7 +357,7 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
 				if (a == 1) // it is a ICMP packet
 				{
-					printf("Prim Router Read a ICMP packet \n", nread);
+					//printf("Prim Router Read a ICMP packet \n", nread);
 					struct octane_control localMsg, msg1, msg1_re;
 					struct in_addr srcAddr, dstAddr;
 					u_int8_t icmp_type;
@@ -373,12 +373,12 @@ void primaryRouter_s4(cRouter & Router, sockaddr_in &rou2Addr)
 						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port), false);
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size(); i++)
+						for (int i = 0; i < (int)tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
 						}
-						int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+						//int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{
@@ -495,7 +495,7 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	struct timeval idelTimeout;
+	//struct timeval idelTimeout;
 	idelTimeout.tv_sec = 15;
 	idelTimeout.tv_usec = 0;
 	struct timeval timeout;
@@ -579,7 +579,7 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));
 				if (a == 1) // it is a ICMP packet
 				{
-					printf("Prim Router Read a ICMP packet \n", nread);
+					//printf("Prim Router Read a ICMP packet \n", nread);
 					struct octane_control localMsg, msg1, msg1_re;
 					struct in_addr srcAddr, dstAddr;
 					u_int8_t icmp_type;
@@ -596,12 +596,12 @@ void primaryRouter_s5(cRouter & Router, sockaddr_in &rou2Addr)
 						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(rou2Addr.sin_port), false);
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size(); i++)
+						for (int i = 0; i < (int)tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
 						}
-						int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+						//int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 						int iCheck = packetDstCheck(dstAddr, "10.5.51.0", "255.255.255.0");
 						if (iCheck == 1)
 						{
@@ -727,7 +727,7 @@ void primaryRouter_s6(cRouter & Router)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	struct timeval idelTimeout;
+	//struct timeval idelTimeout;
 	idelTimeout.tv_sec = 15;
 	idelTimeout.tv_usec = 0;
 	struct timeval timeout;
@@ -823,7 +823,7 @@ void primaryRouter_s6(cRouter & Router)
 				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));// for FromTunnel "port" is not useful
 				if (a == 1) // it is a ICMP packet
 				{
-					printf("Prim Router Read a ICMP packet \n", nread);
+					//printf("Prim Router Read a ICMP packet \n", nread);
 					struct octane_control localMsg, msg1, msg1_re;
 					struct in_addr srcAddr, dstAddr;
 					u_int8_t icmp_type;
@@ -859,7 +859,7 @@ void primaryRouter_s6(cRouter & Router)
 						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size(); i++)
+						for (int i = 0; i < (int)tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
@@ -939,21 +939,21 @@ void primaryRouter_s6(cRouter & Router)
 					}
 					else
 					{
-						struct in_addr dstAddr;
+						//struct in_addr dstAddr;
 						uint32_t srcAddrin, dstAddrin;
 						uint16_t port1, port2;
 						u_int8_t iptp;
-						u_int8_t icmp_type;
-						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1,port2,iptp);
-						dstAddr.s_addr = dstAddrin;
-						int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
-						int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
+						//u_int8_t icmp_type;
+						//int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1,port2,iptp);
+						//dstAddr.s_addr = dstAddrin;
+						//int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
+						//int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
 						if (iPortNum == 80 || iPortNum == 443)
 						{
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log
 							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-							for (int i = 0; i < tempLog.size(); i++)
+							for (int i = 0; i < (int)tempLog.size(); i++)
 							{
 								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 								Router.vLog.push_back(sLog);
@@ -1082,7 +1082,7 @@ void primaryRouter_s7(cRouter & Router)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	struct timeval idelTimeout;
+	//struct timeval idelTimeout;
 	idelTimeout.tv_sec = 15;
 	idelTimeout.tv_usec = 0;
 	struct timeval timeout;
@@ -1178,11 +1178,11 @@ void primaryRouter_s7(cRouter & Router)
 				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));// for FromTunnel "port" is not useful
 				if (a == 1) // it is a ICMP packet
 				{
-					printf("Prim Router Read a ICMP packet \n", nread);
+					//printf("Prim Router Read a ICMP packet \n", nread);
 					struct octane_control localMsg, msg1, msg1_re;
 					struct in_addr srcAddr, dstAddr;
 					u_int8_t icmp_type;
-					int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+					//int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 					int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
 					int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
 					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
@@ -1214,7 +1214,7 @@ void primaryRouter_s7(cRouter & Router)
 						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size(); i++)
+						for (int i = 0; i < (int)tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
@@ -1294,21 +1294,21 @@ void primaryRouter_s7(cRouter & Router)
 					}
 					else
 					{
-						struct in_addr dstAddr;
+						//struct in_addr dstAddr;
 						uint32_t srcAddrin, dstAddrin;
 						uint16_t port1, port2;
 						u_int8_t iptp;
-						u_int8_t icmp_type;
-						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1, port2, iptp);
-						dstAddr.s_addr = dstAddrin;
-						int iCheck = 1;// packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
-						int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
+						//u_int8_t icmp_type;
+						//int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1, port2, iptp);
+						//dstAddr.s_addr = dstAddrin;
+						//int iCheck = 1;// packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
+						//int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
 						if (iPortNum == 80)
 						{
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log
 							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-							for (int i = 0; i < tempLog.size(); i++)
+							for (int i = 0; i < (int)tempLog.size(); i++)
 							{
 								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 								Router.vLog.push_back(sLog);
@@ -1350,7 +1350,7 @@ void primaryRouter_s7(cRouter & Router)
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log
 							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-							for (int i = 0; i < tempLog.size(); i++)
+							for (int i = 0; i <(int) tempLog.size(); i++)
 							{
 								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 								Router.vLog.push_back(sLog);
@@ -1495,9 +1495,9 @@ void primaryRouter_s9(cRouter & Router)
 	bool isAuthenticated = false;
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	struct timeval idelTimeout;
-	idelTimeout.tv_sec = 15;
-	idelTimeout.tv_usec = 0;
+	//struct timeval idelTimeout;
+	//idelTimeout.tv_sec = 15;
+	//idelTimeout.tv_usec = 0;
 	struct timeval timeout;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
@@ -1519,8 +1519,8 @@ void primaryRouter_s9(cRouter & Router)
 
 	struct octane_control authOctMsg;
 	struct octane_control authOctMsgRev;
-	int iAuthSeq;
-	int iAuthSeqRev;
+	//int iAuthSeq;
+	//int iAuthSeqRev;
 
 	while (1)
 	{
@@ -1599,11 +1599,11 @@ void primaryRouter_s9(cRouter & Router)
 				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));// for FromTunnel "port" is not useful
 				if (a == 1) // it is a ICMP packet
 				{
-					printf("Prim Router Read a ICMP packet \n", nread);
+					//printf("Prim Router Read a ICMP packet \n", nread);
 					struct octane_control localMsg, msg1, msg1_re;
 					struct in_addr srcAddr, dstAddr;
 					u_int8_t icmp_type;
-					int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+					//int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 					int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
 					int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
 					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
@@ -1635,7 +1635,7 @@ void primaryRouter_s9(cRouter & Router)
 						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size(); i++)
+						for (int i = 0; i < (int)tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
@@ -1725,21 +1725,21 @@ void primaryRouter_s9(cRouter & Router)
 					}
 					else
 					{
-						struct in_addr dstAddr;
+						//struct in_addr dstAddr;
 						uint32_t srcAddrin, dstAddrin;
 						uint16_t port1, port2;
 						u_int8_t iptp;
-						u_int8_t icmp_type;
-						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1, port2, iptp);
-						dstAddr.s_addr = dstAddrin;
-						int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
-						int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
+						//u_int8_t icmp_type;
+						//int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1, port2, iptp);
+						//dstAddr.s_addr = dstAddrin;
+						//int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
+						//int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
 						if (iPortNum == 80 || iPortNum == 443)
 						{
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log
 							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-							for (int i = 0; i < tempLog.size(); i++)
+							for (int i = 0; i < (int)tempLog.size(); i++)
 							{
 								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 								Router.vLog.push_back(sLog);
@@ -1775,8 +1775,8 @@ void primaryRouter_s9(cRouter & Router)
 							if (iPortNum == 80 && isAuthenticated == false)
 							{
 								authOctMsg = localMsg;
-								iAuthSeq = iSeqno1;
-								iAuthSeqRev = iSeqno2;
+								//iAuthSeq = iSeqno1;
+								//iAuthSeqRev = iSeqno2;
 								Router.createReverseOctaneMsg(authOctMsgRev, authOctMsg, Router.iPortNum,false);
 							}
 						}
@@ -1852,7 +1852,7 @@ void primaryRouter_s9(cRouter & Router)
 						Router.m_rouFlowTable.remove(authOctMsgRev);
 						isAuthenticated = true;
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(octMsg,0);
-						for (int i = 0; i < tempLog.size(); i++)
+						for (int i = 0; i < (int)tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
@@ -1903,9 +1903,9 @@ void primaryRouter_s10(cRouter & Router)
 {
 	int tun_fd = set_tunnel_reader();
 	int iSockID = Router.iSockID;
-	struct timeval idelTimeout;
-	idelTimeout.tv_sec = 15;
-	idelTimeout.tv_usec = 0;
+	//struct timeval idelTimeout;
+	//idelTimeout.tv_sec = 15;
+	//idelTimeout.tv_usec = 0;
 	struct timeval timeout;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
@@ -1999,11 +1999,11 @@ void primaryRouter_s10(cRouter & Router)
 				int a = icmpForward_log(Router, buffer, sizeof(buffer), FromTunnel, ntohs(rou2Addr.sin_port));// for FromTunnel "port" is not useful
 				if (a == 1) // it is a ICMP packet
 				{
-					printf("Prim Router Read a ICMP packet \n", nread);
+					//printf("Prim Router Read a ICMP packet \n", nread);
 					struct octane_control localMsg, msg1, msg1_re;
 					struct in_addr srcAddr, dstAddr;
 					u_int8_t icmp_type;
-					int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
+					//int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 					int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
 					int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
 					targetAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
@@ -2035,7 +2035,7 @@ void primaryRouter_s10(cRouter & Router)
 						Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 						//insert rules in flow_table and get the respective log
 						vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-						for (int i = 0; i < tempLog.size(); i++)
+						for (int i = 0; i < (int)tempLog.size(); i++)
 						{
 							string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 							Router.vLog.push_back(sLog);
@@ -2122,21 +2122,21 @@ void primaryRouter_s10(cRouter & Router)
 					}
 					else
 					{
-						struct in_addr dstAddr;
+						//struct in_addr dstAddr;
 						uint32_t srcAddrin, dstAddrin;
 						uint16_t port1, port2;
 						u_int8_t iptp;
-						u_int8_t icmp_type;
-						int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1, port2, iptp);
-						dstAddr.s_addr = dstAddrin;
-						int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
-						int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
+						//u_int8_t icmp_type;
+						//int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1, port2, iptp);
+						//dstAddr.s_addr = dstAddrin;
+						//int iCheck = 1; //packetDstCheck(dstAddr, "128.52.129.126", "255.255.255.255");
+						//int iCheck2 = 1;// packetDstCheck(dstAddr, "128.52.130.149", "255.255.255.255");
 						if (iDstPortNum == 80 || iDstPortNum == 443)
 						{
 							Router.createOctaneMsg(localMsg, buffer, sizeof(buffer), 1, ntohs(targetAddr.sin_port), false);
 							//insert rules in flow_table and get the respective log
 							vector<string> tempLog = Router.m_rouFlowTable.dbInsert(localMsg);
-							for (int i = 0; i < tempLog.size(); i++)
+							for (int i = 0; i < (int) tempLog.size(); i++)
 							{
 								string sLog = "router: " + to_string(Router.iRouterID) + tempLog[i];
 								Router.vLog.push_back(sLog);
@@ -2363,7 +2363,7 @@ void stage1(cRouter &Router,
 			struct sockaddr_in & rou2Addr)
 {
 	int sockID;
-	socklen_t len;
+	//socklen_t len;
 	struct sockaddr_in  locAddr;
 	setTempAddr("127.0.0.1", locAddr);
 	getDynmcPortSrv(locAddr, rou1Addr);
@@ -2452,7 +2452,7 @@ void stage6(cRouter &Router,
 	struct sockaddr_in & rou2Addr)
 {
 	int sockID;
-	socklen_t len;
+	//socklen_t len;
 	struct sockaddr_in  locAddr;
 	setTempAddr("127.0.0.1", locAddr);
 	getDynmcPortSrv(locAddr, rou1Addr);
@@ -2527,7 +2527,7 @@ void stage7(cRouter &Router,
 	struct sockaddr_in & rou2Addr)
 {
 	int sockID;
-	socklen_t len;
+	//socklen_t len;
 	struct sockaddr_in  locAddr;
 	setTempAddr("127.0.0.1", locAddr);
 	getDynmcPortSrv(locAddr, rou1Addr);
@@ -2600,7 +2600,7 @@ void stage9(cRouter &Router,
 	struct sockaddr_in & rou2Addr)
 {
 	int sockID;
-	socklen_t len;
+	//socklen_t len;
 	struct sockaddr_in  locAddr;
 	setTempAddr("127.0.0.1", locAddr);
 	getDynmcPortSrv(locAddr, rou1Addr);
@@ -2673,7 +2673,7 @@ void stage10(cRouter &Router,
 	struct sockaddr_in & rou2Addr)
 {
 	int sockID;
-	socklen_t len;
+	//socklen_t len;
 	struct sockaddr_in  locAddr;
 	setTempAddr("127.0.0.1", locAddr);
 	getDynmcPortSrv(locAddr, rou1Addr);
@@ -2746,7 +2746,7 @@ void primaryRouter_reg(const int sockID, cRouter & Router)
 {
 	struct sockaddr_in rou2Addr;
 	Router.iSockID = sockID;
-	vector<string> &vLog = Router.vLog;
+	//vector<string> &vLog = Router.vLog;
 	
 	char buf[1024], pRou2Addr[16];
 	memset(buf, 0, 1024);
@@ -2789,7 +2789,7 @@ void writeFile(string sFilePath, const vector<string> & vContent)
 	//cout << "write to File:"<< sFilePath << endl;
 	if (outFile.is_open())
 	{
-		for (int i = 0; i<vContent.size(); i++)
+		for (int i = 0; i< (int)vContent.size(); i++)
 		{
 			//cout<< vContent[i] << "\n";
 			outFile << vContent[i] << "\n";

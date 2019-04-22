@@ -49,9 +49,9 @@ int sendMsg(int sockID2,const char* buf,unsigned int iSize,
 		perror("sendMsg error");
 	}
 	char pRou1Addr[16];
-        unsigned int iRou1Port;
+        //unsigned int iRou1Port;
         inet_ntop(AF_INET,&rou1Addr.sin_addr,pRou1Addr,sizeof(pRou1Addr));// translate the router 1 ip address to ascii
-        iRou1Port = ntohs(rou1Addr.sin_port);//translate the router 1 port  to ascii
+        //iRou1Port = ntohs(rou1Addr.sin_port);//translate the router 1 port  to ascii
 	//	cout << endl;
 	//	cout<<"sendMsg: receiver  address:"<<pRou1Addr<<endl;
     //    cout<<"sendMsg: receiver port: "<<iRou1Port<<endl;
@@ -73,7 +73,7 @@ int  recvMsg(int sockID, char *buf, unsigned int iSize,
         {
 		//printf("recvMsg: sender said %s \n", buf);
         }
-	int iRou2Port = ntohs(rou2Addr.sin_port);
+	//int iRou2Port = ntohs(rou2Addr.sin_port);
 	inet_ntop(AF_INET,&rou2Addr.sin_addr,pRou2Addr,sizeof(pRou2Addr));
 	//cout << endl;
 	//cout<<"recvMsg: sender address:"<<pRou2Addr<<endl;
@@ -88,7 +88,7 @@ int octaneUnpack(char* buffer, struct octane_control *pOutOctane)
 {
 	struct ip * pIpHeader;
 	struct octane_control * pOctane;
-	char *pA;
+	//char *pA;
 	pIpHeader = (struct ip *) buffer;
 
 	unsigned int iIpHeaderLen = pIpHeader->ip_hl << 2;
@@ -410,7 +410,7 @@ void ipChangeProtocol(char* buffer, int iProtocol)
 struct in_addr icmpReply_Edit(struct in_addr AddrForReplace, char* buffer, int iFlag)// actually edit the IP packet
 {
 	struct ip * pIpHeader;
-	struct icmp * pIcmp;
+	//struct icmp * pIcmp;
 	struct in_addr replacedAddr;
 	pIpHeader = (struct ip *) buffer;
 

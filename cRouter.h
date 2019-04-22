@@ -8,16 +8,16 @@ using namespace std;
 
 struct flow_entry
 {
-	uint32_t m_srcIp;
-	uint32_t m_dstIp;
-	uint16_t m_srcPort;
-	uint16_t m_dstPort;
-	uint16_t m_protocol;
+	uint32_t m_srcIp ;
+	uint32_t m_dstIp ;
+	uint16_t m_srcPort ;
+	uint16_t m_dstPort ;
+	uint16_t m_protocol ;
 
 	flow_entry() {};
 	flow_entry( uint32_t srcIp, uint16_t srcPort, uint32_t dstIp,
 		 uint16_t dstPort, uint16_t protocol) :
-		m_srcIp(srcIp), m_srcPort(srcPort), m_dstIp(dstIp), m_dstPort(dstPort),
+		m_srcIp(srcIp), m_dstIp(dstIp), m_srcPort(srcPort), m_dstPort(dstPort),
 		m_protocol(protocol) {};
 	flow_entry(octane_control msg);
 	flow_entry(char* buffer);

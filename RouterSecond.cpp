@@ -28,7 +28,7 @@ void secondRouter(cRouter & Router, const sockaddr_in rou1Addr, struct sockaddr_
 
 void secondRouter_s2(cRouter & Router)
 {
-	char buffer[2048];
+	//char buffer[2048];
 	struct sockaddr_in rou1Addr;
 	struct timeval timeout;
 	struct sockaddr_in rou2ExternalAddr;
@@ -177,7 +177,7 @@ void secondRouter_s2(cRouter & Router)
 
 void secondRouter_s4(cRouter & Router)
 {
-	char buffer[2048];
+	//char buffer[2048];
 	bool bRefreshTimeout = true;
 	struct sockaddr_in rou1Addr;
 	struct timeval timeout;
@@ -186,7 +186,7 @@ void secondRouter_s4(cRouter & Router)
 	int iSockID = Router.iSockID;
 	int iRawSockID;
 	int iMaxfdpl;
-	int iCount = 0;
+	//int iCount = 0;
 	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
@@ -375,7 +375,7 @@ void secondRouter_s4(cRouter & Router)
 
 void secondRouter_s5(cRouter & Router)
 {
-	char buffer[2048];
+	//char buffer[2048];
 	bool bRefreshTimeout = true;
 	struct sockaddr_in rou1Addr;
 	struct timeval timeout;
@@ -384,7 +384,7 @@ void secondRouter_s5(cRouter & Router)
 	int iSockID = Router.iSockID;
 	int iRawSockID;
 	int iMaxfdpl;
-	int iCount = 0;
+	//int iCount = 0;
 	fd_set fdSetAll, fdSet;
 	timeout.tv_sec = 15;
 	timeout.tv_usec = 0;
@@ -583,7 +583,7 @@ void secondRouter_s5(cRouter & Router)
 
 void secondRouter_s6(cRouter & Router) // target port of  octane_control is host endian (big endian)
 {
-	char buffer[2048];
+	//char buffer[2048];
 	bool bRefreshTimeout = true;
 	struct sockaddr_in rou1Addr;
 	struct sockaddr_in rou2ExternalAddr;
@@ -596,7 +596,7 @@ void secondRouter_s6(cRouter & Router) // target port of  octane_control is host
 	int iMaxfdpl;
 	struct timeval timeout; // select: time out
 	fd_set fdSetAll, fdSet;
-	int iCount = 0;// used for testing retransmit octane_control 
+	//int iCount = 0;// used for testing retransmit octane_control 
 	
 	iRawSockID = getIcmpRawSocket();
 	if (iRawSockID<0)
@@ -1012,11 +1012,11 @@ void icmpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize
 void tcpForward_secondRouter(cRouter & Router, char* buffer, unsigned int iSize,
 	const struct in_addr rou2ExternalAddr)
 {
-	struct in_addr dstAddr;
-	struct in_addr srcAddr;
+	//struct in_addr dstAddr;
+	//struct in_addr srcAddr;
 	struct msghdr msg1;
 	struct iovec iov1;
-	struct icmphdr icmphdr;
+	//struct icmphdr icmphdr;
 	struct sockaddr_in sockDstAddr;
 	uint32_t sSrc_addr;
 	uint32_t sDst_addr;

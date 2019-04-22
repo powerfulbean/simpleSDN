@@ -74,9 +74,9 @@ public:
 	int m_iSeq;
 	int Expire();
 	sockaddr_in m_rou2Addr;
-	int m_iSockID;
+	int m_iSockID = -1;
 
-	cOctaneTimer(int iSockID, sockaddr_in & rou2Addr, octane_control  msg, int iSeq) : m_iSockID(iSockID), m_iOctaneMsg(msg), m_iSeq(iSeq)
+	cOctaneTimer(int iSockID, sockaddr_in & rou2Addr, octane_control  msg, int iSeq) : m_iOctaneMsg(msg), m_iSeq(iSeq), m_iSockID(iSockID)
 	{
 		m_rou2Addr.sin_family = AF_INET;
 		m_rou2Addr.sin_addr.s_addr = rou2Addr.sin_addr.s_addr;

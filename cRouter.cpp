@@ -355,7 +355,7 @@ bool flow_table::contains(flow_entry entry, flow_entry & output)
 int cRouter::stageEngine()
 {
 	//int iStageLen = 2;
-	if(iConfigReg<=vConfig.size())
+	if(iConfigReg<= (int)vConfig.size())
 	{       
 		iStage = stoi(vConfig[(nextConfig() -1)]);
 		switch (stageToCase(iStage))
@@ -381,7 +381,7 @@ int cRouter::stageEngine()
 
 int cRouter::nextConfig()
 {
-	if (iConfigReg > vConfig.size())
+	if (iConfigReg > (int)vConfig.size())
 	{
 		cout << "Error: stage£º " << iStage << "need more legal line in the configuration file" << endl;
 		return 0;
@@ -423,14 +423,14 @@ void cRouter::readConfigFile(char* filePath)
 		vReadBuffer.push_back(sTemp);
 	}
 	infile.close();
-	for(int i=0;i<vReadBuffer.size();i++)
+	for(int i=0;i<(int)vReadBuffer.size();i++)
 	{	
-		bool flag =true;
+		//bool flag =true;
 		string sNum;
 		vector<string> output;
 		if(parser(vReadBuffer[i],output)) // every string in the output is a word in one string of ReadBuffer 
 		{
-			for(int i=0;i<output.size();i++)
+			for(int i=0;i<(int)output.size();i++)
 			{
 			//	vector<string> vRecord;
 				if(output[i]=="stage")
@@ -466,7 +466,7 @@ void cRouter::writeLogFile()
 	ofstream outFile(sFilePath);
 	if(outFile.is_open())
 	{
-		for(int i=0;i<vLog.size();i++)
+		for(int i=0;i<(int)vLog.size();i++)
 		{
 			outFile<<vLog[i]<<"\n";
 		}
@@ -488,7 +488,7 @@ int cRouter::parser(const string &target, vector<string> &output)
 	int iWordHead=0;
 	int iWordTail=0;
 	bool bEndFlag = false;
-	for(int i=0;i<target.size();i++)
+	for(int i=0;i<(int)target.size();i++)
 	{
 		if(target[i]==' ' || target[i]==9)
 		{
@@ -518,7 +518,7 @@ int cRouter::parser(const string &target, vector<string> &output)
 		if(wordHeadFoundFlag == true)
 		{
 			//cout<<i<<iWordHead<<endl;	
-			if(i!=iWordTail || i==target.size()-1)
+			if(i!=iWordTail || i==(int)target.size()-1)
 			{
 				if(iWordHead == iWordTail)
 				{
@@ -578,11 +578,11 @@ int cRouter::createOctaneMsg(octane_control &msg, const char *buffer, const unsi
 
 int cRouter::createReverseOctaneMsg(octane_control &msg,const octane_control oriMsg, uint16_t sTargetPort , bool truelySend)
 {
-	uint32_t sSrc_addr;
-	uint32_t sDst_addr;
-	uint16_t sSrc_port;
-	uint16_t sDst_port;
-	u_int8_t ip_type;
+	//uint32_t sSrc_addr;
+	//uint32_t sDst_addr;
+	//uint16_t sSrc_port;
+	//uint16_t sDst_port;
+	//u_int8_t ip_type;
 	int iThisSeqno = m_iSeqnoCnt;
 	msg.octane_action = oriMsg.octane_action;
 	msg.octane_flags = 0;

@@ -826,8 +826,8 @@ void primaryRouter_s6(cRouter & Router)
 				{
 					//printf("Prim Router Read a ICMP packet \n", nread);
 					struct octane_control localMsg, msg1, msg1_re;
-					struct in_addr srcAddr, dstAddr;
-					u_int8_t icmp_type;
+					struct in_addr dstAddr; //struct in_addr srcAddr, dstAddr;
+					//u_int8_t icmp_type;
 					//int iProtocolType = icmpUnpack(buffer, srcAddr, dstAddr, icmp_type);
 					int iCheck = packetDstCheck(dstAddr, "10.5.51.11", "255.255.255.255");
 					int iCheck2 = packetDstCheck(dstAddr, "10.5.51.12", "255.255.255.255");
@@ -943,7 +943,7 @@ void primaryRouter_s6(cRouter & Router)
 						//struct in_addr dstAddr;
 						//uint32_t srcAddrin, dstAddrin;
 						//uint16_t port1, port2;
-						u//_int8_t iptp;
+						//u_int8_t iptp;
 						//u_int8_t icmp_type;
 						//int iProtocolType = ipUnpack(buffer, srcAddrin, dstAddrin, port1,port2,iptp);
 						//dstAddr.s_addr = dstAddrin;

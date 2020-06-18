@@ -1,0 +1,12 @@
+build/
+dist/
+*.pyc
+*.gz
+*.whl
+*.whl
+*.o
+*.sh
+*.out
+*.gz
+*.backup
+*.swp
